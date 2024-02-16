@@ -6,4 +6,5 @@ abstract class AnjuColor {
   static Color secondary = '#D10909'.toColor();
   static Color tertiary = '#F7CF92'.toColor();
   static Color background = Colors.white;
+  static Color dueDate = '#0AA607'.toColor();
 }

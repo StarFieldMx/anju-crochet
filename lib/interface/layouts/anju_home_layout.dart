@@ -1,7 +1,6 @@
 import 'package:anju/config/router/anju_router.gr.dart';
-import 'package:anju/config/themes/anju_colors.dart';
-import 'package:anju/config/utils/utils.dart';
 import 'package:anju/interface/widgets/animated_anju_bar.dart';
+import 'package:anju/interface/widgets/anju_topbar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,7 @@ class AnjuHomeLayout extends StatelessWidget {
       routes: const [
         ShoppingRoute(),
         PdfPatrons(),
-        HomeRoute(),
+        OrdersRoute(),
         InventoryRoute(),
         WalletRoute(),
       ],
@@ -31,11 +30,7 @@ class AnjuHomeLayout extends StatelessWidget {
       },
       builder: (context, child) {
         return Scaffold(
-          appBar: AppBar(
-            backgroundColor: AnjuColor.primary,
-            title: Image.asset(AnjuImages.logo, height: 64),
-            centerTitle: true,
-          ),
+          appBar: const AnjuTopBar(),
           body: child,
           bottomNavigationBar: const AnimatedAnjuBar(),
         );

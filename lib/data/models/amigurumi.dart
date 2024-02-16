@@ -1,0 +1,3 @@
+class Amigurumi {
+  Amigurumi._();
+}

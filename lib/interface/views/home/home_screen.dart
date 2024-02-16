@@ -1,38 +1,27 @@
-import 'package:anju/config/router/anju_router.gr.dart';
-import 'package:anju/config/utils/utils.dart';
+import 'package:flutter/material.dart';
+// utils
+// models
+import 'package:anju/data/models/orders.dart';
+// widgets
+import 'package:anju/interface/widgets/ordercard.dart';
+// packages
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
+
+List<Orders> orders = List.generate(40, (index) => Orders.unique());
 
 @RoutePage()
 
 /// Muestra los pedidos pendiente
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class OrdersScreen extends StatelessWidget {
+  const OrdersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 2,
+      itemCount: orders.length,
       itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () => AutoRouter.of(context).push(PedidosRoute(id: index)),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                Hero(
-                    tag: HeroTag.ordersItem(index),
-                    child: Image.asset(AnjuImages.borrego)),
-                const Column(
-                  children: [
-                    Text('Due date: 20 de enero del 2024'),
-                    Text('Es un borrego muy bonito de color...'),
-                    Text('Fulanito Perez'),
-                  ],
-                ),
-              ],
-            ),
-          ),
+        return OrderCard(
+          order: orders[index],
         );
       },
     );
