@@ -99,7 +99,7 @@ class AnjuHomeLayout extends _i9.PageRouteInfo<void> {
 class DetailsOrderRoute extends _i9.PageRouteInfo<DetailsOrderRouteArgs> {
   DetailsOrderRoute({
     _i10.Key? key,
-    required _i11.Orders order,
+    required _i11.Order order,
     List<_i9.PageRouteInfo>? children,
   }) : super(
           DetailsOrderRoute.name,
@@ -124,7 +124,7 @@ class DetailsOrderRouteArgs {
 
   final _i10.Key? key;
 
-  final _i11.Orders order;
+  final _i11.Order order;
 
   @override
   String toString() {

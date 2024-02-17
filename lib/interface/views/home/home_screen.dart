@@ -7,7 +7,7 @@ import 'package:anju/interface/widgets/ordercard.dart';
 // packages
 import 'package:auto_route/auto_route.dart';
 
-List<Orders> orders = List.generate(40, (index) => Orders.unique());
+List<Order> orders = List.generate(40, (index) => Order.unique());
 
 @RoutePage()
 

@@ -13,7 +13,7 @@ class OrderCard extends StatelessWidget {
     super.key,
     required this.order,
   });
-  final Orders order;
+  final Order order;
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;

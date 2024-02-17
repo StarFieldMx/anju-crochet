@@ -1,10 +1,10 @@
-class Orders {
+class Order {
   final int id;
   final int idAmigurumi;
   final String dueDate;
   final String customer;
   final String? details;
-  Orders._(
+  Order._(
       {required this.id,
       required this.idAmigurumi,
       required this.dueDate,
@@ -13,9 +13,9 @@ class Orders {
 
   static int _lastId = 0;
 
-  factory Orders.unique() {
+  factory Order.unique() {
     _lastId = (_lastId % 200) + 1;
-    return Orders._(
+    return Order._(
       id: _lastId,
       idAmigurumi: 0,
       customer: 'Francisco',

@@ -12,7 +12,7 @@ class AnjuTopBar extends StatelessWidget implements PreferredSizeWidget {
     final imageHeight = MediaQuery.of(context).size.height * 0.12;
 
     return AppBar(
-      backgroundColor: AnjuColor.primary,
+      backgroundColor: AnjuColors.primary,
       title: Image.asset(AnjuImages.logo, height: imageHeight),
       centerTitle: true,
     );
