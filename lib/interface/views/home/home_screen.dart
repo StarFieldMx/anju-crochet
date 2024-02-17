@@ -22,7 +22,7 @@ class OrdersScreen extends StatelessWidget {
     return AnjuItemListViewer<Order>(
       list: orders,
       childBuilder: (order) => OrderCard(order: order),
-      title: 'Shopping screen',
+      title: 'Pedidos',
     );
   }
 }

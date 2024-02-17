@@ -16,12 +16,17 @@ class AnjuItemListViewer<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
       children: [
-        Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Text(title, style: AnjuTextStyles.titleScreens),
-        ),
-        ...list.map(childBuilder).toList(),
+        Text(title, style: AnjuTextStyles.titleScreens),
+        const SizedBox(height: 20),
+        ...list.map((item) {
+          final childWidget = childBuilder(item);
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: childWidget,
+          );
+        }).toList(),
       ],
     );
   }

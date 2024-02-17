@@ -20,46 +20,43 @@ class OrderCard extends StatelessWidget {
     final cardHeight = size.height * 0.125;
     return GestureDetector(
       onTap: () => AutoRouter.of(context).push(const DetailsOrderRoute()),
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Container(
-          constraints: BoxConstraints(maxHeight: cardHeight),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              AnjuImage(id: order.id, imagePath: AnjuImages.test),
-              const SizedBox(width: 20),
-              Expanded(
-                child: SizedBox(
-                  height: cardHeight * 0.85,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+      child: Container(
+        constraints: BoxConstraints(maxHeight: cardHeight),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AnjuImage(id: order.id, imagePath: AnjuImages.test),
+            const SizedBox(width: 20),
+            Expanded(
+              child: SizedBox(
+                height: cardHeight * 0.85,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Due: ${order.dueDate}',
+                      style: AnjuTextStyles.date,
+                    ),
+                    const SizedBox(height: 5),
+                    if (order.details != null)
                       Text(
-                        'Due: ${order.dueDate}',
-                        style: AnjuTextStyles.date,
-                      ),
-                      const SizedBox(height: 5),
-                      if (order.details != null)
-                        Text(
-                          order.details!,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: AnjuTextStyles.details,
-                        ),
-                      const SizedBox(height: 5),
-                      Text(
-                        order.customer,
-                        maxLines: 1,
+                        order.details!,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.grey),
+                        style: AnjuTextStyles.details,
                       ),
-                    ],
-                  ),
+                    const SizedBox(height: 5),
+                    Text(
+                      order.customer,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

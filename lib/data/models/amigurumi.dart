@@ -1,19 +1,22 @@
 import 'dart:math';
 
+import 'package:anju/config/utils/utils.dart';
+import 'package:anju/data/models/anju_material.dart';
+
 class Amigurumi {
   final int id;
   final String name;
   final double price;
-  final List<Material> materials;
+  final List<AnjuMaterial> materials;
   final List<AmigurumiImage> images;
-
-  Amigurumi({
-    required this.id,
-    required this.name,
-    required this.price,
-    required this.materials,
-    required this.images,
-  });
+  final bool available;
+  Amigurumi(
+      {required this.id,
+      required this.name,
+      required this.price,
+      required this.materials,
+      required this.images,
+      required this.available});
   factory Amigurumi.random() {
     // Nombres aleatorios para los amigurumis
     List<String> names = [
@@ -35,19 +38,23 @@ class Amigurumi {
     return Amigurumi(
       name: name,
       price: price,
-      images: [],
+      images: [
+        AmigurumiImage(id: 1, type: ImageType.local, url: AnjuImages.test)
+      ],
       materials: [],
       id: id,
+      available: true,
     );
   }
   Map<String, dynamic> toMap() {
+    // los materiales ya existen, imagenes no
     return {
       'id': id,
       'name': name,
       'price': price,
-      // Convertir la lista de materiales a un formato adecuado para SQLite
-      // (puedes hacer algo similar para las imágenes)
-      'materials': materials.map((material) => material.toMap()).toList(),
+      // TODO AGREGAR IMAGENES
+      'images': [],
+      'available': available ? 1 : 0,
     };
   }
 
@@ -56,31 +63,11 @@ class Amigurumi {
       id: map['id'],
       name: map['name'],
       price: map['price'],
-      materials: List<Material>.from(
-          map['materials'].map((materialMap) => Material.fromMap(materialMap))),
+      materials: List<AnjuMaterial>.from(map['materials']
+          .map((materialMap) => AnjuMaterial.fromMap(materialMap))),
       //TODO: LOGIC IMAGES
       images: [],
-    );
-  }
-}
-
-class Material {
-  final int id;
-  final String name;
-
-  Material({required this.id, required this.name});
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-    };
-  }
-
-  static Material fromMap(Map<String, dynamic> map) {
-    return Material(
-      id: map['id'],
-      name: map['name'],
+      available: (map["available"] as int) == 1,
     );
   }
 }
@@ -96,7 +83,8 @@ class AmigurumiImage {
     return {
       'id': id,
       'url': url,
-      'type': type.index, // Almacena el índice del enum en lugar del valor
+      'type': type
+          .index, // TODO: Almacena el índice del enum en lugar del valor (SQL)
     };
   }
 
