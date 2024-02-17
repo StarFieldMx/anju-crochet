@@ -46,13 +46,13 @@ class Yarn extends AnjuMaterial {
         "trademark": trademark,
       };
 
-  factory Yarn.llavero({
+  factory Yarn.hilo({
     required int id,
   }) =>
       Yarn._(
         id: id,
         name: 'Hilo chino',
-        type: AnjuMaType.llavero,
+        type: AnjuMaType.hilo,
         color: Colors.pink.shade100,
         // HILO
         thickness: 0.5,

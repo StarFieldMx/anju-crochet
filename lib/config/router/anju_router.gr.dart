@@ -8,17 +8,15 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:anju/data/models/orders.dart' as _i11;
 import 'package:anju/interface/layouts/anju_home_layout.dart' as _i1;
-import 'package:anju/interface/views/home/home_screen.dart' as _i4;
 import 'package:anju/interface/views/home/details_order_screen.dart' as _i2;
+import 'package:anju/interface/views/home/home_screen.dart' as _i4;
 import 'package:anju/interface/views/inventory/inventory_screen.dart' as _i3;
 import 'package:anju/interface/views/pdf/pdf_patrons_screen.dart' as _i5;
 import 'package:anju/interface/views/shop/shopping_screen.dart' as _i6;
 import 'package:anju/interface/views/splash_screen.dart' as _i7;
 import 'package:anju/interface/views/wallet/wallet_screen.dart' as _i8;
 import 'package:auto_route/auto_route.dart' as _i9;
-import 'package:flutter/material.dart' as _i10;
 
 abstract class $AnjuRouter extends _i9.RootStackRouter {
   $AnjuRouter({super.navigatorKey});
@@ -32,13 +30,9 @@ abstract class $AnjuRouter extends _i9.RootStackRouter {
       );
     },
     DetailsOrderRoute.name: (routeData) {
-      final args = routeData.argsAs<DetailsOrderRouteArgs>();
       return _i9.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i2.DetailsOrderScreen(
-          key: args.key,
-          order: args.order,
-        ),
+        child: const _i2.DetailsOrderScreen(),
       );
     },
     InventoryRoute.name: (routeData) {
@@ -96,40 +90,16 @@ class AnjuHomeLayout extends _i9.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i2.DetailsOrderScreen]
-class DetailsOrderRoute extends _i9.PageRouteInfo<DetailsOrderRouteArgs> {
-  DetailsOrderRoute({
-    _i10.Key? key,
-    required _i11.Order order,
-    List<_i9.PageRouteInfo>? children,
-  }) : super(
+class DetailsOrderRoute extends _i9.PageRouteInfo<void> {
+  const DetailsOrderRoute({List<_i9.PageRouteInfo>? children})
+      : super(
           DetailsOrderRoute.name,
-          args: DetailsOrderRouteArgs(
-            key: key,
-            order: order,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'DetailsOrderRoute';
 
-  static const _i9.PageInfo<DetailsOrderRouteArgs> page =
-      _i9.PageInfo<DetailsOrderRouteArgs>(name);
-}
-
-class DetailsOrderRouteArgs {
-  const DetailsOrderRouteArgs({
-    this.key,
-    required this.order,
-  });
-
-  final _i10.Key? key;
-
-  final _i11.Order order;
-
-  @override
-  String toString() {
-    return 'DetailsOrderRouteArgs{key: $key, order: $order}';
-  }
+  static const _i9.PageInfo<void> page = _i9.PageInfo<void>(name);
 }
 
 /// generated route for

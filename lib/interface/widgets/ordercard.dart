@@ -19,7 +19,7 @@ class OrderCard extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     final cardHeight = size.height * 0.125;
     return GestureDetector(
-      onTap: () => AutoRouter.of(context).push(DetailsOrderRoute(order: order)),
+      onTap: () => AutoRouter.of(context).push(const DetailsOrderRoute()),
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Container(

@@ -1,5 +1,3 @@
-import 'package:anju/data/models/yarn.dart';
-import 'package:anju/interface/widgets/anju_color_circle.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 
@@ -11,27 +9,11 @@ class ShoppingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Column(
         children: [
-          const Text('Shopping screen'),
+          Text('Shopping screen'),
           // TODO: THIS IS FOR DETAIL VIEW SHOPING TIME!
-          SizedBox(
-            height: 200,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: List.generate(
-                8,
-                (index) {
-                  final llavero = Yarn.llavero(id: index);
-                  return AnjuColorCircle(
-                    colors: [llavero.color],
-                    name: llavero.name,
-                  );
-                },
-              ),
-            ),
-          ),
         ],
       ),
     );
