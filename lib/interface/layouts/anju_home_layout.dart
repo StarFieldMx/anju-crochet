@@ -30,8 +30,10 @@ class AnjuHomeLayout extends StatelessWidget {
       },
       builder: (context, child) {
         return Scaffold(
+          extendBody: true,
           appBar: const AnjuTopBar(),
           body: child,
+          backgroundColor: Colors.white,
           bottomNavigationBar: const AnimatedAnjuBar(),
         );
       },

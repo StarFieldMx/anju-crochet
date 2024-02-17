@@ -82,7 +82,7 @@ class DetailAmigurumi extends StatelessWidget {
           children: yarns.map((yarn) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text('$yarns 3.3 mm'),
+              child: Text('$yarn 3.3 mm'),
             );
           }).toList(),
         ),
