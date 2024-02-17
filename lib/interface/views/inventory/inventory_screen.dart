@@ -1,3 +1,4 @@
+import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -9,8 +10,8 @@ class InventoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Inventory'),
+    return Center(
+      child: Text('Inventory screen', style: AnjuTextStyles.titleScreens),
     );
   }
 }

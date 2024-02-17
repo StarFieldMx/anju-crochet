@@ -1,4 +1,4 @@
-import 'package:anju/config/utils/utils.dart';
+import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -10,15 +10,8 @@ class PdfPatrons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 200),
-        SizedBox(
-          width: 400,
-          child: Hero(tag: HeroTag.logo, child: Image.asset(AnjuImages.logo)),
-        )
-      ],
+    return Center(
+      child: Text('Shopping screen', style: AnjuTextStyles.titleScreens),
     );
   }
 }

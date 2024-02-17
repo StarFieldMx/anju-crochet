@@ -6,6 +6,8 @@ abstract class AnjuTextStyles {
 
   static TextStyle date = TextStyle(color: AnjuColors.dueDate);
   static TextStyle colorsName = const TextStyle(fontSize: 13);
+  static TextStyle titleScreens =
+      const TextStyle(fontSize: 22, fontWeight: FontWeight.bold);
   static TextStyle mediumTitle =
       const TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
   static TextStyle titleAmigurumi =

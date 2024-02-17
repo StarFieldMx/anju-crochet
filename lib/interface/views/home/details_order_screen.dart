@@ -1,7 +1,6 @@
 import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/config/utils/images_constant.dart';
 import 'package:anju/data/models/anju_color.dart';
-import 'package:anju/data/models/yarn.dart';
 import 'package:flutter/material.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/interface/widgets/widgets.dart';
@@ -57,16 +56,18 @@ class DetailAmigurumi extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 30),
-        _buildYarnsDetails(title: 'Hilo', yarns: [Yarn.hilo(id: 1)]),
+        _buildYarnsDetails(
+            title: 'Hilo', yarns: List.generate(10, (index) => 'Frances')),
         const SizedBox(height: 15),
         Divider(color: AnjuColors.primary)
       ],
     );
   }
 
+  // TODO: ADD YARN MODEL
   Widget _buildYarnsDetails({
     required String title,
-    required List<Yarn> yarns,
+    required List<String> yarns,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +82,7 @@ class DetailAmigurumi extends StatelessWidget {
           children: yarns.map((yarn) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text('${yarn.name} ${yarn.thickness} mm'),
+              child: Text('$yarns 3.3 mm'),
             );
           }).toList(),
         ),
