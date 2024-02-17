@@ -19,7 +19,7 @@ class Orders {
       id: _lastId,
       idAmigurumi: 0,
       customer: 'Francisco',
-      dueDate: 'ene 20, 2024',
+      dueDate: 'ENE 20, 2024',
       details:
           'In commodo consectetur non eiusmod laboris excepteur excepteur in ea est velit aute.',
     );

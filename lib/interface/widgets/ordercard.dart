@@ -1,9 +1,9 @@
+import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/config/utils/utils.dart';
 import 'package:anju/data/models/orders.dart';
 import 'package:flutter/material.dart';
 // ROUTER
 import 'package:anju/config/router/anju_router.gr.dart';
-import 'package:anju/config/themes/anju_colors.dart';
 import 'package:auto_route/auto_route.dart';
 // WIDGETS
 import 'package:anju/interface/widgets/anju_image.dart';
@@ -37,7 +37,7 @@ class OrderCard extends StatelessWidget {
                     children: [
                       Text(
                         'Due: ${order.dueDate}',
-                        style: TextStyle(color: AnjuColor.dueDate),
+                        style: AnjuTextStyles.date,
                       ),
                       const SizedBox(height: 5),
                       if (order.details != null)
@@ -45,7 +45,7 @@ class OrderCard extends StatelessWidget {
                           order.details!,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: AnjuTextStyles.details,
                         ),
                       const SizedBox(height: 5),
                       Text(
