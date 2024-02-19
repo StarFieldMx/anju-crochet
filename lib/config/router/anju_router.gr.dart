@@ -13,7 +13,7 @@ import 'package:anju/interface/views/home/details_order_screen.dart' as _i2;
 import 'package:anju/interface/views/home/home_screen.dart' as _i4;
 import 'package:anju/interface/views/inventory/inventory_screen.dart' as _i3;
 import 'package:anju/interface/views/pdf/pdf_patrons_screen.dart' as _i5;
-import 'package:anju/interface/views/shop/shopping_screen.dart' as _i6;
+import 'package:anju/interface/views/show/show_screen.dart' as _i6;
 import 'package:anju/interface/views/splash_screen.dart' as _i7;
 import 'package:anju/interface/views/wallet/wallet_screen.dart' as _i8;
 import 'package:auto_route/auto_route.dart' as _i9;
@@ -56,7 +56,7 @@ abstract class $AnjuRouter extends _i9.RootStackRouter {
     ShoppingRoute.name: (routeData) {
       return _i9.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i6.ShoppingScreen(),
+        child: const _i6.AmigurumiShowScreen(),
       );
     },
     SplashRoute.name: (routeData) {
@@ -145,7 +145,7 @@ class PdfPatrons extends _i9.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i6.ShoppingScreen]
+/// [_i6.AmigurumiShowScreen]
 class ShoppingRoute extends _i9.PageRouteInfo<void> {
   const ShoppingRoute({List<_i9.PageRouteInfo>? children})
       : super(

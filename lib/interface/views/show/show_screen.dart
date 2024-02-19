@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 @RoutePage()
 
 /// Muestra muñequitos que maneja
-class ShoppingScreen extends StatelessWidget {
-  const ShoppingScreen({super.key});
+class AmigurumiShowScreen extends StatelessWidget {
+  const AmigurumiShowScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
