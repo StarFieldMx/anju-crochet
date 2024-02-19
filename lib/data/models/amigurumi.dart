@@ -7,7 +7,7 @@ class Amigurumi {
   final int id;
   final String name;
   final double price;
-  final List<AnjuMaterial> materials;
+  final List<Product> materials;
   final List<AmigurumiImage> images;
   final bool available;
   Amigurumi(
@@ -63,8 +63,8 @@ class Amigurumi {
       id: map['id'],
       name: map['name'],
       price: map['price'],
-      materials: List<AnjuMaterial>.from(map['materials']
-          .map((materialMap) => AnjuMaterial.fromMap(materialMap))),
+      materials: List<Product>.from(
+          map['materials'].map((materialMap) => Product.fromMap(materialMap))),
       //TODO: LOGIC IMAGES
       images: [],
       available: (map["available"] as int) == 1,

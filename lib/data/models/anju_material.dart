@@ -1,9 +1,9 @@
 // TODO: IMPROVE
-class AnjuMaterial {
+class Product {
   final int id;
   final String name;
 
-  AnjuMaterial({required this.id, required this.name});
+  Product({required this.id, required this.name});
 
   Map<String, dynamic> toMap() {
     return {
@@ -12,8 +12,8 @@ class AnjuMaterial {
     };
   }
 
-  static AnjuMaterial fromMap(Map<String, dynamic> map) {
-    return AnjuMaterial(
+  static Product fromMap(Map<String, dynamic> map) {
+    return Product(
       id: map['id'],
       name: map['name'],
     );

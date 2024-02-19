@@ -1,6 +1,8 @@
-import 'package:anju/config/themes/anju_textstyles.dart';
+import 'package:anju/interface/widgets/anju_item_list_viewer.dart';
+import 'package:anju/interface/widgets/product_item.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 @RoutePage()
 
@@ -10,8 +12,10 @@ class InventoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Inventory screen', style: AnjuTextStyles.titleScreens),
+    return AnjuItemListViewer(
+      childBuilder: (p0) => const ProductItem(),
+      list: List.generate(10, (index) => null),
+      title: 'Lista de un producto (hilo sinfonia)',
     );
   }
 }

@@ -4,6 +4,14 @@ import 'package:anju/interface/widgets/anju_topbar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+enum AnjuRoutes {
+  shopping,
+  pdfpatrons,
+  orders,
+  inventory,
+  wallet,
+}
+
 @RoutePage()
 class AnjuHomeLayout extends StatelessWidget {
   const AnjuHomeLayout({super.key});
@@ -31,7 +39,7 @@ class AnjuHomeLayout extends StatelessWidget {
       builder: (context, child) {
         return Scaffold(
           extendBody: true,
-          appBar: const AnjuTopBar(),
+          appBar: const AnjuTopBar(isMainRoute: true),
           body: child,
           backgroundColor: Colors.white,
           bottomNavigationBar: const AnimatedAnjuBar(),
