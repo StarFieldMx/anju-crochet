@@ -10,7 +10,7 @@ class AnjuRouter extends $AnjuRouter {
         AutoRoute(
           page: AnjuHomeLayout.page,
           children: [
-            AutoRoute(page: HomeRoute.page),
+            AutoRoute(page: OrdersRoute.page),
             AutoRoute(page: InventoryRoute.page),
             AutoRoute(page: WalletRoute.page),
             AutoRoute(page: PdfPatrons.page),
@@ -19,7 +19,7 @@ class AnjuRouter extends $AnjuRouter {
           ],
         ),
         AutoRoute(
-          page: PedidosRoute.page,
+          page: DetailsOrderRoute.page,
         ),
       ];
 }
@@ -27,9 +27,9 @@ class AnjuRouter extends $AnjuRouter {
 class AnjuRouteCubit extends Cubit<AnjuRouter> {
   AnjuRouteCubit() : super(AnjuRouter());
 
-  void goHome() => state.push(const AnjuHomeLayout(children: [HomeRoute()]));
+  void goHome() => state.push(const AnjuHomeLayout(children: [OrdersRoute()]));
 
-  void goShop() => state.push(const AnjuHomeLayout(children: [HomeRoute()]));
+  void goShop() => state.push(const AnjuHomeLayout(children: [OrdersRoute()]));
 
   void goInventory() =>
       state.push(const AnjuHomeLayout(children: [InventoryRoute()]));
@@ -37,8 +37,8 @@ class AnjuRouteCubit extends Cubit<AnjuRouter> {
   void goWallet() =>
       state.push(const AnjuHomeLayout(children: [WalletRoute()]));
 
-  void goAdd() => state.push(const AnjuHomeLayout(children: [HomeRoute()]));
+  void goAdd() => state.push(const AnjuHomeLayout(children: [OrdersRoute()]));
 
   void goHomeFromSplash() =>
-      state.replace(const AnjuHomeLayout(children: [HomeRoute()]));
+      state.replace(const AnjuHomeLayout(children: [OrdersRoute()]));
 }

@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+// utils
 import 'package:anju/config/themes/anju_colors.dart';
 import 'package:auto_route/auto_route.dart';
+// packages
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/material.dart';
 
 class AnimatedAnjuBar extends StatefulWidget {
   const AnimatedAnjuBar({super.key});
@@ -13,7 +15,7 @@ class AnimatedAnjuBar extends StatefulWidget {
 class _AnimatedAnjuBarState extends State<AnimatedAnjuBar> {
   int activeIndex = 2;
   int lastIndex = 0;
-  final activeColorIcon = AnjuColor.secondary;
+  final activeColorIcon = AnjuColors.secondary;
   final inactiveColorIcon = Colors.white;
 
   List<Icon> get itemsDynamics {
@@ -50,9 +52,9 @@ class _AnimatedAnjuBarState extends State<AnimatedAnjuBar> {
   Widget build(BuildContext context) {
     return CurvedNavigationBar(
       backgroundColor: Colors.transparent,
-      buttonBackgroundColor: AnjuColor.primary,
+      buttonBackgroundColor: AnjuColors.primary,
       animationDuration: const Duration(milliseconds: 500),
-      color: AnjuColor.primary,
+      color: AnjuColors.primary,
       onTap: (index) {
         _updateColor(index);
         AutoTabsRouter.of(context).setActiveIndex(index);

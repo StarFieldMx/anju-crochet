@@ -5,7 +5,9 @@ extension ColorExtension on String {
     var hexString = this;
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
-    buffer.write(hexString.replaceFirst('#', ''));
+    if (hexString.contains('#')) {
+      buffer.write(hexString.replaceFirst('#', ''));
+    }
     int colorValue = int.parse(buffer.toString(), radix: 16);
     return Color(colorValue).withOpacity(opacity);
   }
