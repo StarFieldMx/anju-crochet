@@ -1,13 +1,13 @@
 import 'dart:math';
 
 import 'package:anju/config/utils/utils.dart';
-import 'package:anju/data/models/anju_material.dart';
+import 'package:anju/data/models/models.dart';
 
 class Amigurumi {
   final int id;
   final String name;
   final double price;
-  final List<Product> materials;
+  final List<Crochet> materials;
   final List<AmigurumiImage> images;
   final bool available;
   Amigurumi(
@@ -52,7 +52,6 @@ class Amigurumi {
       'id': id,
       'name': name,
       'price': price,
-      // TODO AGREGAR IMAGENES
       'images': [],
       'available': available ? 1 : 0,
     };
@@ -63,8 +62,8 @@ class Amigurumi {
       id: map['id'],
       name: map['name'],
       price: map['price'],
-      materials: List<Product>.from(
-          map['materials'].map((materialMap) => Product.fromMap(materialMap))),
+      materials: List<Crochet>.from(
+          map['materials'].map((materialMap) => Crochet.fromJson(materialMap))),
       //TODO: LOGIC IMAGES
       images: [],
       available: (map["available"] as int) == 1,
