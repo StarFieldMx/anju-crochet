@@ -21,7 +21,7 @@ class AnjuHomeLayout extends StatelessWidget {
     return AutoTabsRouter(
       navigatorObservers: () => [HeroController()],
       routes: const [
-        ShoppingRoute(),
+        AmigurumiShowRoute(),
         PdfPatrons(),
         OrdersRoute(),
         InventoryRoute(),

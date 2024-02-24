@@ -35,4 +35,11 @@ abstract class AnjuTextStyles {
   );
   static TextStyle info =
       defaultStyle.copyWith(color: Colors.grey.shade200, fontSize: 15);
+  // SHOP SCREEN
+  static TextStyle handmade = defaultStyle.copyWith(
+      color: AnjuColors.primary, fontSize: 17, fontWeight: FontWeight.bold);
+  static TextStyle amigurumiName = defaultStyle.copyWith(
+      color: Colors.black, fontSize: 28, fontWeight: FontWeight.w700);
+  static TextStyle priceTag = defaultStyle.copyWith(
+      color: Colors.black, fontSize: 22, fontWeight: FontWeight.w500);
 }

@@ -11,7 +11,7 @@ class PdfPatrons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Shopping screen', style: AnjuTextStyles.titleScreens),
+      child: Text('PDF screen', style: AnjuTextStyles.titleScreens),
     );
   }
 }

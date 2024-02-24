@@ -4,6 +4,7 @@
 import 'dart:ui';
 
 import 'package:anju/config/utils/utils.dart';
+import 'package:anju/data/models/thread_color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum CrochetType {
@@ -54,7 +55,7 @@ enum ThreadStatus { nuevo, medio, pocoloco, agotado }
 
 // "Hilo"
 class Thread extends Crochet {
-  Color color;
+  ThreadColor threadColor;
   String brand;
   double thickness;
   ThreadStatus status;
@@ -63,7 +64,7 @@ class Thread extends Crochet {
     String? id,
     required String name,
     required int stock,
-    required this.color,
+    required this.threadColor,
     required this.brand,
     required this.thickness,
     required this.status,
@@ -73,7 +74,7 @@ class Thread extends Crochet {
   @override
   void showInfo() {
     super.showInfo();
-    print('Color: $color');
+    print('Color: $threadColor');
     print('Brand: $brand');
     print('Thickness: $thickness');
   }
@@ -85,7 +86,7 @@ class Thread extends Crochet {
       'name': name,
       'stock': stock,
       'type': type.name,
-      'color': color.toHex(),
+      'threadColor': threadColor.toJson(),
       'status': status.name,
       'brand': brand,
       'thickness': thickness,
@@ -99,7 +100,7 @@ class Thread extends Crochet {
         stock: json['stock'],
         status: ThreadStatus.values
             .firstWhere((status) => status.name == json['status']),
-        color: (json['color'] as String).toColor(),
+        threadColor: ThreadColor.fromJson(json['threadColor']),
         brand: json['brand'],
         thickness: json['thickness'],
         isMultiColor: json['muticolor'],
@@ -110,7 +111,7 @@ class Thread extends Crochet {
         'name': name,
         'stock': stock,
         'type': type.name,
-        'color': color.toHex(),
+        'color': threadColor.toJson(),
         'status': status.name,
         'brand': brand,
         'thickness': thickness,
