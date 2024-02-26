@@ -19,7 +19,7 @@ import 'package:anju/interface/views/show/show_screen.dart' as _i2;
 import 'package:anju/interface/views/splash_screen.dart' as _i8;
 import 'package:anju/interface/views/wallet/wallet_screen.dart' as _i9;
 import 'package:auto_route/auto_route.dart' as _i10;
-import 'package:flutter/material.dart' as _i11;
+import 'package:flutter/cupertino.dart' as _i11;
 
 abstract class $AnjuRouter extends _i10.RootStackRouter {
   $AnjuRouter({super.navigatorKey});
