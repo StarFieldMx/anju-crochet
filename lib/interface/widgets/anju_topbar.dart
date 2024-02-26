@@ -11,6 +11,8 @@ class AnjuTopBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      // * remove color when scrolling
+      surfaceTintColor: Colors.transparent,
       actions: actions ?? getActions(context),
       backgroundColor: AnjuColors.primary,
       title: Image.asset(AnjuImages.logo, height: getHeight(context)),

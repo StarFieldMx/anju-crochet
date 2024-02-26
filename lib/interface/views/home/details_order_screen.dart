@@ -1,6 +1,6 @@
 import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/config/utils/images_constant.dart';
-import 'package:anju/data/models/anju_color.dart';
+import 'package:anju/data/models/thread_color.dart';
 import 'package:flutter/material.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/interface/widgets/widgets.dart';
@@ -38,20 +38,15 @@ class DetailAmigurumi extends StatelessWidget {
         const SizedBox(height: 20),
         _buildCircles(
           title: 'Color(es)',
-          colors: [
-            [
-              AnjuColor.test(),
-              AnjuColor.test(),
-            ]
-          ],
+          colors: [[]],
         ),
         const SizedBox(height: 30),
         _buildCircles(
           title: 'Llaveros',
           colors: [
             [
-              AnjuColor.test(),
-              AnjuColor.test(),
+              //AnjuColor.test(),
+              // AnjuColor.test(),
             ]
           ],
         ),
@@ -92,7 +87,7 @@ class DetailAmigurumi extends StatelessWidget {
 
   Widget _buildCircles({
     required String title,
-    required List<List<AnjuColor>> colors,
+    required List<List<ThreadColor>> colors,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

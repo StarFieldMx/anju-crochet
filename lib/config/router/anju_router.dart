@@ -15,11 +15,17 @@ class AnjuRouter extends $AnjuRouter {
             AutoRoute(page: WalletRoute.page),
             AutoRoute(page: PdfPatrons.page),
             AutoRoute(page: InventoryRoute.page),
-            AutoRoute(page: ShoppingRoute.page),
+            AutoRoute(page: AmigurumiShowRoute.page),
           ],
         ),
         AutoRoute(
           page: DetailsOrderRoute.page,
+        ),
+        AutoRoute(
+          page: PdfViewRoute.page,
+        ),
+        AutoRoute(
+          page: AmigurumiDetailsRoute.page,
         ),
       ];
 }

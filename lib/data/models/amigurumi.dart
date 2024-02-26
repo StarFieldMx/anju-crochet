@@ -1,22 +1,29 @@
 import 'dart:math';
 
 import 'package:anju/config/utils/utils.dart';
-import 'package:anju/data/models/anju_material.dart';
+import 'package:anju/data/models/models.dart';
+
+enum AmigurumiStatus { disponible, sobrepedido, proximamente }
+
+enum AmigurumiType { special, normal }
 
 class Amigurumi {
   final int id;
   final String name;
   final double price;
-  final List<Product> materials;
+  final List<Crochet> materials;
   final List<AmigurumiImage> images;
-  final bool available;
-  Amigurumi(
-      {required this.id,
-      required this.name,
-      required this.price,
-      required this.materials,
-      required this.images,
-      required this.available});
+  final AmigurumiStatus status;
+  final AmigurumiType type;
+  Amigurumi({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.materials,
+    required this.images,
+    required this.status,
+    required this.type,
+  });
   factory Amigurumi.random() {
     // Nombres aleatorios para los amigurumis
     List<String> names = [
@@ -30,7 +37,7 @@ class Amigurumi {
     ];
 
     // Precios aleatorios entre 5 y 50
-    double price = Random().nextInt(46) + 5.toDouble();
+    double price = Random().nextInt(200) + 5.toDouble();
     String name = names[Random().nextInt(names.length)];
     // Generar un id aleatorio
     int id =
@@ -43,7 +50,10 @@ class Amigurumi {
       ],
       materials: [],
       id: id,
-      available: true,
+      status: AmigurumiStatus.disponible,
+      type: Random().nextInt(1) == 1
+          ? AmigurumiType.normal
+          : AmigurumiType.special,
     );
   }
   Map<String, dynamic> toMap() {
@@ -52,9 +62,9 @@ class Amigurumi {
       'id': id,
       'name': name,
       'price': price,
-      // TODO AGREGAR IMAGENES
       'images': [],
-      'available': available ? 1 : 0,
+      'status': status.name,
+      'type': type.name,
     };
   }
 
@@ -63,11 +73,18 @@ class Amigurumi {
       id: map['id'],
       name: map['name'],
       price: map['price'],
-      materials: List<Product>.from(
-          map['materials'].map((materialMap) => Product.fromMap(materialMap))),
+      materials: List<Crochet>.from(
+          map['materials'].map((materialMap) => Crochet.fromJson(materialMap))),
       //TODO: LOGIC IMAGES
       images: [],
-      available: (map["available"] as int) == 1,
+      status: AmigurumiStatus.values.firstWhere(
+        (element) => element.name == map["status"],
+        orElse: () => AmigurumiStatus.disponible,
+      ),
+      type: AmigurumiType.values.firstWhere(
+        (element) => element.name == map["type"],
+        orElse: () => AmigurumiType.normal,
+      ),
     );
   }
 }
