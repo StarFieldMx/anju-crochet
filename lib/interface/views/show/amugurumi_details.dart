@@ -58,9 +58,9 @@ class AmigurumiDetailsScreen extends StatelessWidget {
                   itemCount: 5,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const MultiColorCircle(colors: [
+                    return const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: MultiColorCircle(colors: [
                         Colors.amber,
                         Colors.brown,
                         Colors.white,

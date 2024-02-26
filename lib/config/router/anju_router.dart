@@ -22,6 +22,9 @@ class AnjuRouter extends $AnjuRouter {
           page: DetailsOrderRoute.page,
         ),
         AutoRoute(
+          page: PdfViewRoute.page,
+        ),
+        AutoRoute(
           page: AmigurumiDetailsRoute.page,
         ),
       ];

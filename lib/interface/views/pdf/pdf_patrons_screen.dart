@@ -1,3 +1,6 @@
+import 'package:anju/config/router/anju_router.dart';
+import 'package:anju/config/router/anju_router.gr.dart';
+import 'package:anju/config/servicelocator.dart';
 import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:auto_route/auto_route.dart';
@@ -11,17 +14,6 @@ import 'package:pdfx/pdfx.dart';
 class PdfPatrons extends StatelessWidget {
   const PdfPatrons({super.key});
 
-// TODO: USE IN VIEW PDF FOR VIEW ALL PDF (PDFPinchView)
-// final pdfPinchController = PdfControllerPinch(
-//   document: PdfDocument.openAsset('pdf/nezuko.pdf'),
-// );
-
-// @override
-// void initState() {
-//   pages = pdfPinchController.pageListenable.value;
-//   super.initState();
-// }
-
   @override
   Widget build(BuildContext context) {
     return const Padding(
@@ -32,8 +24,8 @@ class PdfPatrons extends StatelessWidget {
             SizedBox(height: 20),
             _PdfCard('pdf/nezuko.pdf'),
             _PdfCard('pdf/nezuko.pdf'),
-            _PdfCard('pdf/nezuko.pdf'),
-            _PdfCard('pdf/nezuko.pdf'),
+            // _PdfCard('pdf/nezuko.pdf'),
+            // _PdfCard('pdf/nezuko.pdf'),
             SizedBox(height: 80),
           ],
         ),
@@ -90,8 +82,6 @@ class _PdfCardState extends State<_PdfCard> {
   void dispose() {
     super.dispose();
     pdfView.dispose();
-    doc?.close();
-    print('dispose pdf');
   }
 
   @override
@@ -100,52 +90,56 @@ class _PdfCardState extends State<_PdfCard> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
-      child: Card(
-        elevation: 2.5,
-        color: AnjuColors.primaryShade100,
-        child: Column(
-          children: [
-            if (doc != null)
-              Container(
-                height: size.height * 0.25,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: PdfPageImageProvider(
-                      pageImage, // Aquí accedes al PdfPageImage no nulo
-                      1,
-                      doc!.id,
+      child: GestureDetector(
+        onTap: () =>
+            geit<AnjuRouteCubit>().state.push(PdfViewRoute(path: widget.path)),
+        child: Card(
+          elevation: 2.5,
+          color: AnjuColors.primaryShade100,
+          child: Column(
+            children: [
+              if (doc != null)
+                Container(
+                  height: size.height * 0.18,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: PdfPageImageProvider(
+                        pageImage, // Aquí accedes al PdfPageImage no nulo
+                        1,
+                        doc!.id,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            if (doc != null)
-              Container(
-                width: size.width,
-                height: 80,
-                padding: const EdgeInsets.only(left: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      doc!.sourceName,
-                      style: AnjuTextStyles.pdfText,
-                    ),
-                    Row(
-                      children: [
-                        const Icon(FontAwesomeIcons.filePdf),
-                        const SizedBox(width: 20),
-                        Text(
-                          '$pages páginas',
-                          style: AnjuTextStyles.pagesPdf,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-          ],
+              if (doc != null)
+                Container(
+                  width: size.width,
+                  height: 80,
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        doc!.sourceName,
+                        style: AnjuTextStyles.pdfText,
+                      ),
+                      Row(
+                        children: [
+                          const Icon(FontAwesomeIcons.filePdf),
+                          const SizedBox(width: 20),
+                          Text(
+                            '$pages páginas',
+                            style: AnjuTextStyles.pagesPdf,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );
