@@ -42,4 +42,16 @@ abstract class AnjuTextStyles {
       color: Colors.black, fontSize: 28, fontWeight: FontWeight.w700);
   static TextStyle priceTag = defaultStyle.copyWith(
       color: Colors.black, fontSize: 22, fontWeight: FontWeight.w500);
+  // PDF SCREEN
+  static TextStyle pdfText = defaultStyle.copyWith(
+    color: Colors.black,
+    fontSize: 25,
+    fontWeight: FontWeight.bold,
+    overflow: TextOverflow.ellipsis,
+  );
+  static TextStyle pagesPdf = defaultStyle.copyWith(
+    color: Colors.grey,
+    fontSize: 18,
+    overflow: TextOverflow.ellipsis,
+  );
 }
