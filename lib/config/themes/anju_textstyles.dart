@@ -54,4 +54,26 @@ abstract class AnjuTextStyles {
     fontSize: 18,
     overflow: TextOverflow.ellipsis,
   );
+  // Wallet
+  static TextStyle walletCards =
+      defaultStyle.copyWith(fontSize: 18, fontWeight: FontWeight.bold);
+
+  static TextStyle expenses = defaultStyle.copyWith(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AnjuColors.secondary,
+  );
+  static TextStyle income = defaultStyle.copyWith(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AnjuColors.primary,
+  );
+  static TextStyle pedido = defaultStyle.copyWith(
+    fontWeight: FontWeight.bold,
+  );
+  static TextStyle descriptionPedido = defaultStyle.copyWith(
+    fontSize: 16,
+    fontWeight: FontWeight.w100,
+    color: Colors.black.withOpacity(0.4),
+  );
 }

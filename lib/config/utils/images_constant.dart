@@ -15,3 +15,13 @@ abstract class AnjuImages {
         cuis,
       ];
 }
+
+abstract class AnjuSvg {
+  static const balance = '$absolutePath/balance.svg';
+  static const stats = '$absolutePath/stats.svg';
+
+  static List<String> get values => [
+        balance,
+        stats,
+      ];
+}

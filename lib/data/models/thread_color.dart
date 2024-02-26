@@ -1,4 +1,4 @@
-import 'package:anju/config/utils/colors_extensions.dart';
+import 'package:anju/config/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 enum ColorType { principal, secundario }

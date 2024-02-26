@@ -49,6 +49,8 @@ dependencies:
   dots_indicator: ^3.0.0
   pdfx: ^2.6.0
   font_awesome_flutter: ^10.7.0
+  flutter_svg: ^2.0.10+1
+  # expandable: ^5.0.1
 
 dev_dependencies:
   flutter_test:
