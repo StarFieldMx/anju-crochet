@@ -27,6 +27,7 @@ class AnjuItemListViewer<T> extends StatelessWidget {
             child: childWidget,
           );
         }).toList(),
+        const SizedBox(height: 60),
       ],
     );
   }

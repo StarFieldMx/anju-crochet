@@ -4,6 +4,7 @@ import 'package:anju/config/utils/hero_tags.dart';
 
 enum ImageType { orders, details }
 
+// TODO: UPDATE TO TO NETWORK IMAGE
 class AnjuImage extends StatelessWidget {
   const AnjuImage({
     super.key,

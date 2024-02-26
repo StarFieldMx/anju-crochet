@@ -1,5 +1,5 @@
 import 'package:anju/config/themes/anju_textstyles.dart';
-import 'package:anju/data/models/anju_color.dart';
+import 'package:anju/data/models/thread_color.dart';
 import 'package:anju/interface/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +9,7 @@ class AnjuColorCircle extends StatelessWidget {
     required this.colors,
   });
 
-  final List<AnjuColor> colors;
+  final List<ThreadColor> colors;
 
   @override
   Widget build(BuildContext context) {
