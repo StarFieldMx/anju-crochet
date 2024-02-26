@@ -8,49 +8,48 @@ import 'package:pdfx/pdfx.dart';
 @RoutePage()
 
 /// Muestra los patrones PDF existentes
-class PdfPatrons extends StatefulWidget {
+class PdfPatrons extends StatelessWidget {
   const PdfPatrons({super.key});
 
-  @override
-  State<PdfPatrons> createState() => _PdfPatronsState();
-}
+// TODO: USE IN VIEW PDF FOR VIEW ALL PDF (PDFPinchView)
+// final pdfPinchController = PdfControllerPinch(
+//   document: PdfDocument.openAsset('pdf/nezuko.pdf'),
+// );
 
-class _PdfPatronsState extends State<PdfPatrons> {
-  // TODO: USE IN VIEW PDF FOR VIEW ALL PDF (PDFPinchView)
-  final pdfPinchController = PdfControllerPinch(
-    document: PdfDocument.openAsset('pdf/nezuko.pdf'),
-  );
-
-  // @override
-  // void initState() {
-  //   pages = pdfPinchController.pageListenable.value;
-  //   super.initState();
-  // }
+// @override
+// void initState() {
+//   pages = pdfPinchController.pageListenable.value;
+//   super.initState();
+// }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      children: const [
-        SizedBox(height: 20),
-        _Test('pdf/nezuko.pdf'),
-        _Test('pdf/nezuko.pdf'),
-        _Test('pdf/nezuko.pdf'),
-        _Test('pdf/nezuko.pdf'),
-        SizedBox(height: 80),
-      ],
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            _PdfCard('pdf/nezuko.pdf'),
+            _PdfCard('pdf/nezuko.pdf'),
+            _PdfCard('pdf/nezuko.pdf'),
+            _PdfCard('pdf/nezuko.pdf'),
+            SizedBox(height: 80),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class _Test extends StatefulWidget {
-  const _Test(this.path);
+class _PdfCard extends StatefulWidget {
+  const _PdfCard(this.path);
   final String path;
   @override
-  State<_Test> createState() => _TestState();
+  State<_PdfCard> createState() => _PdfCardState();
 }
 
-class _TestState extends State<_Test> {
+class _PdfCardState extends State<_PdfCard> {
   late PdfController pdfView;
   PdfDocument? doc;
   late Future<PdfPageImage> pageImage;
@@ -91,6 +90,8 @@ class _TestState extends State<_Test> {
   void dispose() {
     super.dispose();
     pdfView.dispose();
+    doc?.close();
+    print('dispose pdf');
   }
 
   @override
@@ -100,6 +101,7 @@ class _TestState extends State<_Test> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Card(
+        elevation: 2.5,
         color: AnjuColors.primaryShade100,
         child: Column(
           children: [
