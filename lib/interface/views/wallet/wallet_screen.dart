@@ -4,7 +4,6 @@ import 'package:anju/config/utils/utils.dart';
 import 'package:anju/data/models/bill.dart';
 import 'package:anju/interface/views/wallet/stats_view.dart';
 import 'package:anju/interface/views/wallet/widget/bill_date_picker.dart';
-import 'package:anju/interface/views/wallet/widget/stats_graph_circular.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -87,6 +86,12 @@ class _WalletScreenState extends State<WalletScreen> {
       subtitle: 'Premio por desempeño',
       date: DateTime(2024, 2, 5),
     ),
+    Income(
+      money: 500,
+      title: 'Crochet',
+      subtitle: 'Premio por crochet',
+      date: DateTime(2024, 2, 6),
+    ),
   ];
 
   BillType type = BillType.balance;
@@ -163,6 +168,35 @@ class _WalletScreenState extends State<WalletScreen> {
               pickDate: (time, range) {},
             ),
             const SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    Text('Ingresos'),
+                    Text('\$${bills.totalIncome}',
+                        style: AnjuTextStyles.income),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text('Egresos'),
+                    Text('\$${bills.totalExpenses}',
+                        style: AnjuTextStyles.expenses),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text('balance'),
+                    Text('\$${bills.balance}',
+                        style: AnjuTextStyles.income
+                            .copyWith(color: Colors.black)),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 15),
+
             // TODO: Cambiar según si es Balance o Stats
             if (type == BillType.balance)
               ...bills.billsByDate.map(

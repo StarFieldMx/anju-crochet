@@ -11,6 +11,12 @@ class StatsView extends StatelessWidget {
     return Column(
       children: [
         StatsGraphCircular(
+          data: allBills.incomeAndExpense,
+          nameChart: 'Ingresos & Egresos',
+          graphType: GraphTyp.doughnut,
+          isChartTitle: true,
+        ),
+        StatsGraphCircular(
           data: allBills.incomes,
           nameChart: 'Ingresos',
           graphType: GraphTyp.doughnut,

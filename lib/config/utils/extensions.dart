@@ -83,6 +83,23 @@ extension BillsExtensions on List<Bill> {
     return map((bill) => bill.money).fold(0.0, (prev, amount) => prev + amount);
   }
 
+  List<Bill> get incomeAndExpense {
+    return [
+      Income(
+        money: totalIncome,
+        title: 'Ingreso',
+        subtitle: 'Mis ingresos',
+        date: first.date,
+      ),
+      Expenses(
+        money: totalExpenses,
+        title: 'Egreso',
+        subtitle: 'Mis rgresos',
+        date: first.date,
+      ),
+    ];
+  }
+
   List<Bill> get incomes {
     return where((bill) => bill is Income).toList();
   }

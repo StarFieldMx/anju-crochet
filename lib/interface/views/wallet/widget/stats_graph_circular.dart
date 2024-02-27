@@ -8,14 +8,17 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 enum GraphTyp { pie, doughnut }
 
 class StatsGraphCircular extends StatefulWidget {
-  const StatsGraphCircular(
-      {super.key,
-      required this.data,
-      required this.nameChart,
-      required this.graphType});
+  const StatsGraphCircular({
+    super.key,
+    required this.data,
+    required this.nameChart,
+    required this.graphType,
+    this.isChartTitle = false,
+  });
   final List<Bill> data;
   final String nameChart;
   final GraphTyp graphType;
+  final bool isChartTitle;
   @override
   State<StatsGraphCircular> createState() => _StatsGraphCircularState();
 }
@@ -37,11 +40,12 @@ class _StatsGraphCircularState extends State<StatsGraphCircular> {
     return SfCircularChart(
       tooltipBehavior: _tooltip,
       annotations: [
-        CircularChartAnnotation(
-          widget: Text(widget.nameChart,
-              style: AnjuTextStyles.defaultStyle
-                  .copyWith(fontWeight: FontWeight.bold)),
-        ),
+        if (!widget.isChartTitle)
+          CircularChartAnnotation(
+            widget: Text(widget.nameChart,
+                style: AnjuTextStyles.defaultStyle
+                    .copyWith(fontWeight: FontWeight.bold)),
+          ),
       ],
       legend: const Legend(
         isVisible: true,
@@ -49,6 +53,12 @@ class _StatsGraphCircularState extends State<StatsGraphCircular> {
         isResponsive: true,
         position: LegendPosition.bottom,
       ),
+      title: widget.isChartTitle
+          ? ChartTitle(
+              text: widget.nameChart,
+              textStyle: AnjuTextStyles.defaultStyle
+                  .copyWith(fontWeight: FontWeight.bold))
+          : const ChartTitle(),
       series: <CircularSeries<Bill, String>>[
         widget.graphType == GraphTyp.doughnut
             ? DoughnutSeries<Bill, String>(
@@ -72,6 +82,9 @@ class _StatsGraphCircularState extends State<StatsGraphCircular> {
   }
 
   String getLabelPercent(Bill data, int _) {
+    if (widget.data.length == 2) {
+      return '${((100 * data.money) / widget.data.totalBill).toStringAsFixed(2)}%';
+    }
     if (data is Expenses) {
       return '${((100 * data.money) / widget.data.totalExpenses).toStringAsFixed(2)}%';
     }
