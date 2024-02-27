@@ -2,7 +2,9 @@ import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/config/utils/utils.dart';
 import 'package:anju/data/models/bill.dart';
+import 'package:anju/interface/views/wallet/stats_view.dart';
 import 'package:anju/interface/views/wallet/widget/bill_date_picker.dart';
+import 'package:anju/interface/views/wallet/widget/stats_graph_circular.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -49,11 +51,17 @@ class _WalletScreenState extends State<WalletScreen> {
       subtitle: 'Pago mensual del alquiler',
       date: DateTime(2024, 2, 10),
     ),
+    Expenses(
+      money: 300,
+      title: 'Hilo sinfonía',
+      subtitle: 'Compre hilo',
+      date: DateTime(2024, 2, 10),
+    ),
     Income(
       money: 1000,
       title: 'Salario',
       subtitle: 'Pago mensual',
-      date: DateTime(2024, 2, 28),
+      date: DateTime(2024, 2, 10),
     ),
     Income(
       money: 300,
@@ -85,6 +93,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: SingleChildScrollView(
@@ -153,7 +162,7 @@ class _WalletScreenState extends State<WalletScreen> {
             BillDatePicker(
               pickDate: (time, range) {},
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 15),
             // TODO: Cambiar según si es Balance o Stats
             if (type == BillType.balance)
               ...bills.billsByDate.map(
@@ -161,6 +170,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   bills: e,
                 ),
               ),
+            if (type == BillType.stats) StatsView(allBills: bills),
             const SizedBox(height: 80.0),
           ],
         ),

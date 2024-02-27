@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 abstract class AnjuTextStyles {
   static TextStyle defaultStyle = GoogleFonts.roboto();
+  static TextStyle cinna = GoogleFonts.spicyRice();
   static TextStyle titleScreens =
       defaultStyle.copyWith(fontSize: 22, fontWeight: FontWeight.bold);
   // DETAILS

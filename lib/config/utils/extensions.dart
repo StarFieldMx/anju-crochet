@@ -67,15 +67,28 @@ extension BillsExtensions on List<Bill> {
   }
 
   double get totalExpenses {
-    return where((bill) => bill is Expenses)
+    final amount = where((bill) => bill is Expenses)
         .map((bill) => bill.money)
-        .fold(0, (prev, amount) => prev + amount);
+        .fold(0.0, (prev, amount) => prev + amount);
+    return amount;
   }
 
   double get totalIncome {
     return where((bill) => bill is Income)
         .map((bill) => bill.money)
         .fold(0.0, (prev, amount) => prev + amount);
+  }
+
+  double get totalBill {
+    return map((bill) => bill.money).fold(0.0, (prev, amount) => prev + amount);
+  }
+
+  List<Bill> get incomes {
+    return where((bill) => bill is Income).toList();
+  }
+
+  List<Bill> get expenses {
+    return where((bill) => bill is Expenses).toList();
   }
 
   double get balance {
