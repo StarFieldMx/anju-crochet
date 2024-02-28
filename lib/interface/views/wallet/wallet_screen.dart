@@ -168,33 +168,34 @@ class _WalletScreenState extends State<WalletScreen> {
               pickDate: (time, range) {},
             ),
             const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: [
-                    Text('Ingresos'),
-                    Text('\$${bills.totalIncome}',
-                        style: AnjuTextStyles.income),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('Egresos'),
-                    Text('\$${bills.totalExpenses}',
-                        style: AnjuTextStyles.expenses),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('balance'),
-                    Text('\$${bills.balance}',
-                        style: AnjuTextStyles.income
-                            .copyWith(color: Colors.black)),
-                  ],
-                ),
-              ],
-            ),
+            if (type == BillType.balance)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      const Text('Ingresos'),
+                      Text('\$${bills.totalIncome}',
+                          style: AnjuTextStyles.income),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const Text('Egresos'),
+                      Text('\$${bills.totalExpenses}',
+                          style: AnjuTextStyles.expenses),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const Text('balance'),
+                      Text('\$${bills.balance}',
+                          style: AnjuTextStyles.income
+                              .copyWith(color: Colors.black)),
+                    ],
+                  ),
+                ],
+              ),
             const SizedBox(height: 15),
 
             // TODO: Cambiar según si es Balance o Stats
