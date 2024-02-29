@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 class AnjuItemListViewer<T> extends StatelessWidget {
   const AnjuItemListViewer({
-    Key? key,
+    super.key,
     required this.list,
     required this.title,
     required this.childBuilder,
-  }) : super(key: key);
+  });
 
   final List<T> list;
   final String title;
@@ -26,8 +26,8 @@ class AnjuItemListViewer<T> extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 20),
             child: childWidget,
           );
-        }).toList(),
-        const SizedBox(height: 60),
+        }),
+        const SizedBox(height: 75.0),
       ],
     );
   }

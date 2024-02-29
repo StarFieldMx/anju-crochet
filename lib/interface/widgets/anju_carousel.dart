@@ -4,7 +4,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 
 class AnjuCarousel extends StatefulWidget {
-  const AnjuCarousel({Key? key, required this.images}) : super(key: key);
+  const AnjuCarousel({super.key, required this.images});
   final List<String> images;
 
   @override
