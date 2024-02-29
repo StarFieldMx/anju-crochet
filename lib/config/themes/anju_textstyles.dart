@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 abstract class AnjuTextStyles {
   static TextStyle defaultStyle = GoogleFonts.roboto();
+  static TextStyle cinna = GoogleFonts.spicyRice();
   static TextStyle titleScreens =
       defaultStyle.copyWith(fontSize: 22, fontWeight: FontWeight.bold);
   // DETAILS
@@ -53,5 +54,27 @@ abstract class AnjuTextStyles {
     color: Colors.grey,
     fontSize: 18,
     overflow: TextOverflow.ellipsis,
+  );
+  // Wallet
+  static TextStyle walletCards =
+      defaultStyle.copyWith(fontSize: 18, fontWeight: FontWeight.bold);
+
+  static TextStyle expenses = defaultStyle.copyWith(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AnjuColors.secondary,
+  );
+  static TextStyle income = defaultStyle.copyWith(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AnjuColors.primary,
+  );
+  static TextStyle pedido = defaultStyle.copyWith(
+    fontWeight: FontWeight.bold,
+  );
+  static TextStyle descriptionPedido = defaultStyle.copyWith(
+    fontSize: 16,
+    fontWeight: FontWeight.w100,
+    color: Colors.black.withOpacity(0.4),
   );
 }

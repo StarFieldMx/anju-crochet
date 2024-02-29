@@ -93,7 +93,7 @@ abstract class $AnjuRouter extends _i11.RootStackRouter {
     WalletRoute.name: (routeData) {
       return _i11.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i10.WalletScreen(),
+        child: _i10.WalletScreen(),
       );
     },
   };

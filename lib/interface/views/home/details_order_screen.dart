@@ -8,7 +8,7 @@ import 'package:auto_route/auto_route.dart';
 
 @RoutePage()
 class DetailsOrderScreen extends StatelessWidget {
-  const DetailsOrderScreen({Key? key}) : super(key: key);
+  const DetailsOrderScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class DetailsOrderScreen extends StatelessWidget {
 }
 
 class DetailAmigurumi extends StatelessWidget {
-  const DetailAmigurumi({Key? key}) : super(key: key);
+  const DetailAmigurumi({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class DetailAmigurumi extends StatelessWidget {
 }
 
 class _DetailsCard extends StatelessWidget {
-  const _DetailsCard({Key? key}) : super(key: key);
+  const _DetailsCard();
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,6 @@ import 'dart:ui';
 
 import 'package:anju/config/utils/utils.dart';
 import 'package:anju/data/models/thread_color.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum CrochetType {
   thread,
@@ -13,6 +12,7 @@ enum CrochetType {
   safetyEyes,
   accessories,
   keychains,
+  prepacking,
 }
 
 abstract class Crochet {
@@ -28,8 +28,6 @@ abstract class Crochet {
     print('Stock: $stock');
   }
 
-  Future<void> uploadJson(FirebaseFirestore firestore, String collection);
-
   Map<String, dynamic> toJson();
 
   factory Crochet.fromJson(Map<String, dynamic> json) {
@@ -44,6 +42,9 @@ abstract class Crochet {
         return Accessories.fromJson(json);
       case 'keychains':
         return Keychains.fromJson(json);
+      case 'prepacking':
+        return PrePacking.fromJson(json);
+
       default:
         // TODO: IMPLEMENT DEFAUTL MATERIAL
         throw ArgumentError('Invalid material type');
@@ -77,21 +78,6 @@ class Thread extends Crochet {
     print('Color: $threadColor');
     print('Brand: $brand');
     print('Thickness: $thickness');
-  }
-
-  @override
-  Future<void> uploadJson(
-      FirebaseFirestore firestore, String collection) async {
-    await firestore.collection(collection).add({
-      'name': name,
-      'stock': stock,
-      'type': type.name,
-      'threadColor': threadColor.toJson(),
-      'status': status.name,
-      'brand': brand,
-      'thickness': thickness,
-      'muticolor': isMultiColor,
-    });
   }
 
   static Thread fromJson(Map<String, dynamic> json) => Thread._(
@@ -137,16 +123,6 @@ class Filling extends Crochet {
     print('Available: $available');
   }
 
-  @override
-  Future<void> uploadJson(
-      FirebaseFirestore firestore, String collection) async {
-    await firestore.collection(collection).doc('relleno').update({
-      'stock': stock,
-      'type': type.name,
-      'available': available,
-    });
-  }
-
   static Filling fromJson(Map<String, dynamic> json) => Filling._(
         id: json['id'],
         name: json['name'],
@@ -179,18 +155,6 @@ class SafetyEyes extends Crochet {
     super.showInfo();
     print('Shape: $shape');
     print('Size: $size mm');
-  }
-
-  @override
-  Future<void> uploadJson(
-      FirebaseFirestore firestore, String collection) async {
-    firestore.collection(collection).add({
-      'name': name,
-      'stock': stock,
-      'type': type.name,
-      'shape': shape,
-      'size': size,
-    });
   }
 
   static SafetyEyes fromJson(Map<String, dynamic> json) => SafetyEyes._(
@@ -228,17 +192,6 @@ class Accessories extends Crochet {
     print('Available colors: $colors');
   }
 
-  @override
-  Future<void> uploadJson(
-      FirebaseFirestore firestore, String collection) async {
-    firestore.collection(collection).add({
-      'name': name,
-      'stock': stock,
-      'type': type.name,
-      'colors': colors,
-    });
-  }
-
   static Accessories fromJson(Map<String, dynamic> json) => Accessories._(
         id: json['id'],
         name: json['name'],
@@ -272,17 +225,6 @@ class Keychains extends Crochet {
     print('Color: ${color.toHex()}');
   }
 
-  @override
-  Future<void> uploadJson(
-      FirebaseFirestore firestore, String collection) async {
-    firestore.collection(collection).add({
-      'name': name,
-      'stock': stock,
-      'type': type.name,
-      'color': color.toHex(),
-    });
-  }
-
   static Keychains fromJson(Map<String, dynamic> json) => Keychains._(
         id: json['id'],
         name: json['name'],
@@ -297,4 +239,25 @@ class Keychains extends Crochet {
         'type': type.name,
         'color': color.toHex(),
       };
+}
+
+class PrePacking extends Crochet {
+  PrePacking._({
+    String? id,
+    required String name,
+    required int stock,
+  }) : super(name, stock, id, CrochetType.prepacking);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'stock': stock,
+        'type': type.name,
+      };
+
+  static PrePacking fromJson(Map<String, dynamic> json) => PrePacking._(
+        id: json['id'],
+        name: json['name'],
+        stock: json['stock'],
+      );
 }
