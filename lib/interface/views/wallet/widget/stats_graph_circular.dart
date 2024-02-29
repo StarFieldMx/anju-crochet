@@ -1,4 +1,3 @@
-import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/config/utils/extensions.dart';
 import 'package:anju/data/models/bill.dart';

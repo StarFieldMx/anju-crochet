@@ -3,7 +3,7 @@ import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:flutter/material.dart';
 
 class BillDatePicker extends StatefulWidget {
-  const BillDatePicker({Key? key, required this.pickDate}) : super(key: key);
+  const BillDatePicker({super.key, required this.pickDate});
   final void Function(DateTime, TimeRange) pickDate;
 
   @override
@@ -64,7 +64,7 @@ class _BillDatePickerState extends State<BillDatePicker> {
 enum TimeRange { anual, mensual }
 
 class _DateChanger extends StatefulWidget {
-  const _DateChanger({Key? key, required this.dateValue}) : super(key: key);
+  const _DateChanger({required this.dateValue});
   final void Function(DateTime, TimeRange) dateValue;
 
   @override
