@@ -49,6 +49,7 @@ dependencies:
   dots_indicator: ^3.0.0
   pdfx: ^2.6.0
   font_awesome_flutter: ^10.7.0
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
