@@ -1,28 +1,40 @@
 import 'dart:math';
 
-import 'package:anju/config/utils/utils.dart';
 import 'package:anju/data/models/models.dart';
+import 'package:isar/isar.dart';
 
 enum AmigurumiStatus { disponible, sobrepedido, proximamente }
 
 enum AmigurumiType { special, normal }
 
+@collection
 class Amigurumi {
-  final int id;
+  final Id id = Isar.autoIncrement;
   final String name;
   final double price;
-  final List<Crochet> materials;
-  final List<AmigurumiImage> images;
+  final materials = IsarLinks<Crochet>();
+
+  final images = IsarLinks<AmigurumiImage>();
+
+  /// Status of the amigurumi
+  @Enumerated(EnumType.name)
   final AmigurumiStatus status;
+
+  /// UTC time
+  final DateTime createdAt;
+
+  /// UTC time
+  final DateTime updatedAt;
+
+  @enumerated
   final AmigurumiType type;
   Amigurumi({
-    required this.id,
     required this.name,
     required this.price,
-    required this.materials,
-    required this.images,
     required this.status,
     required this.type,
+    required this.createdAt,
+    required this.updatedAt,
   });
   factory Amigurumi.random() {
     // Nombres aleatorios para los amigurumis
@@ -40,20 +52,19 @@ class Amigurumi {
     double price = Random().nextInt(200) + 5.toDouble();
     String name = names[Random().nextInt(names.length)];
     // Generar un id aleatorio
-    int id =
-        Random.secure().nextInt(1000); // Ejemplo de rango de ids entre 0 y 999
     return Amigurumi(
       name: name,
       price: price,
-      images: [
-        AmigurumiImage(id: 1, type: ImageType.local, url: AnjuImages.test)
-      ],
-      materials: [],
-      id: id,
+      // images: [
+      //   AmigurumiImage(id: 1, type: ImageType.local, url: AnjuImages.test)
+      // ],
+      // materials: [],
       status: AmigurumiStatus.disponible,
       type: Random().nextInt(1) == 1
           ? AmigurumiType.normal
           : AmigurumiType.special,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
   }
   Map<String, dynamic> toMap() {
@@ -70,13 +81,13 @@ class Amigurumi {
 
   static Amigurumi fromMap(Map<String, dynamic> map) {
     return Amigurumi(
-      id: map['id'],
+      // id: map['id'],
       name: map['name'],
       price: map['price'],
-      materials: List<Crochet>.from(
-          map['materials'].map((materialMap) => Crochet.fromJson(materialMap))),
+      // materials: List<Crochet>.from(
+      //     map['materials'].map((materialMap) => Crochet.fromJson(materialMap))),
       //TODO: LOGIC IMAGES
-      images: [],
+      // images: [],
       status: AmigurumiStatus.values.firstWhere(
         (element) => element.name == map["status"],
         orElse: () => AmigurumiStatus.disponible,
@@ -85,34 +96,19 @@ class Amigurumi {
         (element) => element.name == map["type"],
         orElse: () => AmigurumiType.normal,
       ),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
   }
 }
 
+@collection
 class AmigurumiImage {
-  final int id;
-  final String url;
-  final ImageType type;
+  Id id = Isar.autoIncrement;
+  String? url;
 
-  AmigurumiImage({required this.id, required this.url, required this.type});
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'url': url,
-      'type': type
-          .index, // TODO: Almacena el índice del enum en lugar del valor (SQL)
-    };
-  }
-
-  static AmigurumiImage fromMap(Map<String, dynamic> map) {
-    return AmigurumiImage(
-      id: map['id'],
-      url: map['url'],
-      type: ImageType.values[
-          map['type']], // Convierte el índice de nuevo al valor del enum
-    );
-  }
+  @Enumerated(EnumType.name)
+  ImageType? type;
 }
 
 enum ImageType { local, network }

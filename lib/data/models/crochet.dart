@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:anju/config/utils/utils.dart';
 import 'package:anju/data/models/thread_color.dart';
+import 'package:isar/isar.dart';
 
 enum CrochetType {
   thread,
@@ -15,20 +16,31 @@ enum CrochetType {
   prepacking,
 }
 
-abstract class Crochet {
-  String? id;
+@collection
+class Crochet {
+  Id id = Isar.autoIncrement;
   String name;
   int stock;
-  CrochetType type;
-  Crochet(this.name, this.stock, this.id, this.type);
 
-  // Method to display basic information of the material
+  @Enumerated(EnumType.name)
+  CrochetType type;
+
+  Crochet(this.id, this.name, this.stock, this.type);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'stock': stock,
+      'type': type.name,
+    };
+  }
+
   void showInfo() {
     print('Name: $name');
     print('Stock: $stock');
+    print('Type: ${type.name}');
   }
-
-  Map<String, dynamic> toJson();
 
   factory Crochet.fromJson(Map<String, dynamic> json) {
     switch (json['type'] as String) {
@@ -44,9 +56,7 @@ abstract class Crochet {
         return Keychains.fromJson(json);
       case 'prepacking':
         return PrePacking.fromJson(json);
-
       default:
-        // TODO: IMPLEMENT DEFAUTL MATERIAL
         throw ArgumentError('Invalid material type');
     }
   }
@@ -61,8 +71,8 @@ class Thread extends Crochet {
   double thickness;
   ThreadStatus status;
   bool isMultiColor;
-  Thread._({
-    String? id,
+  Thread({
+    required Id id,
     required String name,
     required int stock,
     required this.threadColor,
@@ -70,7 +80,7 @@ class Thread extends Crochet {
     required this.thickness,
     required this.status,
     this.isMultiColor = false,
-  }) : super(name, stock, id, CrochetType.thread);
+  }) : super(id, name, stock, CrochetType.thread);
 
   @override
   void showInfo() {
@@ -80,7 +90,7 @@ class Thread extends Crochet {
     print('Thickness: $thickness');
   }
 
-  static Thread fromJson(Map<String, dynamic> json) => Thread._(
+  factory Thread.fromJson(Map<String, dynamic> json) => Thread(
         id: json['id'],
         name: json['name'],
         stock: json['stock'],
@@ -105,17 +115,16 @@ class Thread extends Crochet {
       };
 }
 
-// "Relleno"
 class Filling extends Crochet {
   bool available;
 
-  Filling._({
-    String? id,
+  Filling({
+    required Id id,
     String name = 'Relleno',
     // No es medible así
     int stock = 1,
     required this.available,
-  }) : super(name, stock, id, CrochetType.filling);
+  }) : super(id, name, stock, CrochetType.filling);
 
   @override
   void showInfo() {
@@ -123,7 +132,7 @@ class Filling extends Crochet {
     print('Available: $available');
   }
 
-  static Filling fromJson(Map<String, dynamic> json) => Filling._(
+  factory Filling.fromJson(Map<String, dynamic> json) => Filling(
         id: json['id'],
         name: json['name'],
         stock: json['stock'],
@@ -142,13 +151,13 @@ class Filling extends Crochet {
 class SafetyEyes extends Crochet {
   String shape;
   double size;
-  SafetyEyes._({
-    String? id,
+  SafetyEyes({
+    required Id id,
     required String name,
     required int stock,
     required this.shape,
     required this.size,
-  }) : super(name, stock, id, CrochetType.safetyEyes);
+  }) : super(id, name, stock, CrochetType.safetyEyes);
 
   @override
   void showInfo() {
@@ -157,7 +166,7 @@ class SafetyEyes extends Crochet {
     print('Size: $size mm');
   }
 
-  static SafetyEyes fromJson(Map<String, dynamic> json) => SafetyEyes._(
+  factory SafetyEyes.fromJson(Map<String, dynamic> json) => SafetyEyes(
         id: json['id'],
         name: json['name'],
         stock: json['stock'],
@@ -179,25 +188,18 @@ class SafetyEyes extends Crochet {
 class Accessories extends Crochet {
   List<String> colors;
 
-  Accessories._({
-    String? id,
+  Accessories({
+    required Id id,
     required String name,
     required int stock,
     required this.colors,
-  }) : super(name, stock, id, CrochetType.accessories);
+  }) : super(id, name, stock, CrochetType.accessories);
 
   @override
   void showInfo() {
     super.showInfo();
     print('Available colors: $colors');
   }
-
-  static Accessories fromJson(Map<String, dynamic> json) => Accessories._(
-        id: json['id'],
-        name: json['name'],
-        stock: json['stock'],
-        colors: json['colors'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {
@@ -206,18 +208,25 @@ class Accessories extends Crochet {
         'type': type.name,
         'colors': colors,
       };
+
+  factory Accessories.fromJson(Map<String, dynamic> json) => Accessories(
+        id: json['id'],
+        name: json['name'],
+        stock: json['stock'],
+        colors: List<String>.from(json['colors']),
+      );
 }
 
 // "Llavero"
 class Keychains extends Crochet {
   Color color;
 
-  Keychains._({
-    String? id,
+  Keychains({
+    required Id id,
     required String name,
     required int stock,
     required this.color,
-  }) : super(name, stock, id, CrochetType.keychains);
+  }) : super(id, name, stock, CrochetType.keychains);
 
   @override
   void showInfo() {
@@ -225,7 +234,7 @@ class Keychains extends Crochet {
     print('Color: ${color.toHex()}');
   }
 
-  static Keychains fromJson(Map<String, dynamic> json) => Keychains._(
+  factory Keychains.fromJson(Map<String, dynamic> json) => Keychains(
         id: json['id'],
         name: json['name'],
         stock: json['stock'],
@@ -242,11 +251,11 @@ class Keychains extends Crochet {
 }
 
 class PrePacking extends Crochet {
-  PrePacking._({
-    String? id,
+  PrePacking({
+    required Id id,
     required String name,
     required int stock,
-  }) : super(name, stock, id, CrochetType.prepacking);
+  }) : super(id, name, stock, CrochetType.prepacking);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -255,7 +264,7 @@ class PrePacking extends Crochet {
         'type': type.name,
       };
 
-  static PrePacking fromJson(Map<String, dynamic> json) => PrePacking._(
+  static PrePacking fromJson(Map<String, dynamic> json) => PrePacking(
         id: json['id'],
         name: json['name'],
         stock: json['stock'],

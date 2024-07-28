@@ -24,73 +24,73 @@ class _WalletScreenState extends State<WalletScreen> {
       money: 200,
       title: 'Pedido Mario',
       subtitle: 'Corazones y borregos',
-      date: DateTime(2024, 2, 26),
+      dueAt: DateTime(2024, 2, 26),
     ),
     Expenses(
       money: 150,
       title: 'Factura eléctrica',
       subtitle: 'Energía consumida',
-      date: DateTime(2024, 2, 21),
+      dueAt: DateTime(2024, 2, 21),
     ),
     Expenses(
       money: 100,
       title: 'Compra supermercado',
       subtitle: 'Productos de primera necesidad',
-      date: DateTime(2024, 2, 18),
+      dueAt: DateTime(2024, 2, 18),
     ),
     Expenses(
       money: 50,
       title: 'Transporte público',
       subtitle: 'Viaje en metro',
-      date: DateTime(2024, 2, 14),
+      dueAt: DateTime(2024, 2, 14),
     ),
     Expenses(
       money: 300,
       title: 'Alquiler de local',
       subtitle: 'Pago mensual del alquiler',
-      date: DateTime(2024, 2, 10),
+      dueAt: DateTime(2024, 2, 10),
     ),
     Expenses(
       money: 300,
       title: 'Hilo sinfonía',
       subtitle: 'Compre hilo',
-      date: DateTime(2024, 2, 10),
+      dueAt: DateTime(2024, 2, 10),
     ),
     Income(
       money: 1000,
       title: 'Salario',
       subtitle: 'Pago mensual',
-      date: DateTime(2024, 2, 10),
+      dueAt: DateTime(2024, 2, 10),
     ),
     Income(
       money: 300,
       title: 'Ingreso extra',
       subtitle: 'Trabajo adicional',
-      date: DateTime(2024, 2, 25),
+      dueAt: DateTime(2024, 2, 25),
     ),
     Income(
       money: 500,
       title: 'Reembolso de impuestos',
       subtitle: 'Devolución de impuestos',
-      date: DateTime(2024, 2, 20),
+      dueAt: DateTime(2024, 2, 20),
     ),
     Income(
       money: 200,
       title: 'Venta de muebles',
       subtitle: 'Ingresos adicionales',
-      date: DateTime(2024, 2, 16),
+      dueAt: DateTime(2024, 2, 16),
     ),
     Income(
       money: 800,
       title: 'Bonificación',
       subtitle: 'Premio por desempeño',
-      date: DateTime(2024, 2, 5),
+      dueAt: DateTime(2024, 2, 5),
     ),
     Income(
       money: 500,
       title: 'Crochet',
       subtitle: 'Premio por crochet',
-      date: DateTime(2024, 2, 6),
+      dueAt: DateTime(2024, 2, 6),
     ),
   ];
 
@@ -223,13 +223,13 @@ class BillisByDate extends StatelessWidget {
 
   bool _checkAllBillsHaveSameDate() {
     if (bills.isEmpty) return true;
-    final firstDate = bills.first.date;
-    return bills.every((bill) => bill.date == firstDate);
+    final firstDate = bills.first.dueAt;
+    return bills.every((bill) => bill.dueAt == firstDate);
   }
 
   @override
   Widget build(BuildContext context) {
-    assert(_checkAllBillsHaveSameDate(), 'All bills must have the same date');
+    assert(_checkAllBillsHaveSameDate(), 'All bills must have the same dueAt');
     return Card(
       color: Colors.white,
       surfaceTintColor: Colors.white,
@@ -241,12 +241,12 @@ class BillisByDate extends StatelessWidget {
               children: [
                 const SizedBox(width: 10),
                 Text(
-                  '${bills.first.date.day}',
+                  '${bills.first.dueAt.day}',
                   style: AnjuTextStyles.walletCards,
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  bills.first.date.weekdayAbbreviation,
+                  bills.first.dueAt.weekdayAbbreviation,
                   style: AnjuTextStyles.defaultStyle
                       .copyWith(fontWeight: FontWeight.w500),
                 ),

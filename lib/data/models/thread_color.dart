@@ -1,11 +1,16 @@
 import 'package:anju/config/utils/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 
-enum ColorType { principal, secundario }
+enum ColorType { primary, secondary }
 
+// @collection
 class ThreadColor {
+  final Id id = Isar.autoIncrement;
   String name;
   Color color;
+
+  @Enumerated(EnumType.name)
   ColorType type;
 
   ThreadColor._({

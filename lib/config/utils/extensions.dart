@@ -48,10 +48,10 @@ extension BillsExtensions on List<Bill> {
     Map<DateTime, List<Bill>> billsMap = {};
 
     for (var bill in this) {
-      if (billsMap.containsKey(bill.date)) {
-        billsMap[bill.date]!.add(bill);
+      if (billsMap.containsKey(bill.dueAt)) {
+        billsMap[bill.dueAt]!.add(bill);
       } else {
-        billsMap[bill.date] = [bill];
+        billsMap[bill.dueAt] = [bill];
       }
     }
 
@@ -89,13 +89,13 @@ extension BillsExtensions on List<Bill> {
         money: totalIncome,
         title: 'Ingreso',
         subtitle: 'Mis ingresos',
-        date: first.date,
+        dueAt: first.dueAt,
       ),
       Expenses(
         money: totalExpenses,
         title: 'Egreso',
         subtitle: 'Mis rgresos',
-        date: first.date,
+        dueAt: first.dueAt,
       ),
     ];
   }

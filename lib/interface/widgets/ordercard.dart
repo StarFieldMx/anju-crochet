@@ -25,7 +25,11 @@ class OrderCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            AnjuImage(id: order.id, imagePath: AnjuImages.test),
+            AnjuImage(
+              // id: order.id,
+              imagePath: AnjuImages.test,
+              hero: false,
+            ),
             const SizedBox(width: 20),
             Expanded(
               child: SizedBox(

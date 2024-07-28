@@ -4,6 +4,7 @@ import 'package:anju/config/router/anju_router.dart';
 import 'package:anju/config/router/anju_router.gr.dart';
 import 'package:anju/config/servicelocator.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
+import 'package:anju/config/utils/images_constant.dart';
 import 'package:anju/data/models/amigurumi.dart';
 import 'package:anju/interface/widgets/anju_image.dart';
 import 'package:anju/interface/widgets/anju_item_list_viewer.dart';
@@ -51,7 +52,11 @@ class _ShowWidget extends StatelessWidget {
         child: Stack(
           children: [
             AnjuImage(
-              imagePath: amigurumi.images.first.url,
+              id: 0,
+              imagePath: amigurumi.images.isNotEmpty &&
+                      amigurumi.images.first.url != null
+                  ? amigurumi.images.first.url!
+                  : AnjuImages.borrego,
               hero: false,
               height: 412,
             ),
