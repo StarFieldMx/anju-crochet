@@ -10,7 +10,7 @@ Future<void> get runAppAnju async {
   await serviceLocator();
   final bloc = MultiBlocProvider(
     providers: [
-      BlocProvider(create: (_) => geit<AnjuRouteCubit>()),
+      BlocProvider(create: (_) => getIt<AnjuRouteCubit>()),
     ],
     child: const Anju(),
   );

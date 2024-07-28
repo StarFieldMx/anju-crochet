@@ -27,7 +27,7 @@ class SplashScreenState extends State<SplashScreen> {
       _scale = _scale == 1.0 ? 6.0 : 1.0;
     });
     await Future.delayed(const Duration(milliseconds: 900));
-    geit<AnjuRouteCubit>().goHomeFromSplash();
+    getIt<AnjuRouteCubit>().goHomeFromSplash();
   }
 
   @override

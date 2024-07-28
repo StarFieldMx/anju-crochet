@@ -43,7 +43,7 @@ class _ShowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => geit<AnjuRouteCubit>()
+      onTap: () => getIt<AnjuRouteCubit>()
           .state
           .push(AmigurumiDetailsRoute(amigurumi: amigurumi)),
       child: SizedBox(

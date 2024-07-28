@@ -24,7 +24,9 @@ class AnjuHomeLayout extends StatelessWidget {
         AmigurumiShowRoute(),
         PdfPatrons(),
         OrdersRoute(),
-        InventoryRoute(),
+        InventoryRoute(children: [
+          CategoryRoute(),
+        ]),
         WalletRoute(),
       ],
       transitionBuilder: (context, child, animation) {

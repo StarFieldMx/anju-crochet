@@ -14,19 +14,13 @@ class AnjuRouter extends $AnjuRouter {
             AutoRoute(page: InventoryRoute.page),
             AutoRoute(page: WalletRoute.page),
             AutoRoute(page: PdfPatrons.page),
-            AutoRoute(page: InventoryRoute.page),
             AutoRoute(page: AmigurumiShowRoute.page),
           ],
         ),
-        AutoRoute(
-          page: DetailsOrderRoute.page,
-        ),
-        AutoRoute(
-          page: PdfViewRoute.page,
-        ),
-        AutoRoute(
-          page: AmigurumiDetailsRoute.page,
-        ),
+        AutoRoute(page: CategoryRoute.page),
+        AutoRoute(page: DetailsOrderRoute.page),
+        AutoRoute(page: PdfViewRoute.page),
+        AutoRoute(page: AmigurumiDetailsRoute.page),
       ];
 }
 
@@ -47,4 +41,6 @@ class AnjuRouteCubit extends Cubit<AnjuRouter> {
 
   void goHomeFromSplash() =>
       state.replace(const AnjuHomeLayout(children: [OrdersRoute()]));
+
+  void goCategory({dynamic something}) => state.push(const CategoryRoute());
 }

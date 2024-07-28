@@ -92,7 +92,7 @@ class _PdfCardState extends State<_PdfCard> {
       padding: const EdgeInsets.only(bottom: 20),
       child: GestureDetector(
         onTap: () =>
-            geit<AnjuRouteCubit>().state.push(PdfViewRoute(path: widget.path)),
+            getIt<AnjuRouteCubit>().state.push(PdfViewRoute(path: widget.path)),
         child: Card(
           elevation: 2.5,
           color: AnjuColors.primaryShade100,
