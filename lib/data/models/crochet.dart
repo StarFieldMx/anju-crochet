@@ -66,11 +66,11 @@ enum ThreadStatus { nuevo, medio, pocoloco, agotado }
 
 // "Hilo"
 class Thread extends Crochet {
-  ThreadColor threadColor;
+  List<ThreadColor> threadColor;
   String brand;
   double thickness;
   ThreadStatus status;
-  bool isMultiColor;
+
   Thread({
     required Id id,
     required String name,
@@ -79,7 +79,6 @@ class Thread extends Crochet {
     required this.brand,
     required this.thickness,
     required this.status,
-    this.isMultiColor = false,
   }) : super(id, name, stock, CrochetType.thread);
 
   @override
@@ -96,23 +95,28 @@ class Thread extends Crochet {
         stock: json['stock'],
         status: ThreadStatus.values
             .firstWhere((status) => status.name == json['status']),
-        threadColor: ThreadColor.fromJson(json['threadColor']),
+        threadColor: (json['threadColor'] as List)
+            .map((colorJson) => ThreadColor.fromJson(colorJson))
+            .toList(),
         brand: json['brand'],
         thickness: json['thickness'],
-        isMultiColor: json['muticolor'],
       );
 
   @override
   Map<String, dynamic> toJson() => {
+        'id': id,
         'name': name,
         'stock': stock,
         'type': type.name,
-        'color': threadColor.toJson(),
+        'threadColor': threadColor.map((color) => color.toJson()).toList(),
         'status': status.name,
         'brand': brand,
         'thickness': thickness,
-        'muticolor': isMultiColor,
       };
+
+  bool get isMultiColor {
+    return threadColor.isNotEmpty && threadColor.length > 1;
+  }
 }
 
 class Filling extends Crochet {

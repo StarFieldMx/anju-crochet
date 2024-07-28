@@ -23,10 +23,8 @@ class AnjuHomeLayout extends StatelessWidget {
       routes: const [
         AmigurumiShowRoute(),
         PdfPatrons(),
-        OrdersRoute(),
-        InventoryRoute(children: [
-          CategoryRoute(),
-        ]),
+        HomeRoute(),
+        InventoryRoute(),
         WalletRoute(),
       ],
       transitionBuilder: (context, child, animation) {
@@ -41,7 +39,10 @@ class AnjuHomeLayout extends StatelessWidget {
       builder: (context, child) {
         return Scaffold(
           extendBody: true,
-          appBar: const AnjuTopBar(isMainRoute: true),
+          appBar: AnjuTopBar(
+            isMainRoute: true,
+            tabsRouter: AutoTabsRouter.of(context),
+          ),
           body: child,
           backgroundColor: Colors.white,
           bottomNavigationBar: const AnimatedAnjuBar(),

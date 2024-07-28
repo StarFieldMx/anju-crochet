@@ -17,18 +17,24 @@ import 'package:flutter/material.dart';
 /// ```
 
 class AnjuDropDown<T> extends StatelessWidget {
-  const AnjuDropDown(
-      {super.key,
-      required this.hintText,
-      required this.onChange,
-      required this.items});
+  const AnjuDropDown({
+    super.key,
+    required this.hintText,
+    required this.onChange,
+    required this.items,
+    this.value,
+  });
+
   final String hintText;
   final void Function(T?)? onChange;
   final List<DropdownMenuItem<T>> items;
+  final T? value;
+
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField2<T>(
       isExpanded: true,
+      value: value,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 16),
         border: outlined,
@@ -52,7 +58,6 @@ class AnjuDropDown<T> extends StatelessWidget {
       buttonStyleData: const ButtonStyleData(
         padding: EdgeInsets.only(right: 8),
       ),
-
       // STYLE OF ARROW DOWN [Icon]
       iconStyleData: const IconStyleData(
         icon: Icon(
