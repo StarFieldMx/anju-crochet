@@ -35,7 +35,9 @@ class AnjuDropDown<T> extends StatelessWidget {
     return DropdownButtonFormField2<T>(
       isExpanded: true,
       value: value,
+
       decoration: InputDecoration(
+        label: Text(hintText),
         contentPadding: const EdgeInsets.symmetric(vertical: 16),
         border: outlined,
         enabledBorder: outlined,
@@ -46,6 +48,7 @@ class AnjuDropDown<T> extends StatelessWidget {
         hintText,
         style: const TextStyle(fontSize: 14),
       ),
+      // barrierLabel: hintText,
       items: items,
       validator: (value) {
         if (value == null) {

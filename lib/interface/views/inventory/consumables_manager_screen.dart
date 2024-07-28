@@ -1,4 +1,5 @@
 import 'package:anju/config/servicelocator.dart';
+import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/data/models/crochet.dart';
 import 'package:anju/interface/views/inventory/consumables_manager/consumable_manager_bloc.dart';
 import 'package:anju/interface/widgets/forms/anju_add_button.dart';
@@ -17,29 +18,42 @@ class ConsumablesManagerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AnjuTopBar(),
-      body: Column(
-        children: [
-          AnjuDropDown<CrochetType>(
-            hintText: 'cosas de la vida',
-            onChange: (value) {
-              print(value);
-            },
-            items: CrochetType.values
-                .map(
-                  (type) => DropdownMenuItem<CrochetType>(
-                    value: type, // <--- Asegúrate de asignar el valor aquí
-                    child: Text(type.name),
-                  ),
-                )
-                .toList(),
-            value: CrochetType.values
-                .first, // <--- Asegúrate de que el valor esté en la lista de elementos
-          ),
-          BlocProvider(
-            create: (context) => getIt<ConsumableManagerBloc>(),
-            child: const DynamicForm(),
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 15),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Nuevo producto',
+                style: AnjuTextStyles.titleScreens,
+                // textAlign: TextAlign.left,
+              ),
+            ),
+            const SizedBox(height: 20),
+            AnjuDropDown<CrochetType>(
+              hintText: 'Categoría',
+              onChange: (value) {
+                print(value);
+              },
+              items: CrochetType.values
+                  .map(
+                    (type) => DropdownMenuItem<CrochetType>(
+                      value: type, // <--- Asegúrate de asignar el valor aquí
+                      child: Text(type.name),
+                    ),
+                  )
+                  .toList(),
+              value: CrochetType.values
+                  .first, // <--- Asegúrate de que el valor esté en la lista de elementos
+            ),
+            BlocProvider(
+              create: (context) => getIt<ConsumableManagerBloc>(),
+              child: const DynamicForm(),
+            ),
+          ],
+        ),
       ),
     );
   }
