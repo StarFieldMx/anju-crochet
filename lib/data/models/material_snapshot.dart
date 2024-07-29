@@ -12,7 +12,7 @@ class MaterialSnapshot {
   static MaterialSnapshot fromCrochet(Crochet crochet) {
     return MaterialSnapshot()
       ..name = crochet.name
-      ..cost = crochet.cost
+      ..cost = crochet.purchasePrice
       ..quantity = crochet.quantity
       ..unit = crochet.unit;
   }

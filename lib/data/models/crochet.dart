@@ -20,12 +20,12 @@ abstract class Crochet {
   @enumerated
   late CrochetType type;
   late int quantity;
-  late double cost;
+  late double purchasePrice;
   @enumerated
   late UnitWeight unit;
 
   double get unitPrice {
-    return cost / quantity;
+    return purchasePrice / quantity;
   }
 }
 

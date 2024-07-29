@@ -20,39 +20,43 @@ class ConsumablesManagerScreen extends StatelessWidget {
       appBar: const AnjuTopBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 15),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Nuevo producto',
-                style: AnjuTextStyles.titleScreens,
-                // textAlign: TextAlign.left,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 15),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Nuevo producto',
+                  style: AnjuTextStyles.titleScreens,
+                  // textAlign: TextAlign.left,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            AnjuDropDown<CrochetType>(
-              hintText: 'Categoría',
-              onChange: (value) {
-                print(value);
-              },
-              items: CrochetType.values
-                  .map(
-                    (type) => DropdownMenuItem<CrochetType>(
-                      value: type, // <--- Asegúrate de asignar el valor aquí
-                      child: Text(type.name),
-                    ),
-                  )
-                  .toList(),
-              value: CrochetType.values
-                  .first, // <--- Asegúrate de que el valor esté en la lista de elementos
-            ),
-            BlocProvider(
-              create: (context) => getIt<ConsumableManagerBloc>(),
-              child: const CreateCrochetMaterialForm(),
-            ),
-          ],
+              const SizedBox(height: 20),
+              AnjuDropDown<CrochetType>(
+                hintText: 'Categoría',
+                onChange: (value) {
+                  if (value != null) {
+                    getIt<ConsumableManagerBloc>()
+                        .add(CategorySelectEvent(value));
+                  }
+                },
+                items: CrochetType.values
+                    .map(
+                      (type) => DropdownMenuItem<CrochetType>(
+                        value: type, // <--- Asegúrate de asignar el valor aquí
+                        child: Text(type.name),
+                      ),
+                    )
+                    .toList(),
+              ),
+              const SizedBox(height: 15),
+              BlocProvider(
+                create: (context) => getIt<ConsumableManagerBloc>(),
+                child: const CreateCrochetMaterialForm(),
+              ),
+            ],
+          ),
         ),
       ),
     );

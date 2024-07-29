@@ -12,4 +12,7 @@ final class ConsumableManagerInitialState extends ConsumableManagerState {}
 final class ConsumableManagerChoose extends ConsumableManagerState {
   final CrochetType type;
   ConsumableManagerChoose(this.type);
+
+  @override
+  List<Object> get props => [type];
 }

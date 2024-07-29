@@ -12,14 +12,17 @@ class AnjuTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: 'hola',
-        focusedBorder: _myBorders(),
-        enabledBorder: _myBorders(color: AnjuColors.primaryShade100),
-        errorBorder: _myBorders(color: AnjuColors.secondary),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          labelText: label,
+          focusedBorder: _myBorders(),
+          enabledBorder: _myBorders(color: AnjuColors.primaryShade100),
+          errorBorder: _myBorders(color: AnjuColors.secondary),
+        ),
       ),
     );
   }

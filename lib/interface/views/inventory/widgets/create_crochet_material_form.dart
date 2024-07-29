@@ -13,13 +13,14 @@ class CreateCrochetMaterialForm extends StatefulWidget {
 }
 
 class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController quantityController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  // Ojos
-  final TextEditingController shapeController = TextEditingController();
-  final TextEditingController sizeController = TextEditingController();
-  final TextEditingController costController = TextEditingController();
+  static final TextEditingController _nameController = TextEditingController();
+  static final TextEditingController _quantityController =
+      TextEditingController();
+  static final TextEditingController _purchasePriceController =
+      TextEditingController();
+  static final TextEditingController _shapeController = TextEditingController();
+  static final TextEditingController _sizeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ConsumableManagerBloc, ConsumableManagerState>(
@@ -27,129 +28,95 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         if (state is ConsumableManagerChoose) {
           return buildFormForType(state.type);
         }
-        return AnjuAddButton(
-          onTap: () {},
-        );
+        return AnjuAddButton(onTap: () {});
       },
     );
   }
 
   Widget buildFormForType(CrochetType type) {
-    List<Widget> children;
-
-    switch (type) {
-      case CrochetType.thread:
-        children = [
-          AnjuTextField(controller: nameController, label: 'Nombre'),
-          AnjuTextField(
-            controller: quantityController,
-            label: 'Cantidad',
-            keyboardType: TextInputType.number,
-          ),
-          AnjuTextField(
-            controller: priceController,
-            label: 'Precio',
-            keyboardType: TextInputType.number,
-          ),
-          AnjuTextField(
-            controller: costController,
-            label: 'Precio Compra',
-            keyboardType: TextInputType.number,
-          ),
-          AnjuDropDown<CrochetType>(
-            hintText: 'Marca',
-            onChange: (value) {
-              print(value);
-            },
-            items: CrochetType.values
-                .map(
-                  (type) => DropdownMenuItem<CrochetType>(
-                    value: type,
-                    child: Text(type.name),
-                  ),
-                )
-                .toList(),
-          ),
-          AnjuDropDown<ThreadStatus>(
-            hintText: 'Estado del hilo',
-            value: ThreadStatus.nuevo,
-            onChange: (value) {
-              print(value);
-            },
-            items: ThreadStatus.values
-                .map(
-                  (type) => DropdownMenuItem<ThreadStatus>(
-                    value: type,
-                    child: Text(type.name),
-                  ),
-                )
-                .toList(),
-          ),
-          AnjuDropDown<UnitWeight>(
-            hintText: 'Unidad',
-            value: UnitWeight.gr,
-            onChange: (value) {
-              print(value);
-            },
-            items: UnitWeight.values
-                .map(
-                  (type) => DropdownMenuItem<UnitWeight>(
-                    value: type,
-                    child: Text(type.name),
-                  ),
-                )
-                .toList(),
-          ),
-          // TODO: COLOR SELECTOR
-        ];
-        break;
-      case CrochetType.filling:
-        children = [
-          AnjuTextField(controller: nameController, label: 'Nombre'),
-          Switch(
-              value: false,
-              onChanged: (value) {
-                print(value);
-              })
-        ];
-        break;
-      case CrochetType.safetyEyes:
-        children = [
-          AnjuTextField(controller: nameController, label: 'Nombre'),
-          AnjuTextField(controller: shapeController, label: 'Forma'),
-          AnjuTextField(
-            controller: sizeController,
-            label: 'Tamaño',
-            keyboardType: TextInputType.number,
-          ),
-        ];
-        break;
-      case CrochetType.accessories:
-        children = [
-          AnjuTextField(controller: nameController, label: 'Nombre'),
-          // TODO: ADD COLOR SELECTOR (varios)
-        ];
-        break;
-      case CrochetType.keychains:
-        children = [
-          AnjuTextField(controller: nameController, label: 'Nombre'),
-          // TODO: ADD COLOR SELECTOR (uno)
-        ];
-        break;
-      case CrochetType.prepacking:
-        children = [
-          AnjuTextField(controller: nameController, label: 'Nombre'),
-        ];
-        break;
-    }
+    final formFields = _formFields[type] ?? [];
 
     return Column(
       children: [
-        ...children,
-        AnjuAddButton(
-          onTap: () {},
-        ),
+        ...formFields,
+        AnjuAddButton(onTap: () {}),
       ],
     );
   }
+
+  static List<Widget> buildCommonFields() {
+    return [
+      AnjuTextField(controller: _nameController, label: 'Nombre'),
+      AnjuTextField(
+        controller: _purchasePriceController,
+        label: 'Precio Compra (\$)',
+        keyboardType: TextInputType.number,
+      ),
+    ];
+  }
+
+  final Map<CrochetType, List<Widget>> _formFields = {
+    CrochetType.thread: [
+      ...buildCommonFields(),
+      AnjuTextField(
+          controller: _quantityController,
+          label: 'Cantidad',
+          keyboardType: TextInputType.number),
+      AnjuDropDown<ThreadStatus>(
+        hintText: 'Estado del hilo',
+        value: ThreadStatus.nuevo,
+        onChange: (value) {
+          print(value);
+        },
+        items: ThreadStatus.values
+            .map(
+              (status) => DropdownMenuItem<ThreadStatus>(
+                value: status,
+                child: Text(status.name),
+              ),
+            )
+            .toList(),
+      ),
+      const SizedBox(height: 15),
+      AnjuDropDown<UnitWeight>(
+        hintText: 'Unidad',
+        value: UnitWeight.gr,
+        onChange: (value) {
+          print(value);
+        },
+        items: UnitWeight.values
+            .map(
+              (unit) => DropdownMenuItem<UnitWeight>(
+                value: unit,
+                child: Text(unit.name),
+              ),
+            )
+            .toList(),
+      ),
+      const SizedBox(height: 15),
+    ],
+    CrochetType.filling: [
+      AnjuTextField(
+        controller: _purchasePriceController,
+        label: 'Precio Compra (\$)',
+        keyboardType: TextInputType.number,
+      ),
+      const SizedBox(height: 15),
+    ],
+    CrochetType.safetyEyes: [
+      ...buildCommonFields(),
+      AnjuTextField(controller: _shapeController, label: 'Forma'),
+      AnjuTextField(
+        controller: _sizeController,
+        label: 'Tamaño',
+        keyboardType: TextInputType.number,
+      ),
+    ],
+    // TODO: AGREGAR LO DEL SELECTOR DE COLOR
+    CrochetType.accessories: buildCommonFields(),
+    // TODO: AGREGAR LO DEL SELECTOR DE COLOR
+    CrochetType.keychains: buildCommonFields(),
+
+    CrochetType.prepacking: buildCommonFields(),
+  };
 }
