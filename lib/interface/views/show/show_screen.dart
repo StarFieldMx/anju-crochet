@@ -19,12 +19,8 @@ class AmigurumiShowScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: REMOVE
-    List<Amigurumi> amigurumis =
-        List.generate(10, (index) => Amigurumi.random());
-
     return AnjuItemListViewer<Amigurumi>(
-      list: amigurumis,
+      list: const [],
       childBuilder: (amigurumi) => Card(
         clipBehavior: Clip.hardEdge,
         shadowColor: Colors.black,
@@ -53,9 +49,8 @@ class _ShowWidget extends StatelessWidget {
           children: [
             AnjuImage(
               id: 0,
-              imagePath: amigurumi.images.isNotEmpty &&
-                      amigurumi.images.first.url != null
-                  ? amigurumi.images.first.url!
+              imagePath: amigurumi.images.isNotEmpty
+                  ? amigurumi.images.first.url
                   : AnjuImages.borrego,
               hero: false,
               height: 412,

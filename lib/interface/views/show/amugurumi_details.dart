@@ -43,7 +43,7 @@ class AmigurumiDetailsScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 30),
-            Text('\$ ${amigurumi.price} MXN', style: AnjuTextStyles.priceTag),
+            Text('\$ ${amigurumi.total} MXN', style: AnjuTextStyles.priceTag),
             const SizedBox(height: 30),
             Text(
               'Colors',
