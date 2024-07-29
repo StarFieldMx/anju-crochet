@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+part 'orders.g.dart';
 
 @collection
 class Order {

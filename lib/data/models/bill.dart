@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+part 'bill.g.dart';
 
 enum BillType { balance, stats }
 

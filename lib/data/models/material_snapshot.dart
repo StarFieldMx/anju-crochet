@@ -1,6 +1,8 @@
 import 'package:anju/data/models/crochet.dart';
 import 'package:isar/isar.dart';
 
+part 'material_snapshot.g.dart';
+
 @embedded
 class MaterialSnapshot {
   late String name;

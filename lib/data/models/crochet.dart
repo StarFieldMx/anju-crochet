@@ -1,6 +1,8 @@
 import 'package:anju/data/models/thread_color.dart';
 import 'package:isar/isar.dart';
 
+part 'crochet.g.dart';
+
 enum UnitWeight { gr, kg, pza }
 
 enum CrochetType {

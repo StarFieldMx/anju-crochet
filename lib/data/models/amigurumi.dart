@@ -1,6 +1,7 @@
 import 'package:anju/data/models/material_snapshot.dart';
 import 'package:anju/data/models/work.dart';
 import 'package:isar/isar.dart';
+part 'amigurumi.g.dart';
 
 enum AmigurumiStatus { disponible, sobrepedido, proximamente }
 
