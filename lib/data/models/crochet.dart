@@ -1,8 +1,3 @@
-// Abstract main class for all materials
-// ignore_for_file: avoid_print
-
-import 'dart:ui';
-
 import 'package:anju/data/models/thread_color.dart';
 import 'package:isar/isar.dart';
 
@@ -19,7 +14,6 @@ enum CrochetType {
 
 enum ThreadStatus { nuevo, medio, pocoloco, agotado }
 
-@collection
 abstract class Crochet {
   Id id = Isar.autoIncrement;
   late String name;
@@ -37,7 +31,7 @@ abstract class Crochet {
 
 @collection
 class Thread extends Crochet {
-  late List<ThreadColor> threadColor;
+  final threadColor = IsarLinks<ThreadColor>();
   late String brand;
   late double thickness;
   @enumerated
@@ -56,7 +50,7 @@ class Filling extends Crochet {
 @collection
 class SafetyEyes extends Crochet {
   late String shape;
-  late double size;
+  late String size;
 }
 
 @collection
@@ -66,7 +60,7 @@ class Accessories extends Crochet {
 
 @collection
 class Keychains extends Crochet {
-  late Color color;
+  late String color;
 }
 
 @collection

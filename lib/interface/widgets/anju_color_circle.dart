@@ -1,4 +1,5 @@
 import 'package:anju/config/themes/anju_textstyles.dart';
+import 'package:anju/config/utils/extensions.dart';
 import 'package:anju/data/models/thread_color.dart';
 import 'package:anju/interface/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class AnjuColorCircle extends StatelessWidget {
     return Column(
       children: [
         MultiColorCircle(
-          colors: colors.map((e) => e.color).toList(),
+          colors: colors.map((e) => e.color.toColor()).toList(),
         ),
         Text(
           nameColor,
