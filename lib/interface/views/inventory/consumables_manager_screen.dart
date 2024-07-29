@@ -2,7 +2,7 @@ import 'package:anju/config/servicelocator.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/data/models/crochet.dart';
 import 'package:anju/interface/views/inventory/consumables_manager/consumable_manager_bloc.dart';
-import 'package:anju/interface/views/inventory/widgets/dynamic_form.dart';
+import 'package:anju/interface/views/inventory/widgets/create_crochet_material_form.dart';
 import 'package:anju/interface/widgets/forms/forms.dart';
 import 'package:anju/interface/widgets/widgets.dart';
 import 'package:auto_route/annotations.dart';
@@ -50,7 +50,7 @@ class ConsumablesManagerScreen extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => getIt<ConsumableManagerBloc>(),
-              child: const DynamicForm(),
+              child: const CreateCrochetMaterialForm(),
             ),
           ],
         ),

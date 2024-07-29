@@ -4,19 +4,22 @@ import 'package:anju/interface/widgets/forms/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DynamicForm extends StatefulWidget {
-  const DynamicForm({super.key});
+class CreateCrochetMaterialForm extends StatefulWidget {
+  const CreateCrochetMaterialForm({super.key});
 
   @override
-  State<DynamicForm> createState() => _DynamicFormState();
+  State<CreateCrochetMaterialForm> createState() =>
+      _CreateCrochetMaterialFormState();
 }
 
-class _DynamicFormState extends State<DynamicForm> {
+class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  // Ojos
   final TextEditingController shapeController = TextEditingController();
   final TextEditingController sizeController = TextEditingController();
-  final TextEditingController thicknessController = TextEditingController();
-
+  final TextEditingController costController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ConsumableManagerBloc, ConsumableManagerState>(
@@ -38,7 +41,21 @@ class _DynamicFormState extends State<DynamicForm> {
       case CrochetType.thread:
         children = [
           AnjuTextField(controller: nameController, label: 'Nombre'),
-          AnjuTextField(controller: thicknessController, label: 'Grosor'),
+          AnjuTextField(
+            controller: quantityController,
+            label: 'Cantidad',
+            keyboardType: TextInputType.number,
+          ),
+          AnjuTextField(
+            controller: priceController,
+            label: 'Precio',
+            keyboardType: TextInputType.number,
+          ),
+          AnjuTextField(
+            controller: costController,
+            label: 'Precio Compra',
+            keyboardType: TextInputType.number,
+          ),
           AnjuDropDown<CrochetType>(
             hintText: 'Marca',
             onChange: (value) {
@@ -53,12 +70,47 @@ class _DynamicFormState extends State<DynamicForm> {
                 )
                 .toList(),
           ),
+          AnjuDropDown<ThreadStatus>(
+            hintText: 'Estado del hilo',
+            value: ThreadStatus.nuevo,
+            onChange: (value) {
+              print(value);
+            },
+            items: ThreadStatus.values
+                .map(
+                  (type) => DropdownMenuItem<ThreadStatus>(
+                    value: type,
+                    child: Text(type.name),
+                  ),
+                )
+                .toList(),
+          ),
+          AnjuDropDown<UnitWeight>(
+            hintText: 'Unidad',
+            value: UnitWeight.gr,
+            onChange: (value) {
+              print(value);
+            },
+            items: UnitWeight.values
+                .map(
+                  (type) => DropdownMenuItem<UnitWeight>(
+                    value: type,
+                    child: Text(type.name),
+                  ),
+                )
+                .toList(),
+          ),
           // TODO: COLOR SELECTOR
         ];
         break;
       case CrochetType.filling:
         children = [
           AnjuTextField(controller: nameController, label: 'Nombre'),
+          Switch(
+              value: false,
+              onChanged: (value) {
+                print(value);
+              })
         ];
         break;
       case CrochetType.safetyEyes:
@@ -81,7 +133,7 @@ class _DynamicFormState extends State<DynamicForm> {
       case CrochetType.keychains:
         children = [
           AnjuTextField(controller: nameController, label: 'Nombre'),
-          // TODO: ADD COLOR SELECTOR (varios)
+          // TODO: ADD COLOR SELECTOR (uno)
         ];
         break;
       case CrochetType.prepacking:

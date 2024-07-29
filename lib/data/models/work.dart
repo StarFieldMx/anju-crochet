@@ -7,8 +7,9 @@ class Work {
   Id id = Isar.autoIncrement;
 
   /// Tarifa (lo que gana en cierto tiempo)
-  late double fee;
+  late short fee;
 
   /// Unidad de tiempo para medir la tarifa
+  @enumerated
   late TimeLapse timeLapse;
 }
