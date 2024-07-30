@@ -15,13 +15,11 @@ final class ConsumableManagerInitialState extends ConsumableManagerState {}
 final class ConsumableManagerChoose extends ConsumableManagerState {
   final CrochetType type;
   final List<ThreadBrand> brands;
-  final ThreadBrand? currentBrand;
-  // final ConsumableStatus status;
 
   const ConsumableManagerChoose({
     required this.type,
     this.brands = const [],
-    this.currentBrand,
+    // this.currentBrand,
     super.status = ConsumableStatus.loading,
   });
 
@@ -36,7 +34,6 @@ final class ConsumableManagerChoose extends ConsumableManagerState {
       type: type,
       brands: brands ?? this.brands,
       status: status ?? this.status,
-      currentBrand: currentBrand ?? this.currentBrand,
     );
   }
 }

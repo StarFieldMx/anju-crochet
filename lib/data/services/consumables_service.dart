@@ -1,6 +1,8 @@
 import 'package:anju/data/database/isar_crochet_db.dart';
 import 'package:anju/data/models/crochet.dart';
 import 'package:anju/data/models/threads/thread_brand.dart';
+import 'package:anju/data/models/threads/thread_color.dart';
+import 'package:anju/data/models/threads/thread_type.dart';
 import 'package:anju/data/repository/consumables_repository.dart';
 import 'package:isar/isar.dart';
 
@@ -12,11 +14,23 @@ class ConsumablesService extends ConsumablesRepository {
   }
 
   @override
-  Future<int> createOrUpdateConsumable(Crochet consumable) async {
+  Future<int> createOrUpdateConsumable(Crochet consumable,
+      {ThreadColor? color, ThreadType? threadType}) async {
     // Map to associate Crochet types with their database operations
     final Map<Type, Future<int> Function()> operations = {
-      Thread: () => manager.db
-          .writeTxn(() => manager.db.threads.put(consumable as Thread)),
+      Thread: () => manager.db.writeTxn(() async {
+            final thread = consumable as Thread;
+            final id = await manager.db.threads.put(thread);
+            await thread.brand.save();
+            if (color != null) {
+              thread.threadColor.add(color);
+              thread.threadColor.save();
+            }
+            if (threadType != null) {
+              await thread.threadType.save();
+            }
+            return id;
+          }),
       Filling: () => manager.db
           .writeTxn(() => manager.db.fillings.put(consumable as Filling)),
       SafetyEyes: () => manager.db

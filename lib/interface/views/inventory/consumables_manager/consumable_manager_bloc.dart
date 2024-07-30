@@ -30,7 +30,7 @@ class ConsumableManagerBloc
       print(id);
       emit(myState.copyWith(
           status: ConsumableStatus.success,
-          currentBrand: event.brand,
+          // currentBrand: event.brand,
           brands: [...myState.brands, event.brand]));
     }
   }

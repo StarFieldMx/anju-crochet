@@ -1,7 +1,10 @@
+import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/data/models/models.dart';
 import 'package:anju/data/models/threads/thread_brand.dart';
+import 'package:anju/data/models/threads/thread_color.dart';
 import 'package:anju/data/services/anju_alerts.dart';
+import 'package:anju/data/services/consumables_service.dart';
 import 'package:anju/interface/views/inventory/consumables_manager/consumable_manager_bloc.dart';
 import 'package:anju/interface/widgets/forms/forms.dart';
 import 'package:flutter/material.dart';
@@ -24,23 +27,19 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
   late final TextEditingController _sizeController;
   late final TextEditingController _thicknessController;
 
-  ThreadStatus? threadStatus;
-  UnitWeight? unit;
+  ThreadStatus threadStatus = ThreadStatus.nuevo;
+  UnitWeight unit = UnitWeight.gr;
+  ThreadBrand? brand;
+  ThreadColor? threadColor;
   @override
   void initState() {
     super.initState();
 
     _nameController = TextEditingController(text: widget.material?.name);
-    // _quantityController = TextEditingController(
-    //     text: widget.material is Thread
-    //         ? (widget.material as Thread).quantity.toString()
-    //         : '');
     _thicknessController = TextEditingController(
         text: widget.material is Thread
             ? (widget.material as Thread).thickness.toString()
             : '');
-    // _purchasePriceController =
-    //     TextEditingController(text: widget.material?.purchasePrice.toString());
     _shapeController = TextEditingController(
         text: widget.material is SafetyEyes
             ? (widget.material as SafetyEyes).shape
@@ -85,12 +84,11 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         AnjuAddButton(onTap: () {
           // TODO:Handle form submission
           // TODO: add alerts
-          if (_nameController.text.isEmpty && unit == null) return;
+          if (_nameController.text.isEmpty) return;
           final consumable =
               _createConsumableFromForm(state as ConsumableManagerChoose);
           if (consumable != null) {
-            // TODO:Pass the consumable object to the appropriate method or state
-            // todo: For example: context.read<ConsumableManagerBloc>().add(ConsumableEvent.save(consumable));
+            getIt<ConsumablesService>().createOrUpdateConsumable(consumable);
           }
         }),
       ],
@@ -108,9 +106,11 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
               hintText: 'Marca',
               // value: UnitWeight.gr,
               onChange: (value) {
-                print(value);
+                setState(() {
+                  brand = value;
+                });
               },
-              value: myState.currentBrand,
+              value: brand ?? myState.brands.last,
               items: [
                 ...myState.brands.map((brand) => DropdownMenuItem<ThreadBrand>(
                       // TODO: IMPLEMENT SELECTION OF BRAND
@@ -143,7 +143,10 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
             hintText: 'Estado del hilo',
             value: ThreadStatus.nuevo,
             onChange: (value) {
-              print(value);
+              setState(() {
+                if (value == null) return;
+                threadStatus = value;
+              });
             },
             items: ThreadStatus.values
                 .map(
@@ -190,7 +193,10 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         hintText: 'Unidad',
         value: UnitWeight.gr,
         onChange: (value) {
-          print(value);
+          setState(() {
+            if (value == null) return;
+            unit = value;
+          });
         },
         items: UnitWeight.values
             .map(
@@ -208,10 +214,20 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
   Crochet? _createConsumableFromForm(ConsumableManagerChoose state) {
     switch (state.type) {
       case CrochetType.thread:
+        if (brand == null) {
+          // TODO: CHANGE WITH AND ALERT
+          throw Exception('No brand selected');
+        }
         return Thread()
               ..name = _nameController.text
               ..stock = 0
-              ..unit = unit!
+              ..unit = unit
+              ..brand.value = brand
+              ..status = threadStatus
+              ..type = CrochetType.thread
+              ..thickness = double.parse(_thicknessController.text)
+            // TODO: ..threadType = threadTpye // esta mal debes agregarlo como dice ISAR para los IsarLinks
+            // TODO: ..threadColor = threadColor! // esta mal debes agregarlo como dice ISAR para los IsarLinks
             // ..purchasePrice = 0.0
             // Add additional properties as needed
             ;
@@ -219,8 +235,8 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         return Filling()
               ..name = _nameController.text
               ..stock = 0
-              ..unit = unit!
-
+              ..unit = unit
+              ..type = CrochetType.filling
             // ..purchasePrice = 0.0
             // Add additional properties as needed
             ;
@@ -230,7 +246,8 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
               ..shape = _shapeController.text
               ..size = _sizeController.text
               ..stock = 0
-              ..unit = unit!
+              ..unit = unit
+              ..type = CrochetType.safetyEyes
 
             // ..purchasePrice = 0.0
             // Add additional properties as needed
@@ -239,7 +256,8 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         return Accessories()
               ..name = _nameController.text
               ..stock = 0
-              ..unit = unit!
+              ..unit = unit
+              ..type = CrochetType.accessories
 
             // ..purchasePrice = 0.0
             // Add additional properties as needed
@@ -248,7 +266,8 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         return Keychains()
               ..name = _nameController.text
               ..stock = 0
-              ..unit = unit!
+              ..unit = unit
+              ..type = CrochetType.keychains
             // ..purchasePrice = 0.0
             // Add additional properties as needed
             ;
@@ -256,8 +275,8 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         return PrePacking()
               ..name = _nameController.text
               ..stock = 0
-              ..unit = unit!
-
+              ..unit = unit
+              ..type = CrochetType.prepacking
             // ..purchasePrice = 0.0
             // Add additional properties as needed
             ;
