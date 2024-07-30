@@ -97,6 +97,12 @@ const BillSchema = CollectionSchema(
       name: r'prePacking',
       target: r'PrePacking',
       single: true,
+    ),
+    r'hooks': LinkSchema(
+      id: -6548188261907216317,
+      name: r'hooks',
+      target: r'Hooks',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -200,7 +206,8 @@ List<IsarLinkBase<dynamic>> _billGetLinks(Bill object) {
     object.safetyEye,
     object.accessory,
     object.keychains,
-    object.prePacking
+    object.prePacking,
+    object.hooks
   ];
 }
 
@@ -218,6 +225,7 @@ void _billAttach(IsarCollection<dynamic> col, Id id, Bill object) {
       .attach(col, col.isar.collection<Keychains>(), r'keychains', id);
   object.prePacking
       .attach(col, col.isar.collection<PrePacking>(), r'prePacking', id);
+  object.hooks.attach(col, col.isar.collection<Hooks>(), r'hooks', id);
 }
 
 extension BillQueryWhereSort on QueryBuilder<Bill, Bill, QWhere> {
@@ -931,6 +939,18 @@ extension BillQueryLinks on QueryBuilder<Bill, Bill, QFilterCondition> {
   QueryBuilder<Bill, Bill, QAfterFilterCondition> prePackingIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'prePacking', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> hooks(FilterQuery<Hooks> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'hooks');
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> hooksIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'hooks', 0, true, 0, true);
     });
   }
 }

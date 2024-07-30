@@ -4825,11 +4825,11 @@ const HooksSchema = CollectionSchema(
   indexes: {},
   links: {
     r'bills': LinkSchema(
-      id: -7148178379464185534,
+      id: -5648582990762251387,
       name: r'bills',
       target: r'Bill',
       single: false,
-      linkName: r'prePacking',
+      linkName: r'hooks',
     )
   },
   embeddedSchemas: {},

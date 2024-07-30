@@ -26,6 +26,7 @@ class Bill {
   final accessory = IsarLink<Accessories>();
   final keychains = IsarLink<Keychains>();
   final prePacking = IsarLink<PrePacking>();
+  final hooks = IsarLink<Hooks>();
 
   /// UTC
   late DateTime dueAt;

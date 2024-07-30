@@ -88,6 +88,6 @@ class PrePacking extends Crochet {
 @Collection(ignore: {'threadColor'})
 class Hooks extends Crochet {
   late double thickness;
-  @Backlink(to: 'prePacking')
+  @Backlink(to: 'hooks')
   final bills = IsarLinks<Bill>();
 }
