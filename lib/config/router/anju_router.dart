@@ -47,6 +47,7 @@ class AnjuRouteCubit extends Cubit<AnjuRouter> {
 
   void goCategory({required CrochetType type}) =>
       state.push(CategoryRoute(type: type));
+
   void addMaterial() => state.push(ConsumablesManagerRoute());
 
   BuildContext get context => state.navigatorKey.currentContext!;

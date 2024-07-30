@@ -1,4 +1,5 @@
 import 'package:anju/data/models/bill.dart';
+import 'package:anju/data/models/crochet.dart';
 import 'package:flutter/cupertino.dart';
 
 extension ColorExtension on String {
@@ -17,6 +18,46 @@ extension ColorExtension on String {
 extension HexExtension on Color {
   String toHex() {
     return '#${value.toRadixString(16).substring(2)}';
+  }
+}
+
+extension CrochetTypeExtension on CrochetType {
+  String get spanishPlural {
+    switch (this) {
+      case CrochetType.yarn:
+        return 'Hilos';
+      case CrochetType.filling:
+        return 'Relleno';
+      case CrochetType.safetyEyes:
+        return 'Ojos de seguridad';
+      case CrochetType.accessories:
+        return 'Acccesorios';
+      case CrochetType.keychains:
+        return 'Llaveros';
+      case CrochetType.prepacking:
+        return 'Empaques';
+      case CrochetType.hooks:
+        return 'Ganchos';
+    }
+  }
+
+  String get spanishSingle {
+    switch (this) {
+      case CrochetType.yarn:
+        return 'Hilo';
+      case CrochetType.filling:
+        return 'Relleno';
+      case CrochetType.safetyEyes:
+        return 'Ojo de seguridad';
+      case CrochetType.accessories:
+        return 'Acccesorio';
+      case CrochetType.keychains:
+        return 'Llavero';
+      case CrochetType.prepacking:
+        return 'Empaque';
+      case CrochetType.hooks:
+        return 'Gancho';
+    }
   }
 }
 

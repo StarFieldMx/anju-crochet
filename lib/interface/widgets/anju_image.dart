@@ -21,6 +21,7 @@ class AnjuImage extends StatelessWidget {
   final ImageType type;
   final double? height;
   final double? width;
+
   @override
   Widget build(BuildContext context) {
     return hero

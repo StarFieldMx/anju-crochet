@@ -25,7 +25,7 @@ class AmigurumiDetailsScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 30),
             AnjuCarousel(
-              images: AnjuImages.values,
+              images: AnjuImages.values.toList(),
             ),
             const SizedBox(height: 20),
             Text('Handmade', style: AnjuTextStyles.handmade),
