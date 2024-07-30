@@ -56,4 +56,17 @@ abstract class AnjuAlerts {
 
     return false;
   }
+
+  static Future<void> missingField(
+      {String? text = 'Se te olvido agregar info mi amor'}) async {
+    await ArtSweetAlert.show(
+      context: context,
+      artDialogArgs: ArtDialogArgs(
+        type: ArtSweetAlertType.info,
+        title: "Oops...",
+        text: text,
+        confirmButtonText: 'Okok',
+      ),
+    );
+  }
 }

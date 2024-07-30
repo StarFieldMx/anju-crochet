@@ -21,8 +21,6 @@ class CreateCrochetMaterialForm extends StatefulWidget {
 
 class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
   late final TextEditingController _nameController;
-  // late final TextEditingController _quantityController;
-  // late final TextEditingController _purchasePriceController;
   late final TextEditingController _shapeController;
   late final TextEditingController _sizeController;
   late final TextEditingController _thicknessController;
@@ -30,28 +28,32 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
   ThreadStatus threadStatus = ThreadStatus.nuevo;
   UnitWeight unit = UnitWeight.gr;
   ThreadBrand? brand;
-  ThreadColor? threadColor;
+  List<ThreadColor> threadColor = [];
+
   @override
   void initState() {
     super.initState();
 
     _nameController = TextEditingController(text: widget.material?.name);
     _thicknessController = TextEditingController(
-        text: widget.material is Thread
-            ? (widget.material as Thread).thickness.toString()
-            : '');
+      text: widget.material is Thread
+          ? (widget.material as Thread).thickness.toString()
+          : '',
+    );
     _shapeController = TextEditingController(
-        text: widget.material is SafetyEyes
-            ? (widget.material as SafetyEyes).shape
-            : '');
+      text: widget.material is SafetyEyes
+          ? (widget.material as SafetyEyes).shape
+          : '',
+    );
     _sizeController = TextEditingController(
-        text: widget.material is SafetyEyes
-            ? (widget.material as SafetyEyes).size
-            : '');
+      text: widget.material is SafetyEyes
+          ? (widget.material as SafetyEyes).size
+          : '',
+    );
+
     if (widget.material is Thread) {
       threadStatus = (widget.material as Thread).status;
       unit = (widget.material as Thread).unit;
-      (widget.material as Thread).thickness;
     }
   }
 
@@ -60,6 +62,8 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
     _nameController.dispose();
     _shapeController.dispose();
     _sizeController.dispose();
+    _thicknessController.dispose();
+    getIt<ConsumableManagerBloc>().add(const ResetEvent());
     super.dispose();
   }
 
@@ -75,18 +79,46 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
     );
   }
 
-  Widget buildFormForType(ConsumableManagerState state) {
+  Widget buildFormForType(ConsumableManagerChoose state) {
     final formFields = _buildFormFields(state);
 
     return Column(
       children: [
         ...formFields,
-        AnjuAddButton(onTap: () {
-          // TODO:Handle form submission
-          // TODO: add alerts
-          if (_nameController.text.isEmpty) return;
-          final consumable =
-              _createConsumableFromForm(state as ConsumableManagerChoose);
+        AnjuAddButton(onTap: () async {
+          // Validación de campos
+          if (_nameController.text.isEmpty) {
+            await AnjuAlerts.missingField(
+                text: 'Se te olvido agregar el nombre mi amor.');
+            return;
+          }
+          if (state.type == CrochetType.thread &&
+              _thicknessController.text.isEmpty) {
+            await AnjuAlerts.missingField(
+                text: 'Se te olvido agregar el grosor del hilo.');
+            return;
+          }
+          if (state.type == CrochetType.safetyEyes &&
+              _shapeController.text.isEmpty) {
+            await AnjuAlerts.missingField(
+                text:
+                    'Se te olvido agregar la forma de los ojos de seguridad.');
+            return;
+          }
+          if (state.type == CrochetType.safetyEyes &&
+              _sizeController.text.isEmpty) {
+            await AnjuAlerts.missingField(
+                text:
+                    'Se te olvido agregar el tamaño de los ojos de seguridad.');
+            return;
+          }
+          if (state.type == CrochetType.thread && brand == null) {
+            await AnjuAlerts.missingField(
+                text: 'Se te olvido seleccionar la marca del hilo.');
+            return;
+          }
+
+          final consumable = _createConsumableFromForm(state);
           if (consumable != null) {
             getIt<ConsumablesService>().createOrUpdateConsumable(consumable);
           }
@@ -101,37 +133,31 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
       case CrochetType.thread:
         return [
           ..._buildCommonFields(),
-          // TODO: IMPLEMENT
           AnjuDropDown<ThreadBrand>(
-              hintText: 'Marca',
-              // value: UnitWeight.gr,
-              onChange: (value) {
-                setState(() {
-                  brand = value;
-                });
-              },
-              value: brand ?? myState.brands.last,
-              items: [
-                ...myState.brands.map((brand) => DropdownMenuItem<ThreadBrand>(
-                      // TODO: IMPLEMENT SELECTION OF BRAND
-                      onTap: () {},
-                      value: brand,
-                      child: Text(brand.name),
-                    )),
-                DropdownMenuItem<ThreadBrand>(
-                  value: ThreadBrand()
-                    ..id = 0
-                    ..name = 'Agregar nueva marca',
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.add,
-                      color: AnjuColors.primary,
-                    ),
-                    title: const Text('Agregar nueva marca'),
-                    onTap: AnjuAlerts.addThreadBrand,
-                  ),
+            hintText: 'Marca',
+            onChange: (value) {
+              setState(() {
+                brand = value;
+              });
+            },
+            value: brand ?? myState.brands.first,
+            items: [
+              ...myState.brands.map((brand) => DropdownMenuItem<ThreadBrand>(
+                    value: brand,
+                    child: Text(brand.name),
+                  )),
+              DropdownMenuItem<ThreadBrand>(
+                value: ThreadBrand()
+                  ..id = 0
+                  ..name = 'Agregar nueva marca',
+                child: ListTile(
+                  leading: Icon(Icons.add, color: AnjuColors.primary),
+                  title: const Text('Agregar nueva marca'),
+                  onTap: AnjuAlerts.addThreadBrand,
                 ),
-              ]),
+              ),
+            ],
+          ),
           const SizedBox(height: 30),
           AnjuTextField(
             controller: _thicknessController,
@@ -141,7 +167,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
           const SizedBox(height: 15),
           AnjuDropDown<ThreadStatus>(
             hintText: 'Estado del hilo',
-            value: ThreadStatus.nuevo,
+            value: threadStatus,
             onChange: (value) {
               setState(() {
                 if (value == null) return;
@@ -149,20 +175,13 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
               });
             },
             items: ThreadStatus.values
-                .map(
-                  (status) => DropdownMenuItem<ThreadStatus>(
-                    value: status,
-                    child: Text(status.name),
-                  ),
-                )
+                .map((status) => DropdownMenuItem<ThreadStatus>(
+                      value: status,
+                      child: Text(status.name),
+                    ))
                 .toList(),
           ),
           const SizedBox(height: 30),
-        ];
-      case CrochetType.filling:
-        return [
-          ..._buildCommonFields(),
-          const SizedBox(height: 15),
         ];
       case CrochetType.safetyEyes:
         return [
@@ -175,9 +194,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
           ),
         ];
       case CrochetType.accessories:
-        return _buildCommonFields();
       case CrochetType.keychains:
-        return _buildCommonFields();
       case CrochetType.prepacking:
         return _buildCommonFields();
       default:
@@ -191,7 +208,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
       const SizedBox(height: 15),
       AnjuDropDown<UnitWeight>(
         hintText: 'Unidad',
-        value: UnitWeight.gr,
+        value: unit,
         onChange: (value) {
           setState(() {
             if (value == null) return;
@@ -199,12 +216,10 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
           });
         },
         items: UnitWeight.values
-            .map(
-              (unit) => DropdownMenuItem<UnitWeight>(
-                value: unit,
-                child: Text(unit.name),
-              ),
-            )
+            .map((unit) => DropdownMenuItem<UnitWeight>(
+                  value: unit,
+                  child: Text(unit.name),
+                ))
             .toList(),
       ),
       const SizedBox(height: 30),
@@ -214,72 +229,40 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
   Crochet? _createConsumableFromForm(ConsumableManagerChoose state) {
     switch (state.type) {
       case CrochetType.thread:
-        if (brand == null) {
-          // TODO: CHANGE WITH AND ALERT
-          throw Exception('No brand selected');
-        }
         return Thread()
-              ..name = _nameController.text
-              ..stock = 0
-              ..unit = unit
-              ..brand.value = brand
-              ..status = threadStatus
-              ..type = CrochetType.thread
-              ..thickness = double.parse(_thicknessController.text)
-            // TODO: ..threadType = threadTpye // esta mal debes agregarlo como dice ISAR para los IsarLinks
-            // TODO: ..threadColor = threadColor! // esta mal debes agregarlo como dice ISAR para los IsarLinks
-            // ..purchasePrice = 0.0
-            // Add additional properties as needed
-            ;
-      case CrochetType.filling:
-        return Filling()
-              ..name = _nameController.text
-              ..stock = 0
-              ..unit = unit
-              ..type = CrochetType.filling
-            // ..purchasePrice = 0.0
-            // Add additional properties as needed
-            ;
+          ..name = _nameController.text
+          ..stock = 0
+          ..unit = unit
+          ..brand.value = brand
+          ..status = threadStatus
+          ..type = CrochetType.thread
+          ..thickness = double.parse(_thicknessController.text);
       case CrochetType.safetyEyes:
         return SafetyEyes()
-              ..name = _nameController.text
-              ..shape = _shapeController.text
-              ..size = _sizeController.text
-              ..stock = 0
-              ..unit = unit
-              ..type = CrochetType.safetyEyes
-
-            // ..purchasePrice = 0.0
-            // Add additional properties as needed
-            ;
+          ..name = _nameController.text
+          ..shape = _shapeController.text
+          ..size = _sizeController.text
+          ..stock = 0
+          ..unit = unit
+          ..type = CrochetType.safetyEyes;
       case CrochetType.accessories:
         return Accessories()
-              ..name = _nameController.text
-              ..stock = 0
-              ..unit = unit
-              ..type = CrochetType.accessories
-
-            // ..purchasePrice = 0.0
-            // Add additional properties as needed
-            ;
+          ..name = _nameController.text
+          ..stock = 0
+          ..unit = unit
+          ..type = CrochetType.accessories;
       case CrochetType.keychains:
         return Keychains()
-              ..name = _nameController.text
-              ..stock = 0
-              ..unit = unit
-              ..type = CrochetType.keychains
-            // ..purchasePrice = 0.0
-            // Add additional properties as needed
-            ;
+          ..name = _nameController.text
+          ..stock = 0
+          ..unit = unit
+          ..type = CrochetType.keychains;
       case CrochetType.prepacking:
         return PrePacking()
-              ..name = _nameController.text
-              ..stock = 0
-              ..unit = unit
-              ..type = CrochetType.prepacking
-            // ..purchasePrice = 0.0
-            // Add additional properties as needed
-            ;
+          ..name = _nameController.text
+          ..stock = 0
+          ..unit = unit
+          ..type = CrochetType.prepacking;
       default:
         return null;
     }

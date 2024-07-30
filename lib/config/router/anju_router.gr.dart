@@ -54,9 +54,13 @@ abstract class $AnjuRouter extends _i13.RootStackRouter {
       );
     },
     CategoryRoute.name: (routeData) {
+      final args = routeData.argsAs<CategoryRouteArgs>();
       return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i4.CategoryScreen(),
+        child: _i4.CategoryScreen(
+          key: args.key,
+          type: args.type,
+        ),
       );
     },
     ConsumablesManagerRoute.name: (routeData) {
@@ -188,16 +192,40 @@ class AnjuHomeLayout extends _i13.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i4.CategoryScreen]
-class CategoryRoute extends _i13.PageRouteInfo<void> {
-  const CategoryRoute({List<_i13.PageRouteInfo>? children})
-      : super(
+class CategoryRoute extends _i13.PageRouteInfo<CategoryRouteArgs> {
+  CategoryRoute({
+    _i16.Key? key,
+    required _i15.CrochetType type,
+    List<_i13.PageRouteInfo>? children,
+  }) : super(
           CategoryRoute.name,
+          args: CategoryRouteArgs(
+            key: key,
+            type: type,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'CategoryRoute';
 
-  static const _i13.PageInfo<void> page = _i13.PageInfo<void>(name);
+  static const _i13.PageInfo<CategoryRouteArgs> page =
+      _i13.PageInfo<CategoryRouteArgs>(name);
+}
+
+class CategoryRouteArgs {
+  const CategoryRouteArgs({
+    this.key,
+    required this.type,
+  });
+
+  final _i16.Key? key;
+
+  final _i15.CrochetType type;
+
+  @override
+  String toString() {
+    return 'CategoryRouteArgs{key: $key, type: $type}';
+  }
 }
 
 /// generated route for

@@ -1,4 +1,5 @@
 import 'package:anju/config/router/anju_router.gr.dart';
+import 'package:anju/data/models/crochet.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,8 @@ class AnjuRouteCubit extends Cubit<AnjuRouter> {
   void goHomeFromSplash() =>
       state.replace(const AnjuHomeLayout(children: [HomeRoute()]));
 
-  void goCategory({dynamic something}) => state.push(const CategoryRoute());
+  void goCategory({required CrochetType type}) =>
+      state.push(CategoryRoute(type: type));
   void addMaterial() => state.push(ConsumablesManagerRoute());
 
   BuildContext get context => state.navigatorKey.currentContext!;

@@ -13,6 +13,7 @@ class ConsumableManagerBloc
   ConsumableManagerBloc() : super(ConsumableManagerInitialState()) {
     on<CategorySelectEvent>(_categorySelectionEvent);
     on<AddThreadBrandEvent>(_addThreadBrandEvent);
+    on<ResetEvent>(_resetEvent);
   }
   void _categorySelectionEvent(
       CategorySelectEvent event, Emitter<ConsumableManagerState> emit) async {
@@ -33,5 +34,10 @@ class ConsumableManagerBloc
           // currentBrand: event.brand,
           brands: [...myState.brands, event.brand]));
     }
+  }
+
+  void _resetEvent(
+      ResetEvent event, Emitter<ConsumableManagerState> emit) async {
+    emit(ConsumableManagerInitialState());
   }
 }

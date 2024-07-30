@@ -1,5 +1,6 @@
 import 'package:anju/config/router/anju_router.dart';
 import 'package:anju/config/service_locator.dart';
+import 'package:anju/data/models/crochet.dart';
 import 'package:anju/interface/widgets/anju_item_list_viewer.dart';
 import 'package:anju/interface/widgets/inventory/inventory_item.dart';
 import 'package:auto_route/auto_route.dart';
@@ -19,11 +20,11 @@ class InventoryScreen extends StatelessWidget {
     return Scaffold(
       body: AnjuItemListViewer(
         childBuilder: (p0) => InventoryItem(
-          icon: p0.icon,
-          text: p0.text,
-          onTap: () => getIt<AnjuRouteCubit>().goCategory(),
+          icon: Icons.category,
+          text: p0.name.toUpperCase(),
+          onTap: () => getIt<AnjuRouteCubit>().goCategory(type: p0),
         ),
-        list: items,
+        list: CrochetType.values,
         title: 'Inventario',
       ),
     );

@@ -22,3 +22,10 @@ class AddThreadBrandEvent extends ConsumableManagerEvent {
 
   const AddThreadBrandEvent(this.brand);
 }
+
+class ResetEvent extends ConsumableManagerEvent {
+  // final ThreadBrand brand;
+  // final MaterialActions action;
+
+  const ResetEvent();
+}

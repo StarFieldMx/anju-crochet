@@ -1,5 +1,6 @@
 import 'package:anju/config/router/anju_router.dart';
 import 'package:anju/config/service_locator.dart';
+import 'package:anju/interface/views/inventory/consumables_manager/consumable_manager_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ Future<void> get runAppAnju async {
   final bloc = MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => getIt<AnjuRouteCubit>()),
+      BlocProvider(create: (_) => getIt<ConsumableManagerBloc>()),
     ],
     child: const AnjuApp(),
   );

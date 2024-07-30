@@ -9,7 +9,7 @@ abstract class ConsumablesRepository {
 
   ConsumablesRepository(this.manager);
   Future<int> createOrUpdateConsumable(Crochet consumable,
-      {ThreadColor? color, ThreadType? threadType});
+      {List<ThreadColor>? colors, ThreadType? threadType});
   Future<Crochet?> readConsumable(CrochetType type, int id);
   Future<List<Crochet>> getConsumables(CrochetType type);
   Future<int> createOrUpdateBrand(ThreadBrand brand);

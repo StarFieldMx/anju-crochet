@@ -7,7 +7,10 @@ import 'package:anju/interface/widgets/forms/forms.dart';
 import 'package:anju/interface/widgets/widgets.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
+final List<CrochetType> types = CrochetType.values
+    .where((element) => element != CrochetType.filling)
+    .toList();
 
 @RoutePage()
 class ConsumablesManagerScreen extends StatelessWidget {
@@ -41,7 +44,7 @@ class ConsumablesManagerScreen extends StatelessWidget {
                         .add(CategorySelectEvent(value));
                   }
                 },
-                items: CrochetType.values
+                items: types
                     .map(
                       (type) => DropdownMenuItem<CrochetType>(
                         value: type, // <--- Asegúrate de asignar el valor aquí
@@ -51,10 +54,7 @@ class ConsumablesManagerScreen extends StatelessWidget {
                     .toList(),
               ),
               const SizedBox(height: 15),
-              BlocProvider(
-                create: (context) => getIt<ConsumableManagerBloc>(),
-                child: const CreateCrochetMaterialForm(),
-              ),
+              const CreateCrochetMaterialForm(),
             ],
           ),
         ),
