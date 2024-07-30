@@ -1,5 +1,5 @@
 import 'package:anju/config/router/anju_router.dart';
-import 'package:anju/config/servicelocator.dart';
+import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/config/utils/images_constant.dart';
 import 'package:auto_route/annotations.dart';

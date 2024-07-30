@@ -17,7 +17,7 @@ class CategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Categoría')),
+      appBar: AppBar(title: const Text('Categoría')),
       body: const Center(
         child: Text('Contenido de la categoría'),
       ),

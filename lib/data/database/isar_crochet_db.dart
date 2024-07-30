@@ -1,5 +1,9 @@
 // import 'package:anju/data/models/bill.dart';
+import 'package:anju/data/models/bill.dart';
 import 'package:anju/data/models/models.dart';
+import 'package:anju/data/models/threads/thread_brand.dart';
+import 'package:anju/data/models/threads/thread_color.dart';
+import 'package:anju/data/models/threads/thread_type.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -16,6 +20,12 @@ class IsarCrochetDb {
         AccessoriesSchema,
         KeychainsSchema,
         PrePackingSchema,
+        ThreadColorSchema,
+        ThreadTypeSchema,
+        ThreadBrandSchema,
+        BillSchema,
+        AmigurumiSchema,
+        AmigurumiImageSchema,
         // IncomeSchema,
         // ExpensesSchema,
       ],

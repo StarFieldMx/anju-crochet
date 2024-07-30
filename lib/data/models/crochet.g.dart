@@ -17,58 +17,43 @@ const ThreadSchema = CollectionSchema(
   name: r'Thread',
   id: 3580143950257234225,
   properties: {
-    r'brand': PropertySchema(
-      id: 0,
-      name: r'brand',
-      type: IsarType.string,
-    ),
     r'isMultiColor': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'isMultiColor',
       type: IsarType.bool,
     ),
     r'name': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'name',
       type: IsarType.string,
     ),
-    r'purchasePrice': PropertySchema(
-      id: 3,
-      name: r'purchasePrice',
-      type: IsarType.double,
-    ),
-    r'quantity': PropertySchema(
-      id: 4,
-      name: r'quantity',
-      type: IsarType.long,
-    ),
     r'status': PropertySchema(
-      id: 5,
+      id: 2,
       name: r'status',
       type: IsarType.byte,
       enumMap: _ThreadstatusEnumValueMap,
     ),
+    r'stock': PropertySchema(
+      id: 3,
+      name: r'stock',
+      type: IsarType.long,
+    ),
     r'thickness': PropertySchema(
-      id: 6,
+      id: 4,
       name: r'thickness',
       type: IsarType.double,
     ),
     r'type': PropertySchema(
-      id: 7,
+      id: 5,
       name: r'type',
       type: IsarType.byte,
       enumMap: _ThreadtypeEnumValueMap,
     ),
     r'unit': PropertySchema(
-      id: 8,
+      id: 6,
       name: r'unit',
       type: IsarType.byte,
       enumMap: _ThreadunitEnumValueMap,
-    ),
-    r'unitPrice': PropertySchema(
-      id: 9,
-      name: r'unitPrice',
-      type: IsarType.double,
     )
   },
   estimateSize: _threadEstimateSize,
@@ -83,6 +68,25 @@ const ThreadSchema = CollectionSchema(
       name: r'threadColor',
       target: r'ThreadColor',
       single: false,
+    ),
+    r'threadType': LinkSchema(
+      id: -5537279117680742854,
+      name: r'threadType',
+      target: r'ThreadType',
+      single: true,
+    ),
+    r'brand': LinkSchema(
+      id: -282143516688077099,
+      name: r'brand',
+      target: r'ThreadBrand',
+      single: true,
+    ),
+    r'bills': LinkSchema(
+      id: 3572518439241163664,
+      name: r'bills',
+      target: r'Bill',
+      single: false,
+      linkName: r'thread',
     )
   },
   embeddedSchemas: {},
@@ -98,7 +102,6 @@ int _threadEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.brand.length * 3;
   bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
@@ -109,16 +112,13 @@ void _threadSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.brand);
-  writer.writeBool(offsets[1], object.isMultiColor);
-  writer.writeString(offsets[2], object.name);
-  writer.writeDouble(offsets[3], object.purchasePrice);
-  writer.writeLong(offsets[4], object.quantity);
-  writer.writeByte(offsets[5], object.status.index);
-  writer.writeDouble(offsets[6], object.thickness);
-  writer.writeByte(offsets[7], object.type.index);
-  writer.writeByte(offsets[8], object.unit.index);
-  writer.writeDouble(offsets[9], object.unitPrice);
+  writer.writeBool(offsets[0], object.isMultiColor);
+  writer.writeString(offsets[1], object.name);
+  writer.writeByte(offsets[2], object.status.index);
+  writer.writeLong(offsets[3], object.stock);
+  writer.writeDouble(offsets[4], object.thickness);
+  writer.writeByte(offsets[5], object.type.index);
+  writer.writeByte(offsets[6], object.unit.index);
 }
 
 Thread _threadDeserialize(
@@ -128,18 +128,16 @@ Thread _threadDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Thread();
-  object.brand = reader.readString(offsets[0]);
   object.id = id;
-  object.name = reader.readString(offsets[2]);
-  object.purchasePrice = reader.readDouble(offsets[3]);
-  object.quantity = reader.readLong(offsets[4]);
+  object.name = reader.readString(offsets[1]);
   object.status =
-      _ThreadstatusValueEnumMap[reader.readByteOrNull(offsets[5])] ??
+      _ThreadstatusValueEnumMap[reader.readByteOrNull(offsets[2])] ??
           ThreadStatus.nuevo;
-  object.thickness = reader.readDouble(offsets[6]);
-  object.type = _ThreadtypeValueEnumMap[reader.readByteOrNull(offsets[7])] ??
+  object.stock = reader.readLong(offsets[3]);
+  object.thickness = reader.readDouble(offsets[4]);
+  object.type = _ThreadtypeValueEnumMap[reader.readByteOrNull(offsets[5])] ??
       CrochetType.thread;
-  object.unit = _ThreadunitValueEnumMap[reader.readByteOrNull(offsets[8])] ??
+  object.unit = _ThreadunitValueEnumMap[reader.readByteOrNull(offsets[6])] ??
       UnitWeight.gr;
   return object;
 }
@@ -152,28 +150,22 @@ P _threadDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
-    case 1:
       return (reader.readBool(offset)) as P;
-    case 2:
+    case 1:
       return (reader.readString(offset)) as P;
-    case 3:
-      return (reader.readDouble(offset)) as P;
-    case 4:
-      return (reader.readLong(offset)) as P;
-    case 5:
+    case 2:
       return (_ThreadstatusValueEnumMap[reader.readByteOrNull(offset)] ??
           ThreadStatus.nuevo) as P;
-    case 6:
+    case 3:
+      return (reader.readLong(offset)) as P;
+    case 4:
       return (reader.readDouble(offset)) as P;
-    case 7:
+    case 5:
       return (_ThreadtypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CrochetType.thread) as P;
-    case 8:
+    case 6:
       return (_ThreadunitValueEnumMap[reader.readByteOrNull(offset)] ??
           UnitWeight.gr) as P;
-    case 9:
-      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -223,13 +215,17 @@ Id _threadGetId(Thread object) {
 }
 
 List<IsarLinkBase<dynamic>> _threadGetLinks(Thread object) {
-  return [object.threadColor];
+  return [object.threadColor, object.threadType, object.brand, object.bills];
 }
 
 void _threadAttach(IsarCollection<dynamic> col, Id id, Thread object) {
   object.id = id;
   object.threadColor
       .attach(col, col.isar.collection<ThreadColor>(), r'threadColor', id);
+  object.threadType
+      .attach(col, col.isar.collection<ThreadType>(), r'threadType', id);
+  object.brand.attach(col, col.isar.collection<ThreadBrand>(), r'brand', id);
+  object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
 }
 
 extension ThreadQueryWhereSort on QueryBuilder<Thread, Thread, QWhere> {
@@ -308,136 +304,6 @@ extension ThreadQueryWhere on QueryBuilder<Thread, Thread, QWhereClause> {
 }
 
 extension ThreadQueryFilter on QueryBuilder<Thread, Thread, QFilterCondition> {
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'brand',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'brand',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'brand',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'brand',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'brand',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'brand',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'brand',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'brand',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'brand',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'brand',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<Thread, Thread, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -629,121 +495,6 @@ extension ThreadQueryFilter on QueryBuilder<Thread, Thread, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> purchasePriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> purchasePriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> purchasePriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> purchasePriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'purchasePrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> quantityEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'quantity',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> quantityGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'quantity',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> quantityLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'quantity',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> quantityBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'quantity',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<Thread, Thread, QAfterFilterCondition> statusEqualTo(
       ThreadStatus value) {
     return QueryBuilder.apply(this, (query) {
@@ -789,6 +540,58 @@ extension ThreadQueryFilter on QueryBuilder<Thread, Thread, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'status',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> stockEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'stock',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> stockGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'stock',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> stockLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'stock',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> stockBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'stock',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -964,68 +767,6 @@ extension ThreadQueryFilter on QueryBuilder<Thread, Thread, QFilterCondition> {
       ));
     });
   }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> unitPriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> unitPriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> unitPriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterFilterCondition> unitPriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'unitPrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
 }
 
 extension ThreadQueryObject on QueryBuilder<Thread, Thread, QFilterCondition> {}
@@ -1087,21 +828,91 @@ extension ThreadQueryLinks on QueryBuilder<Thread, Thread, QFilterCondition> {
           r'threadColor', lower, includeLower, upper, includeUpper);
     });
   }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> threadType(
+      FilterQuery<ThreadType> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'threadType');
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> threadTypeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'threadType', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> brand(
+      FilterQuery<ThreadBrand> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'brand');
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> brandIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'brand', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> bills(
+      FilterQuery<Bill> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'bills');
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> billsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> billsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> billsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> billsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> billsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterFilterCondition> billsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'bills', lower, includeLower, upper, includeUpper);
+    });
+  }
 }
 
 extension ThreadQuerySortBy on QueryBuilder<Thread, Thread, QSortBy> {
-  QueryBuilder<Thread, Thread, QAfterSortBy> sortByBrand() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'brand', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> sortByBrandDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'brand', Sort.desc);
-    });
-  }
-
   QueryBuilder<Thread, Thread, QAfterSortBy> sortByIsMultiColor() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isMultiColor', Sort.asc);
@@ -1126,30 +937,6 @@ extension ThreadQuerySortBy on QueryBuilder<Thread, Thread, QSortBy> {
     });
   }
 
-  QueryBuilder<Thread, Thread, QAfterSortBy> sortByPurchasePrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> sortByPurchasePriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> sortByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> sortByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
-    });
-  }
-
   QueryBuilder<Thread, Thread, QAfterSortBy> sortByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.asc);
@@ -1159,6 +946,18 @@ extension ThreadQuerySortBy on QueryBuilder<Thread, Thread, QSortBy> {
   QueryBuilder<Thread, Thread, QAfterSortBy> sortByStatusDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterSortBy> sortByStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterSortBy> sortByStockDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -1197,33 +996,9 @@ extension ThreadQuerySortBy on QueryBuilder<Thread, Thread, QSortBy> {
       return query.addSortBy(r'unit', Sort.desc);
     });
   }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> sortByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> sortByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
-    });
-  }
 }
 
 extension ThreadQuerySortThenBy on QueryBuilder<Thread, Thread, QSortThenBy> {
-  QueryBuilder<Thread, Thread, QAfterSortBy> thenByBrand() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'brand', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> thenByBrandDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'brand', Sort.desc);
-    });
-  }
-
   QueryBuilder<Thread, Thread, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1260,30 +1035,6 @@ extension ThreadQuerySortThenBy on QueryBuilder<Thread, Thread, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Thread, Thread, QAfterSortBy> thenByPurchasePrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> thenByPurchasePriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> thenByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> thenByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
-    });
-  }
-
   QueryBuilder<Thread, Thread, QAfterSortBy> thenByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.asc);
@@ -1293,6 +1044,18 @@ extension ThreadQuerySortThenBy on QueryBuilder<Thread, Thread, QSortThenBy> {
   QueryBuilder<Thread, Thread, QAfterSortBy> thenByStatusDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterSortBy> thenByStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QAfterSortBy> thenByStockDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -1331,28 +1094,9 @@ extension ThreadQuerySortThenBy on QueryBuilder<Thread, Thread, QSortThenBy> {
       return query.addSortBy(r'unit', Sort.desc);
     });
   }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> thenByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QAfterSortBy> thenByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
-    });
-  }
 }
 
 extension ThreadQueryWhereDistinct on QueryBuilder<Thread, Thread, QDistinct> {
-  QueryBuilder<Thread, Thread, QDistinct> distinctByBrand(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'brand', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<Thread, Thread, QDistinct> distinctByIsMultiColor() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isMultiColor');
@@ -1366,21 +1110,15 @@ extension ThreadQueryWhereDistinct on QueryBuilder<Thread, Thread, QDistinct> {
     });
   }
 
-  QueryBuilder<Thread, Thread, QDistinct> distinctByPurchasePrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<Thread, Thread, QDistinct> distinctByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'quantity');
-    });
-  }
-
   QueryBuilder<Thread, Thread, QDistinct> distinctByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'status');
+    });
+  }
+
+  QueryBuilder<Thread, Thread, QDistinct> distinctByStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'stock');
     });
   }
 
@@ -1401,24 +1139,12 @@ extension ThreadQueryWhereDistinct on QueryBuilder<Thread, Thread, QDistinct> {
       return query.addDistinctBy(r'unit');
     });
   }
-
-  QueryBuilder<Thread, Thread, QDistinct> distinctByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'unitPrice');
-    });
-  }
 }
 
 extension ThreadQueryProperty on QueryBuilder<Thread, Thread, QQueryProperty> {
   QueryBuilder<Thread, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
-    });
-  }
-
-  QueryBuilder<Thread, String, QQueryOperations> brandProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'brand');
     });
   }
 
@@ -1434,21 +1160,15 @@ extension ThreadQueryProperty on QueryBuilder<Thread, Thread, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Thread, double, QQueryOperations> purchasePriceProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<Thread, int, QQueryOperations> quantityProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'quantity');
-    });
-  }
-
   QueryBuilder<Thread, ThreadStatus, QQueryOperations> statusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'status');
+    });
+  }
+
+  QueryBuilder<Thread, int, QQueryOperations> stockProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'stock');
     });
   }
 
@@ -1467,12 +1187,6 @@ extension ThreadQueryProperty on QueryBuilder<Thread, Thread, QQueryProperty> {
   QueryBuilder<Thread, UnitWeight, QQueryOperations> unitProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'unit');
-    });
-  }
-
-  QueryBuilder<Thread, double, QQueryOperations> unitPriceProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'unitPrice');
     });
   }
 }
@@ -1498,32 +1212,22 @@ const FillingSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'purchasePrice': PropertySchema(
+    r'stock': PropertySchema(
       id: 2,
-      name: r'purchasePrice',
-      type: IsarType.double,
-    ),
-    r'quantity': PropertySchema(
-      id: 3,
-      name: r'quantity',
+      name: r'stock',
       type: IsarType.long,
     ),
     r'type': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'type',
       type: IsarType.byte,
       enumMap: _FillingtypeEnumValueMap,
     ),
     r'unit': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'unit',
       type: IsarType.byte,
       enumMap: _FillingunitEnumValueMap,
-    ),
-    r'unitPrice': PropertySchema(
-      id: 6,
-      name: r'unitPrice',
-      type: IsarType.double,
     )
   },
   estimateSize: _fillingEstimateSize,
@@ -1532,7 +1236,15 @@ const FillingSchema = CollectionSchema(
   deserializeProp: _fillingDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'bills': LinkSchema(
+      id: -5786305821310130867,
+      name: r'bills',
+      target: r'Bill',
+      single: false,
+      linkName: r'filling',
+    )
+  },
   embeddedSchemas: {},
   getId: _fillingGetId,
   getLinks: _fillingGetLinks,
@@ -1558,11 +1270,9 @@ void _fillingSerialize(
 ) {
   writer.writeBool(offsets[0], object.available);
   writer.writeString(offsets[1], object.name);
-  writer.writeDouble(offsets[2], object.purchasePrice);
-  writer.writeLong(offsets[3], object.quantity);
-  writer.writeByte(offsets[4], object.type.index);
-  writer.writeByte(offsets[5], object.unit.index);
-  writer.writeDouble(offsets[6], object.unitPrice);
+  writer.writeLong(offsets[2], object.stock);
+  writer.writeByte(offsets[3], object.type.index);
+  writer.writeByte(offsets[4], object.unit.index);
 }
 
 Filling _fillingDeserialize(
@@ -1575,11 +1285,10 @@ Filling _fillingDeserialize(
   object.available = reader.readBool(offsets[0]);
   object.id = id;
   object.name = reader.readString(offsets[1]);
-  object.purchasePrice = reader.readDouble(offsets[2]);
-  object.quantity = reader.readLong(offsets[3]);
-  object.type = _FillingtypeValueEnumMap[reader.readByteOrNull(offsets[4])] ??
+  object.stock = reader.readLong(offsets[2]);
+  object.type = _FillingtypeValueEnumMap[reader.readByteOrNull(offsets[3])] ??
       CrochetType.thread;
-  object.unit = _FillingunitValueEnumMap[reader.readByteOrNull(offsets[5])] ??
+  object.unit = _FillingunitValueEnumMap[reader.readByteOrNull(offsets[4])] ??
       UnitWeight.gr;
   return object;
 }
@@ -1596,17 +1305,13 @@ P _fillingDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readDouble(offset)) as P;
-    case 3:
       return (reader.readLong(offset)) as P;
-    case 4:
+    case 3:
       return (_FillingtypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CrochetType.thread) as P;
-    case 5:
+    case 4:
       return (_FillingunitValueEnumMap[reader.readByteOrNull(offset)] ??
           UnitWeight.gr) as P;
-    case 6:
-      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1644,11 +1349,12 @@ Id _fillingGetId(Filling object) {
 }
 
 List<IsarLinkBase<dynamic>> _fillingGetLinks(Filling object) {
-  return [];
+  return [object.bills];
 }
 
 void _fillingAttach(IsarCollection<dynamic> col, Id id, Filling object) {
   object.id = id;
+  object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
 }
 
 extension FillingQueryWhereSort on QueryBuilder<Filling, Filling, QWhere> {
@@ -1920,106 +1626,43 @@ extension FillingQueryFilter
     });
   }
 
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> purchasePriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterFilterCondition>
-      purchasePriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> purchasePriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> purchasePriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'purchasePrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> quantityEqualTo(
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> stockEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> quantityGreaterThan(
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> stockGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> quantityLessThan(
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> stockLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> quantityBetween(
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> stockBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -2027,7 +1670,7 @@ extension FillingQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'quantity',
+        property: r'stock',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -2141,75 +1784,69 @@ extension FillingQueryFilter
       ));
     });
   }
-
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> unitPriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> unitPriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> unitPriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> unitPriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'unitPrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
 }
 
 extension FillingQueryObject
     on QueryBuilder<Filling, Filling, QFilterCondition> {}
 
 extension FillingQueryLinks
-    on QueryBuilder<Filling, Filling, QFilterCondition> {}
+    on QueryBuilder<Filling, Filling, QFilterCondition> {
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> bills(
+      FilterQuery<Bill> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'bills');
+    });
+  }
+
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> billsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> billsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> billsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> billsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> billsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> billsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'bills', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension FillingQuerySortBy on QueryBuilder<Filling, Filling, QSortBy> {
   QueryBuilder<Filling, Filling, QAfterSortBy> sortByAvailable() {
@@ -2236,27 +1873,15 @@ extension FillingQuerySortBy on QueryBuilder<Filling, Filling, QSortBy> {
     });
   }
 
-  QueryBuilder<Filling, Filling, QAfterSortBy> sortByPurchasePrice() {
+  QueryBuilder<Filling, Filling, QAfterSortBy> sortByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
+      return query.addSortBy(r'stock', Sort.asc);
     });
   }
 
-  QueryBuilder<Filling, Filling, QAfterSortBy> sortByPurchasePriceDesc() {
+  QueryBuilder<Filling, Filling, QAfterSortBy> sortByStockDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterSortBy> sortByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterSortBy> sortByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -2281,18 +1906,6 @@ extension FillingQuerySortBy on QueryBuilder<Filling, Filling, QSortBy> {
   QueryBuilder<Filling, Filling, QAfterSortBy> sortByUnitDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'unit', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterSortBy> sortByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterSortBy> sortByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
     });
   }
 }
@@ -2335,27 +1948,15 @@ extension FillingQuerySortThenBy
     });
   }
 
-  QueryBuilder<Filling, Filling, QAfterSortBy> thenByPurchasePrice() {
+  QueryBuilder<Filling, Filling, QAfterSortBy> thenByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
+      return query.addSortBy(r'stock', Sort.asc);
     });
   }
 
-  QueryBuilder<Filling, Filling, QAfterSortBy> thenByPurchasePriceDesc() {
+  QueryBuilder<Filling, Filling, QAfterSortBy> thenByStockDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterSortBy> thenByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterSortBy> thenByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -2382,18 +1983,6 @@ extension FillingQuerySortThenBy
       return query.addSortBy(r'unit', Sort.desc);
     });
   }
-
-  QueryBuilder<Filling, Filling, QAfterSortBy> thenByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterSortBy> thenByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
-    });
-  }
 }
 
 extension FillingQueryWhereDistinct
@@ -2411,15 +2000,9 @@ extension FillingQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Filling, Filling, QDistinct> distinctByPurchasePrice() {
+  QueryBuilder<Filling, Filling, QDistinct> distinctByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QDistinct> distinctByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'quantity');
+      return query.addDistinctBy(r'stock');
     });
   }
 
@@ -2432,12 +2015,6 @@ extension FillingQueryWhereDistinct
   QueryBuilder<Filling, Filling, QDistinct> distinctByUnit() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'unit');
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QDistinct> distinctByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'unitPrice');
     });
   }
 }
@@ -2462,15 +2039,9 @@ extension FillingQueryProperty
     });
   }
 
-  QueryBuilder<Filling, double, QQueryOperations> purchasePriceProperty() {
+  QueryBuilder<Filling, int, QQueryOperations> stockProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<Filling, int, QQueryOperations> quantityProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'quantity');
+      return query.addPropertyName(r'stock');
     });
   }
 
@@ -2483,12 +2054,6 @@ extension FillingQueryProperty
   QueryBuilder<Filling, UnitWeight, QQueryOperations> unitProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'unit');
-    });
-  }
-
-  QueryBuilder<Filling, double, QQueryOperations> unitPriceProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'unitPrice');
     });
   }
 }
@@ -2509,42 +2074,32 @@ const SafetyEyesSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'purchasePrice': PropertySchema(
-      id: 1,
-      name: r'purchasePrice',
-      type: IsarType.double,
-    ),
-    r'quantity': PropertySchema(
-      id: 2,
-      name: r'quantity',
-      type: IsarType.long,
-    ),
     r'shape': PropertySchema(
-      id: 3,
+      id: 1,
       name: r'shape',
       type: IsarType.string,
     ),
     r'size': PropertySchema(
-      id: 4,
+      id: 2,
       name: r'size',
       type: IsarType.string,
     ),
+    r'stock': PropertySchema(
+      id: 3,
+      name: r'stock',
+      type: IsarType.long,
+    ),
     r'type': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'type',
       type: IsarType.byte,
       enumMap: _SafetyEyestypeEnumValueMap,
     ),
     r'unit': PropertySchema(
-      id: 6,
+      id: 5,
       name: r'unit',
       type: IsarType.byte,
       enumMap: _SafetyEyesunitEnumValueMap,
-    ),
-    r'unitPrice': PropertySchema(
-      id: 7,
-      name: r'unitPrice',
-      type: IsarType.double,
     )
   },
   estimateSize: _safetyEyesEstimateSize,
@@ -2553,7 +2108,15 @@ const SafetyEyesSchema = CollectionSchema(
   deserializeProp: _safetyEyesDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'bills': LinkSchema(
+      id: -6189584522810227873,
+      name: r'bills',
+      target: r'Bill',
+      single: false,
+      linkName: r'safetyEye',
+    )
+  },
   embeddedSchemas: {},
   getId: _safetyEyesGetId,
   getLinks: _safetyEyesGetLinks,
@@ -2580,13 +2143,11 @@ void _safetyEyesSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.name);
-  writer.writeDouble(offsets[1], object.purchasePrice);
-  writer.writeLong(offsets[2], object.quantity);
-  writer.writeString(offsets[3], object.shape);
-  writer.writeString(offsets[4], object.size);
-  writer.writeByte(offsets[5], object.type.index);
-  writer.writeByte(offsets[6], object.unit.index);
-  writer.writeDouble(offsets[7], object.unitPrice);
+  writer.writeString(offsets[1], object.shape);
+  writer.writeString(offsets[2], object.size);
+  writer.writeLong(offsets[3], object.stock);
+  writer.writeByte(offsets[4], object.type.index);
+  writer.writeByte(offsets[5], object.unit.index);
 }
 
 SafetyEyes _safetyEyesDeserialize(
@@ -2598,15 +2159,14 @@ SafetyEyes _safetyEyesDeserialize(
   final object = SafetyEyes();
   object.id = id;
   object.name = reader.readString(offsets[0]);
-  object.purchasePrice = reader.readDouble(offsets[1]);
-  object.quantity = reader.readLong(offsets[2]);
-  object.shape = reader.readString(offsets[3]);
-  object.size = reader.readString(offsets[4]);
+  object.shape = reader.readString(offsets[1]);
+  object.size = reader.readString(offsets[2]);
+  object.stock = reader.readLong(offsets[3]);
   object.type =
-      _SafetyEyestypeValueEnumMap[reader.readByteOrNull(offsets[5])] ??
+      _SafetyEyestypeValueEnumMap[reader.readByteOrNull(offsets[4])] ??
           CrochetType.thread;
   object.unit =
-      _SafetyEyesunitValueEnumMap[reader.readByteOrNull(offsets[6])] ??
+      _SafetyEyesunitValueEnumMap[reader.readByteOrNull(offsets[5])] ??
           UnitWeight.gr;
   return object;
 }
@@ -2621,21 +2181,17 @@ P _safetyEyesDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
-    case 5:
       return (_SafetyEyestypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CrochetType.thread) as P;
-    case 6:
+    case 5:
       return (_SafetyEyesunitValueEnumMap[reader.readByteOrNull(offset)] ??
           UnitWeight.gr) as P;
-    case 7:
-      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -2673,11 +2229,12 @@ Id _safetyEyesGetId(SafetyEyes object) {
 }
 
 List<IsarLinkBase<dynamic>> _safetyEyesGetLinks(SafetyEyes object) {
-  return [];
+  return [object.bills];
 }
 
 void _safetyEyesAttach(IsarCollection<dynamic> col, Id id, SafetyEyes object) {
   object.id = id;
+  object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
 }
 
 extension SafetyEyesQueryWhereSort
@@ -2938,126 +2495,6 @@ extension SafetyEyesQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
         value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
-      purchasePriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
-      purchasePriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
-      purchasePriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
-      purchasePriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'purchasePrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> quantityEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'quantity',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
-      quantityGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'quantity',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> quantityLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'quantity',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> quantityBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'quantity',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
       ));
     });
   }
@@ -3323,6 +2760,59 @@ extension SafetyEyesQueryFilter
     });
   }
 
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> stockEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'stock',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> stockGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'stock',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> stockLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'stock',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> stockBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'stock',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> typeEqualTo(
       CrochetType value) {
     return QueryBuilder.apply(this, (query) {
@@ -3428,76 +2918,73 @@ extension SafetyEyesQueryFilter
       ));
     });
   }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> unitPriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
-      unitPriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> unitPriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> unitPriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'unitPrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
 }
 
 extension SafetyEyesQueryObject
     on QueryBuilder<SafetyEyes, SafetyEyes, QFilterCondition> {}
 
 extension SafetyEyesQueryLinks
-    on QueryBuilder<SafetyEyes, SafetyEyes, QFilterCondition> {}
+    on QueryBuilder<SafetyEyes, SafetyEyes, QFilterCondition> {
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> bills(
+      FilterQuery<Bill> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'bills');
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
+      billsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> billsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
+      billsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
+      billsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
+      billsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition>
+      billsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'bills', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension SafetyEyesQuerySortBy
     on QueryBuilder<SafetyEyes, SafetyEyes, QSortBy> {
@@ -3510,30 +2997,6 @@ extension SafetyEyesQuerySortBy
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByPurchasePrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByPurchasePriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
     });
   }
 
@@ -3561,6 +3024,18 @@ extension SafetyEyesQuerySortBy
     });
   }
 
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByStockDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.desc);
+    });
+  }
+
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -3582,18 +3057,6 @@ extension SafetyEyesQuerySortBy
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByUnitDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'unit', Sort.desc);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> sortByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
     });
   }
 }
@@ -3624,30 +3087,6 @@ extension SafetyEyesQuerySortThenBy
     });
   }
 
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> thenByPurchasePrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> thenByPurchasePriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> thenByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> thenByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
-    });
-  }
-
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> thenByShape() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'shape', Sort.asc);
@@ -3669,6 +3108,18 @@ extension SafetyEyesQuerySortThenBy
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> thenBySizeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'size', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> thenByStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> thenByStockDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -3695,18 +3146,6 @@ extension SafetyEyesQuerySortThenBy
       return query.addSortBy(r'unit', Sort.desc);
     });
   }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> thenByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterSortBy> thenByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
-    });
-  }
 }
 
 extension SafetyEyesQueryWhereDistinct
@@ -3715,18 +3154,6 @@ extension SafetyEyesQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QDistinct> distinctByPurchasePrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QDistinct> distinctByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'quantity');
     });
   }
 
@@ -3744,6 +3171,12 @@ extension SafetyEyesQueryWhereDistinct
     });
   }
 
+  QueryBuilder<SafetyEyes, SafetyEyes, QDistinct> distinctByStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'stock');
+    });
+  }
+
   QueryBuilder<SafetyEyes, SafetyEyes, QDistinct> distinctByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'type');
@@ -3753,12 +3186,6 @@ extension SafetyEyesQueryWhereDistinct
   QueryBuilder<SafetyEyes, SafetyEyes, QDistinct> distinctByUnit() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'unit');
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QDistinct> distinctByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'unitPrice');
     });
   }
 }
@@ -3777,18 +3204,6 @@ extension SafetyEyesQueryProperty
     });
   }
 
-  QueryBuilder<SafetyEyes, double, QQueryOperations> purchasePriceProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<SafetyEyes, int, QQueryOperations> quantityProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'quantity');
-    });
-  }
-
   QueryBuilder<SafetyEyes, String, QQueryOperations> shapeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'shape');
@@ -3801,6 +3216,12 @@ extension SafetyEyesQueryProperty
     });
   }
 
+  QueryBuilder<SafetyEyes, int, QQueryOperations> stockProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'stock');
+    });
+  }
+
   QueryBuilder<SafetyEyes, CrochetType, QQueryOperations> typeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'type');
@@ -3810,12 +3231,6 @@ extension SafetyEyesQueryProperty
   QueryBuilder<SafetyEyes, UnitWeight, QQueryOperations> unitProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'unit');
-    });
-  }
-
-  QueryBuilder<SafetyEyes, double, QQueryOperations> unitPriceProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'unitPrice');
     });
   }
 }
@@ -3841,32 +3256,22 @@ const AccessoriesSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'purchasePrice': PropertySchema(
+    r'stock': PropertySchema(
       id: 2,
-      name: r'purchasePrice',
-      type: IsarType.double,
-    ),
-    r'quantity': PropertySchema(
-      id: 3,
-      name: r'quantity',
+      name: r'stock',
       type: IsarType.long,
     ),
     r'type': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'type',
       type: IsarType.byte,
       enumMap: _AccessoriestypeEnumValueMap,
     ),
     r'unit': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'unit',
       type: IsarType.byte,
       enumMap: _AccessoriesunitEnumValueMap,
-    ),
-    r'unitPrice': PropertySchema(
-      id: 6,
-      name: r'unitPrice',
-      type: IsarType.double,
     )
   },
   estimateSize: _accessoriesEstimateSize,
@@ -3875,7 +3280,15 @@ const AccessoriesSchema = CollectionSchema(
   deserializeProp: _accessoriesDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'bills': LinkSchema(
+      id: 4522008295364413064,
+      name: r'bills',
+      target: r'Bill',
+      single: false,
+      linkName: r'accessory',
+    )
+  },
   embeddedSchemas: {},
   getId: _accessoriesGetId,
   getLinks: _accessoriesGetLinks,
@@ -3908,11 +3321,9 @@ void _accessoriesSerialize(
 ) {
   writer.writeStringList(offsets[0], object.colors);
   writer.writeString(offsets[1], object.name);
-  writer.writeDouble(offsets[2], object.purchasePrice);
-  writer.writeLong(offsets[3], object.quantity);
-  writer.writeByte(offsets[4], object.type.index);
-  writer.writeByte(offsets[5], object.unit.index);
-  writer.writeDouble(offsets[6], object.unitPrice);
+  writer.writeLong(offsets[2], object.stock);
+  writer.writeByte(offsets[3], object.type.index);
+  writer.writeByte(offsets[4], object.unit.index);
 }
 
 Accessories _accessoriesDeserialize(
@@ -3925,13 +3336,12 @@ Accessories _accessoriesDeserialize(
   object.colors = reader.readStringList(offsets[0]) ?? [];
   object.id = id;
   object.name = reader.readString(offsets[1]);
-  object.purchasePrice = reader.readDouble(offsets[2]);
-  object.quantity = reader.readLong(offsets[3]);
+  object.stock = reader.readLong(offsets[2]);
   object.type =
-      _AccessoriestypeValueEnumMap[reader.readByteOrNull(offsets[4])] ??
+      _AccessoriestypeValueEnumMap[reader.readByteOrNull(offsets[3])] ??
           CrochetType.thread;
   object.unit =
-      _AccessoriesunitValueEnumMap[reader.readByteOrNull(offsets[5])] ??
+      _AccessoriesunitValueEnumMap[reader.readByteOrNull(offsets[4])] ??
           UnitWeight.gr;
   return object;
 }
@@ -3948,17 +3358,13 @@ P _accessoriesDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readDouble(offset)) as P;
-    case 3:
       return (reader.readLong(offset)) as P;
-    case 4:
+    case 3:
       return (_AccessoriestypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CrochetType.thread) as P;
-    case 5:
+    case 4:
       return (_AccessoriesunitValueEnumMap[reader.readByteOrNull(offset)] ??
           UnitWeight.gr) as P;
-    case 6:
-      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -3996,12 +3402,13 @@ Id _accessoriesGetId(Accessories object) {
 }
 
 List<IsarLinkBase<dynamic>> _accessoriesGetLinks(Accessories object) {
-  return [];
+  return [object.bills];
 }
 
 void _accessoriesAttach(
     IsarCollection<dynamic> col, Id id, Accessories object) {
   object.id = id;
+  object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
 }
 
 extension AccessoriesQueryWhereSort
@@ -4493,111 +3900,44 @@ extension AccessoriesQueryFilter
     });
   }
 
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      purchasePriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      purchasePriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      purchasePriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      purchasePriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'purchasePrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> quantityEqualTo(
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> stockEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
   QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      quantityGreaterThan(
+      stockGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      quantityLessThan(
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> stockLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> quantityBetween(
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> stockBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -4605,7 +3945,7 @@ extension AccessoriesQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'quantity',
+        property: r'stock',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -4719,79 +4059,73 @@ extension AccessoriesQueryFilter
       ));
     });
   }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      unitPriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      unitPriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      unitPriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      unitPriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'unitPrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
 }
 
 extension AccessoriesQueryObject
     on QueryBuilder<Accessories, Accessories, QFilterCondition> {}
 
 extension AccessoriesQueryLinks
-    on QueryBuilder<Accessories, Accessories, QFilterCondition> {}
+    on QueryBuilder<Accessories, Accessories, QFilterCondition> {
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> bills(
+      FilterQuery<Bill> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'bills');
+    });
+  }
+
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
+      billsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> billsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
+      billsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
+      billsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
+      billsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
+      billsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'bills', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension AccessoriesQuerySortBy
     on QueryBuilder<Accessories, Accessories, QSortBy> {
@@ -4807,28 +4141,15 @@ extension AccessoriesQuerySortBy
     });
   }
 
-  QueryBuilder<Accessories, Accessories, QAfterSortBy> sortByPurchasePrice() {
+  QueryBuilder<Accessories, Accessories, QAfterSortBy> sortByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
+      return query.addSortBy(r'stock', Sort.asc);
     });
   }
 
-  QueryBuilder<Accessories, Accessories, QAfterSortBy>
-      sortByPurchasePriceDesc() {
+  QueryBuilder<Accessories, Accessories, QAfterSortBy> sortByStockDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterSortBy> sortByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterSortBy> sortByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -4853,18 +4174,6 @@ extension AccessoriesQuerySortBy
   QueryBuilder<Accessories, Accessories, QAfterSortBy> sortByUnitDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'unit', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterSortBy> sortByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterSortBy> sortByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
     });
   }
 }
@@ -4895,28 +4204,15 @@ extension AccessoriesQuerySortThenBy
     });
   }
 
-  QueryBuilder<Accessories, Accessories, QAfterSortBy> thenByPurchasePrice() {
+  QueryBuilder<Accessories, Accessories, QAfterSortBy> thenByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
+      return query.addSortBy(r'stock', Sort.asc);
     });
   }
 
-  QueryBuilder<Accessories, Accessories, QAfterSortBy>
-      thenByPurchasePriceDesc() {
+  QueryBuilder<Accessories, Accessories, QAfterSortBy> thenByStockDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterSortBy> thenByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterSortBy> thenByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -4943,18 +4239,6 @@ extension AccessoriesQuerySortThenBy
       return query.addSortBy(r'unit', Sort.desc);
     });
   }
-
-  QueryBuilder<Accessories, Accessories, QAfterSortBy> thenByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterSortBy> thenByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
-    });
-  }
 }
 
 extension AccessoriesQueryWhereDistinct
@@ -4972,15 +4256,9 @@ extension AccessoriesQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Accessories, Accessories, QDistinct> distinctByPurchasePrice() {
+  QueryBuilder<Accessories, Accessories, QDistinct> distinctByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QDistinct> distinctByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'quantity');
+      return query.addDistinctBy(r'stock');
     });
   }
 
@@ -4993,12 +4271,6 @@ extension AccessoriesQueryWhereDistinct
   QueryBuilder<Accessories, Accessories, QDistinct> distinctByUnit() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'unit');
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QDistinct> distinctByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'unitPrice');
     });
   }
 }
@@ -5023,15 +4295,9 @@ extension AccessoriesQueryProperty
     });
   }
 
-  QueryBuilder<Accessories, double, QQueryOperations> purchasePriceProperty() {
+  QueryBuilder<Accessories, int, QQueryOperations> stockProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<Accessories, int, QQueryOperations> quantityProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'quantity');
+      return query.addPropertyName(r'stock');
     });
   }
 
@@ -5044,12 +4310,6 @@ extension AccessoriesQueryProperty
   QueryBuilder<Accessories, UnitWeight, QQueryOperations> unitProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'unit');
-    });
-  }
-
-  QueryBuilder<Accessories, double, QQueryOperations> unitPriceProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'unitPrice');
     });
   }
 }
@@ -5075,32 +4335,22 @@ const KeychainsSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'purchasePrice': PropertySchema(
+    r'stock': PropertySchema(
       id: 2,
-      name: r'purchasePrice',
-      type: IsarType.double,
-    ),
-    r'quantity': PropertySchema(
-      id: 3,
-      name: r'quantity',
+      name: r'stock',
       type: IsarType.long,
     ),
     r'type': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'type',
       type: IsarType.byte,
       enumMap: _KeychainstypeEnumValueMap,
     ),
     r'unit': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'unit',
       type: IsarType.byte,
       enumMap: _KeychainsunitEnumValueMap,
-    ),
-    r'unitPrice': PropertySchema(
-      id: 6,
-      name: r'unitPrice',
-      type: IsarType.double,
     )
   },
   estimateSize: _keychainsEstimateSize,
@@ -5109,7 +4359,15 @@ const KeychainsSchema = CollectionSchema(
   deserializeProp: _keychainsDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'bills': LinkSchema(
+      id: 2833234584986310216,
+      name: r'bills',
+      target: r'Bill',
+      single: false,
+      linkName: r'keychains',
+    )
+  },
   embeddedSchemas: {},
   getId: _keychainsGetId,
   getLinks: _keychainsGetLinks,
@@ -5136,11 +4394,9 @@ void _keychainsSerialize(
 ) {
   writer.writeString(offsets[0], object.color);
   writer.writeString(offsets[1], object.name);
-  writer.writeDouble(offsets[2], object.purchasePrice);
-  writer.writeLong(offsets[3], object.quantity);
-  writer.writeByte(offsets[4], object.type.index);
-  writer.writeByte(offsets[5], object.unit.index);
-  writer.writeDouble(offsets[6], object.unitPrice);
+  writer.writeLong(offsets[2], object.stock);
+  writer.writeByte(offsets[3], object.type.index);
+  writer.writeByte(offsets[4], object.unit.index);
 }
 
 Keychains _keychainsDeserialize(
@@ -5153,11 +4409,10 @@ Keychains _keychainsDeserialize(
   object.color = reader.readString(offsets[0]);
   object.id = id;
   object.name = reader.readString(offsets[1]);
-  object.purchasePrice = reader.readDouble(offsets[2]);
-  object.quantity = reader.readLong(offsets[3]);
-  object.type = _KeychainstypeValueEnumMap[reader.readByteOrNull(offsets[4])] ??
+  object.stock = reader.readLong(offsets[2]);
+  object.type = _KeychainstypeValueEnumMap[reader.readByteOrNull(offsets[3])] ??
       CrochetType.thread;
-  object.unit = _KeychainsunitValueEnumMap[reader.readByteOrNull(offsets[5])] ??
+  object.unit = _KeychainsunitValueEnumMap[reader.readByteOrNull(offsets[4])] ??
       UnitWeight.gr;
   return object;
 }
@@ -5174,17 +4429,13 @@ P _keychainsDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readDouble(offset)) as P;
-    case 3:
       return (reader.readLong(offset)) as P;
-    case 4:
+    case 3:
       return (_KeychainstypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CrochetType.thread) as P;
-    case 5:
+    case 4:
       return (_KeychainsunitValueEnumMap[reader.readByteOrNull(offset)] ??
           UnitWeight.gr) as P;
-    case 6:
-      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -5222,11 +4473,12 @@ Id _keychainsGetId(Keychains object) {
 }
 
 List<IsarLinkBase<dynamic>> _keychainsGetLinks(Keychains object) {
-  return [];
+  return [object.bills];
 }
 
 void _keychainsAttach(IsarCollection<dynamic> col, Id id, Keychains object) {
   object.id = id;
+  object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
 }
 
 extension KeychainsQueryWhereSort
@@ -5621,109 +4873,43 @@ extension KeychainsQueryFilter
     });
   }
 
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition>
-      purchasePriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition>
-      purchasePriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition>
-      purchasePriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition>
-      purchasePriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'purchasePrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> quantityEqualTo(
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> stockEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> quantityGreaterThan(
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> stockGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> quantityLessThan(
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> stockLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> quantityBetween(
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> stockBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -5731,7 +4917,7 @@ extension KeychainsQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'quantity',
+        property: r'stock',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -5845,76 +5031,70 @@ extension KeychainsQueryFilter
       ));
     });
   }
-
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> unitPriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition>
-      unitPriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> unitPriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> unitPriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'unitPrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
 }
 
 extension KeychainsQueryObject
     on QueryBuilder<Keychains, Keychains, QFilterCondition> {}
 
 extension KeychainsQueryLinks
-    on QueryBuilder<Keychains, Keychains, QFilterCondition> {}
+    on QueryBuilder<Keychains, Keychains, QFilterCondition> {
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> bills(
+      FilterQuery<Bill> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'bills');
+    });
+  }
+
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> billsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> billsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> billsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> billsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition>
+      billsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> billsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'bills', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension KeychainsQuerySortBy on QueryBuilder<Keychains, Keychains, QSortBy> {
   QueryBuilder<Keychains, Keychains, QAfterSortBy> sortByColor() {
@@ -5941,27 +5121,15 @@ extension KeychainsQuerySortBy on QueryBuilder<Keychains, Keychains, QSortBy> {
     });
   }
 
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> sortByPurchasePrice() {
+  QueryBuilder<Keychains, Keychains, QAfterSortBy> sortByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
+      return query.addSortBy(r'stock', Sort.asc);
     });
   }
 
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> sortByPurchasePriceDesc() {
+  QueryBuilder<Keychains, Keychains, QAfterSortBy> sortByStockDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> sortByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> sortByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -5986,18 +5154,6 @@ extension KeychainsQuerySortBy on QueryBuilder<Keychains, Keychains, QSortBy> {
   QueryBuilder<Keychains, Keychains, QAfterSortBy> sortByUnitDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'unit', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> sortByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> sortByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
     });
   }
 }
@@ -6040,27 +5196,15 @@ extension KeychainsQuerySortThenBy
     });
   }
 
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> thenByPurchasePrice() {
+  QueryBuilder<Keychains, Keychains, QAfterSortBy> thenByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
+      return query.addSortBy(r'stock', Sort.asc);
     });
   }
 
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> thenByPurchasePriceDesc() {
+  QueryBuilder<Keychains, Keychains, QAfterSortBy> thenByStockDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> thenByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> thenByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -6087,18 +5231,6 @@ extension KeychainsQuerySortThenBy
       return query.addSortBy(r'unit', Sort.desc);
     });
   }
-
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> thenByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QAfterSortBy> thenByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
-    });
-  }
 }
 
 extension KeychainsQueryWhereDistinct
@@ -6117,15 +5249,9 @@ extension KeychainsQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Keychains, Keychains, QDistinct> distinctByPurchasePrice() {
+  QueryBuilder<Keychains, Keychains, QDistinct> distinctByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QDistinct> distinctByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'quantity');
+      return query.addDistinctBy(r'stock');
     });
   }
 
@@ -6138,12 +5264,6 @@ extension KeychainsQueryWhereDistinct
   QueryBuilder<Keychains, Keychains, QDistinct> distinctByUnit() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'unit');
-    });
-  }
-
-  QueryBuilder<Keychains, Keychains, QDistinct> distinctByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'unitPrice');
     });
   }
 }
@@ -6168,15 +5288,9 @@ extension KeychainsQueryProperty
     });
   }
 
-  QueryBuilder<Keychains, double, QQueryOperations> purchasePriceProperty() {
+  QueryBuilder<Keychains, int, QQueryOperations> stockProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<Keychains, int, QQueryOperations> quantityProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'quantity');
+      return query.addPropertyName(r'stock');
     });
   }
 
@@ -6189,12 +5303,6 @@ extension KeychainsQueryProperty
   QueryBuilder<Keychains, UnitWeight, QQueryOperations> unitProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'unit');
-    });
-  }
-
-  QueryBuilder<Keychains, double, QQueryOperations> unitPriceProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'unitPrice');
     });
   }
 }
@@ -6215,32 +5323,22 @@ const PrePackingSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'purchasePrice': PropertySchema(
+    r'stock': PropertySchema(
       id: 1,
-      name: r'purchasePrice',
-      type: IsarType.double,
-    ),
-    r'quantity': PropertySchema(
-      id: 2,
-      name: r'quantity',
+      name: r'stock',
       type: IsarType.long,
     ),
     r'type': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'type',
       type: IsarType.byte,
       enumMap: _PrePackingtypeEnumValueMap,
     ),
     r'unit': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'unit',
       type: IsarType.byte,
       enumMap: _PrePackingunitEnumValueMap,
-    ),
-    r'unitPrice': PropertySchema(
-      id: 5,
-      name: r'unitPrice',
-      type: IsarType.double,
     )
   },
   estimateSize: _prePackingEstimateSize,
@@ -6249,7 +5347,15 @@ const PrePackingSchema = CollectionSchema(
   deserializeProp: _prePackingDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'bills': LinkSchema(
+      id: -7148178379464185534,
+      name: r'bills',
+      target: r'Bill',
+      single: false,
+      linkName: r'prePacking',
+    )
+  },
   embeddedSchemas: {},
   getId: _prePackingGetId,
   getLinks: _prePackingGetLinks,
@@ -6274,11 +5380,9 @@ void _prePackingSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.name);
-  writer.writeDouble(offsets[1], object.purchasePrice);
-  writer.writeLong(offsets[2], object.quantity);
-  writer.writeByte(offsets[3], object.type.index);
-  writer.writeByte(offsets[4], object.unit.index);
-  writer.writeDouble(offsets[5], object.unitPrice);
+  writer.writeLong(offsets[1], object.stock);
+  writer.writeByte(offsets[2], object.type.index);
+  writer.writeByte(offsets[3], object.unit.index);
 }
 
 PrePacking _prePackingDeserialize(
@@ -6290,13 +5394,12 @@ PrePacking _prePackingDeserialize(
   final object = PrePacking();
   object.id = id;
   object.name = reader.readString(offsets[0]);
-  object.purchasePrice = reader.readDouble(offsets[1]);
-  object.quantity = reader.readLong(offsets[2]);
+  object.stock = reader.readLong(offsets[1]);
   object.type =
-      _PrePackingtypeValueEnumMap[reader.readByteOrNull(offsets[3])] ??
+      _PrePackingtypeValueEnumMap[reader.readByteOrNull(offsets[2])] ??
           CrochetType.thread;
   object.unit =
-      _PrePackingunitValueEnumMap[reader.readByteOrNull(offsets[4])] ??
+      _PrePackingunitValueEnumMap[reader.readByteOrNull(offsets[3])] ??
           UnitWeight.gr;
   return object;
 }
@@ -6311,17 +5414,13 @@ P _prePackingDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readDouble(offset)) as P;
-    case 2:
       return (reader.readLong(offset)) as P;
-    case 3:
+    case 2:
       return (_PrePackingtypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CrochetType.thread) as P;
-    case 4:
+    case 3:
       return (_PrePackingunitValueEnumMap[reader.readByteOrNull(offset)] ??
           UnitWeight.gr) as P;
-    case 5:
-      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -6359,11 +5458,12 @@ Id _prePackingGetId(PrePacking object) {
 }
 
 List<IsarLinkBase<dynamic>> _prePackingGetLinks(PrePacking object) {
-  return [];
+  return [object.bills];
 }
 
 void _prePackingAttach(IsarCollection<dynamic> col, Id id, PrePacking object) {
   object.id = id;
+  object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
 }
 
 extension PrePackingQueryWhereSort
@@ -6628,110 +5728,43 @@ extension PrePackingQueryFilter
     });
   }
 
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
-      purchasePriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
-      purchasePriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
-      purchasePriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'purchasePrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
-      purchasePriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'purchasePrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> quantityEqualTo(
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> stockEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
-      quantityGreaterThan(
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> stockGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> quantityLessThan(
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> stockLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'quantity',
+        property: r'stock',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> quantityBetween(
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> stockBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -6739,7 +5772,7 @@ extension PrePackingQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'quantity',
+        property: r'stock',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -6853,76 +5886,73 @@ extension PrePackingQueryFilter
       ));
     });
   }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> unitPriceEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
-      unitPriceGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> unitPriceLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'unitPrice',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> unitPriceBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'unitPrice',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
 }
 
 extension PrePackingQueryObject
     on QueryBuilder<PrePacking, PrePacking, QFilterCondition> {}
 
 extension PrePackingQueryLinks
-    on QueryBuilder<PrePacking, PrePacking, QFilterCondition> {}
+    on QueryBuilder<PrePacking, PrePacking, QFilterCondition> {
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> bills(
+      FilterQuery<Bill> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'bills');
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
+      billsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> billsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
+      billsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
+      billsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
+      billsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'bills', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition>
+      billsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'bills', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension PrePackingQuerySortBy
     on QueryBuilder<PrePacking, PrePacking, QSortBy> {
@@ -6938,27 +5968,15 @@ extension PrePackingQuerySortBy
     });
   }
 
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByPurchasePrice() {
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
+      return query.addSortBy(r'stock', Sort.asc);
     });
   }
 
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByPurchasePriceDesc() {
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByStockDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -6983,18 +6001,6 @@ extension PrePackingQuerySortBy
   QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByUnitDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'unit', Sort.desc);
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
     });
   }
 }
@@ -7025,27 +6031,15 @@ extension PrePackingQuerySortThenBy
     });
   }
 
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByPurchasePrice() {
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.asc);
+      return query.addSortBy(r'stock', Sort.asc);
     });
   }
 
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByPurchasePriceDesc() {
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByStockDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'purchasePrice', Sort.desc);
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByQuantityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'quantity', Sort.desc);
+      return query.addSortBy(r'stock', Sort.desc);
     });
   }
 
@@ -7072,18 +6066,6 @@ extension PrePackingQuerySortThenBy
       return query.addSortBy(r'unit', Sort.desc);
     });
   }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.asc);
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByUnitPriceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unitPrice', Sort.desc);
-    });
-  }
 }
 
 extension PrePackingQueryWhereDistinct
@@ -7095,15 +6077,9 @@ extension PrePackingQueryWhereDistinct
     });
   }
 
-  QueryBuilder<PrePacking, PrePacking, QDistinct> distinctByPurchasePrice() {
+  QueryBuilder<PrePacking, PrePacking, QDistinct> distinctByStock() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QDistinct> distinctByQuantity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'quantity');
+      return query.addDistinctBy(r'stock');
     });
   }
 
@@ -7116,12 +6092,6 @@ extension PrePackingQueryWhereDistinct
   QueryBuilder<PrePacking, PrePacking, QDistinct> distinctByUnit() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'unit');
-    });
-  }
-
-  QueryBuilder<PrePacking, PrePacking, QDistinct> distinctByUnitPrice() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'unitPrice');
     });
   }
 }
@@ -7140,15 +6110,9 @@ extension PrePackingQueryProperty
     });
   }
 
-  QueryBuilder<PrePacking, double, QQueryOperations> purchasePriceProperty() {
+  QueryBuilder<PrePacking, int, QQueryOperations> stockProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'purchasePrice');
-    });
-  }
-
-  QueryBuilder<PrePacking, int, QQueryOperations> quantityProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'quantity');
+      return query.addPropertyName(r'stock');
     });
   }
 
@@ -7161,12 +6125,6 @@ extension PrePackingQueryProperty
   QueryBuilder<PrePacking, UnitWeight, QQueryOperations> unitProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'unit');
-    });
-  }
-
-  QueryBuilder<PrePacking, double, QQueryOperations> unitPriceProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'unitPrice');
     });
   }
 }

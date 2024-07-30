@@ -25,48 +25,42 @@ const AmigurumiSchema = CollectionSchema(
     r'materials': PropertySchema(
       id: 1,
       name: r'materials',
-      type: IsarType.objectList,
-      target: r'MaterialSnapshot',
+      type: IsarType.longList,
+    ),
+    r'materialsTypes': PropertySchema(
+      id: 2,
+      name: r'materialsTypes',
+      type: IsarType.stringList,
     ),
     r'name': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'name',
       type: IsarType.string,
-    ),
-    r'priceMaterial': PropertySchema(
-      id: 3,
-      name: r'priceMaterial',
-      type: IsarType.double,
     ),
     r'status': PropertySchema(
       id: 4,
       name: r'status',
-      type: IsarType.string,
+      type: IsarType.byte,
       enumMap: _AmigurumistatusEnumValueMap,
     ),
-    r'total': PropertySchema(
-      id: 5,
-      name: r'total',
-      type: IsarType.double,
-    ),
     r'type': PropertySchema(
-      id: 6,
+      id: 5,
       name: r'type',
       type: IsarType.byte,
       enumMap: _AmigurumitypeEnumValueMap,
     ),
     r'updatedAt': PropertySchema(
-      id: 7,
+      id: 6,
       name: r'updatedAt',
       type: IsarType.dateTime,
     ),
     r'workedHours': PropertySchema(
-      id: 8,
+      id: 7,
       name: r'workedHours',
       type: IsarType.long,
     ),
     r'workedMinutes': PropertySchema(
-      id: 9,
+      id: 8,
       name: r'workedMinutes',
       type: IsarType.long,
     )
@@ -84,14 +78,15 @@ const AmigurumiSchema = CollectionSchema(
       target: r'AmigurumiImage',
       single: false,
     ),
-    r'pricesWork': LinkSchema(
-      id: -8484001858448947399,
-      name: r'pricesWork',
-      target: r'Work',
+    r'bills': LinkSchema(
+      id: 8159034984309213183,
+      name: r'bills',
+      target: r'Bill',
       single: false,
+      linkName: r'amigurumi',
     )
   },
-  embeddedSchemas: {r'MaterialSnapshot': MaterialSnapshotSchema},
+  embeddedSchemas: {},
   getId: _amigurumiGetId,
   getLinks: _amigurumiGetLinks,
   attach: _amigurumiAttach,
@@ -104,17 +99,15 @@ int _amigurumiEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.materials.length * 3;
+  bytesCount += 3 + object.materials.length * 8;
+  bytesCount += 3 + object.materialsTypes.length * 3;
   {
-    final offsets = allOffsets[MaterialSnapshot]!;
-    for (var i = 0; i < object.materials.length; i++) {
-      final value = object.materials[i];
-      bytesCount +=
-          MaterialSnapshotSchema.estimateSize(value, offsets, allOffsets);
+    for (var i = 0; i < object.materialsTypes.length; i++) {
+      final value = object.materialsTypes[i];
+      bytesCount += value.length * 3;
     }
   }
   bytesCount += 3 + object.name.length * 3;
-  bytesCount += 3 + object.status.name.length * 3;
   return bytesCount;
 }
 
@@ -125,20 +118,14 @@ void _amigurumiSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.createdAt);
-  writer.writeObjectList<MaterialSnapshot>(
-    offsets[1],
-    allOffsets,
-    MaterialSnapshotSchema.serialize,
-    object.materials,
-  );
-  writer.writeString(offsets[2], object.name);
-  writer.writeDouble(offsets[3], object.priceMaterial);
-  writer.writeString(offsets[4], object.status.name);
-  writer.writeDouble(offsets[5], object.total);
-  writer.writeByte(offsets[6], object.type.index);
-  writer.writeDateTime(offsets[7], object.updatedAt);
-  writer.writeLong(offsets[8], object.workedHours);
-  writer.writeLong(offsets[9], object.workedMinutes);
+  writer.writeLongList(offsets[1], object.materials);
+  writer.writeStringList(offsets[2], object.materialsTypes);
+  writer.writeString(offsets[3], object.name);
+  writer.writeByte(offsets[4], object.status.index);
+  writer.writeByte(offsets[5], object.type.index);
+  writer.writeDateTime(offsets[6], object.updatedAt);
+  writer.writeLong(offsets[7], object.workedHours);
+  writer.writeLong(offsets[8], object.workedMinutes);
 }
 
 Amigurumi _amigurumiDeserialize(
@@ -150,22 +137,17 @@ Amigurumi _amigurumiDeserialize(
   final object = Amigurumi();
   object.createdAt = reader.readDateTime(offsets[0]);
   object.id = id;
-  object.materials = reader.readObjectList<MaterialSnapshot>(
-        offsets[1],
-        MaterialSnapshotSchema.deserialize,
-        allOffsets,
-        MaterialSnapshot(),
-      ) ??
-      [];
-  object.name = reader.readString(offsets[2]);
+  object.materials = reader.readLongList(offsets[1]) ?? [];
+  object.materialsTypes = reader.readStringList(offsets[2]) ?? [];
+  object.name = reader.readString(offsets[3]);
   object.status =
-      _AmigurumistatusValueEnumMap[reader.readStringOrNull(offsets[4])] ??
+      _AmigurumistatusValueEnumMap[reader.readByteOrNull(offsets[4])] ??
           AmigurumiStatus.disponible;
-  object.type = _AmigurumitypeValueEnumMap[reader.readByteOrNull(offsets[6])] ??
+  object.type = _AmigurumitypeValueEnumMap[reader.readByteOrNull(offsets[5])] ??
       AmigurumiType.special;
-  object.updatedAt = reader.readDateTime(offsets[7]);
-  object.workedHours = reader.readLong(offsets[8]);
-  object.workedMinutes = reader.readLong(offsets[9]);
+  object.updatedAt = reader.readDateTime(offsets[6]);
+  object.workedHours = reader.readLong(offsets[7]);
+  object.workedMinutes = reader.readLong(offsets[8]);
   return object;
 }
 
@@ -179,30 +161,22 @@ P _amigurumiDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readObjectList<MaterialSnapshot>(
-            offset,
-            MaterialSnapshotSchema.deserialize,
-            allOffsets,
-            MaterialSnapshot(),
-          ) ??
-          []) as P;
+      return (reader.readLongList(offset) ?? []) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringList(offset) ?? []) as P;
     case 3:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
-      return (_AmigurumistatusValueEnumMap[reader.readStringOrNull(offset)] ??
+      return (_AmigurumistatusValueEnumMap[reader.readByteOrNull(offset)] ??
           AmigurumiStatus.disponible) as P;
     case 5:
-      return (reader.readDouble(offset)) as P;
-    case 6:
       return (_AmigurumitypeValueEnumMap[reader.readByteOrNull(offset)] ??
           AmigurumiType.special) as P;
-    case 7:
+    case 6:
       return (reader.readDateTime(offset)) as P;
-    case 8:
+    case 7:
       return (reader.readLong(offset)) as P;
-    case 9:
+    case 8:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -210,14 +184,14 @@ P _amigurumiDeserializeProp<P>(
 }
 
 const _AmigurumistatusEnumValueMap = {
-  r'disponible': r'disponible',
-  r'sobrepedido': r'sobrepedido',
-  r'proximamente': r'proximamente',
+  'disponible': 0,
+  'sobrepedido': 1,
+  'proximamente': 2,
 };
 const _AmigurumistatusValueEnumMap = {
-  r'disponible': AmigurumiStatus.disponible,
-  r'sobrepedido': AmigurumiStatus.sobrepedido,
-  r'proximamente': AmigurumiStatus.proximamente,
+  0: AmigurumiStatus.disponible,
+  1: AmigurumiStatus.sobrepedido,
+  2: AmigurumiStatus.proximamente,
 };
 const _AmigurumitypeEnumValueMap = {
   'special': 0,
@@ -233,14 +207,14 @@ Id _amigurumiGetId(Amigurumi object) {
 }
 
 List<IsarLinkBase<dynamic>> _amigurumiGetLinks(Amigurumi object) {
-  return [object.images, object.pricesWork];
+  return [object.images, object.bills];
 }
 
 void _amigurumiAttach(IsarCollection<dynamic> col, Id id, Amigurumi object) {
   object.id = id;
   object.images
       .attach(col, col.isar.collection<AmigurumiImage>(), r'images', id);
-  object.pricesWork.attach(col, col.isar.collection<Work>(), r'pricesWork', id);
+  object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
 }
 
 extension AmigurumiQueryWhereSort
@@ -430,6 +404,62 @@ extension AmigurumiQueryFilter
   }
 
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsElementEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'materials',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsElementGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'materials',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsElementLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'materials',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsElementBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'materials',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
       materialsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
@@ -509,6 +539,232 @@ extension AmigurumiQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'materials',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'materialsTypes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'materialsTypes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'materialsTypes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'materialsTypes',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'materialsTypes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'materialsTypes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'materialsTypes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesElementMatches(String pattern,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'materialsTypes',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'materialsTypes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'materialsTypes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'materialsTypes',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'materialsTypes',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'materialsTypes',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'materialsTypes',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'materialsTypes',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
+      materialsTypesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'materialsTypes',
         lower,
         includeLower,
         upper,
@@ -647,81 +903,12 @@ extension AmigurumiQueryFilter
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      priceMaterialEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'priceMaterial',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      priceMaterialGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'priceMaterial',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      priceMaterialLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'priceMaterial',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      priceMaterialBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'priceMaterial',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusEqualTo(
-    AmigurumiStatus value, {
-    bool caseSensitive = true,
-  }) {
+      AmigurumiStatus value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'status',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
@@ -729,14 +916,12 @@ extension AmigurumiQueryFilter
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusGreaterThan(
     AmigurumiStatus value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'status',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
@@ -744,14 +929,12 @@ extension AmigurumiQueryFilter
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusLessThan(
     AmigurumiStatus value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'status',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
@@ -761,7 +944,6 @@ extension AmigurumiQueryFilter
     AmigurumiStatus upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -770,137 +952,6 @@ extension AmigurumiQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'status',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'status',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'status',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'status',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'status',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'status',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> totalEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'total',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> totalGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'total',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> totalLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'total',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> totalBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'total',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
       ));
     });
   }
@@ -1124,14 +1175,7 @@ extension AmigurumiQueryFilter
 }
 
 extension AmigurumiQueryObject
-    on QueryBuilder<Amigurumi, Amigurumi, QFilterCondition> {
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> materialsElement(
-      FilterQuery<MaterialSnapshot> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'materials');
-    });
-  }
-}
+    on QueryBuilder<Amigurumi, Amigurumi, QFilterCondition> {}
 
 extension AmigurumiQueryLinks
     on QueryBuilder<Amigurumi, Amigurumi, QFilterCondition> {
@@ -1193,56 +1237,52 @@ extension AmigurumiQueryLinks
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> pricesWork(
-      FilterQuery<Work> q) {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> bills(
+      FilterQuery<Bill> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'pricesWork');
+      return query.link(q, r'bills');
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      pricesWorkLengthEqualTo(int length) {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> billsLengthEqualTo(
+      int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'pricesWork', length, true, length, true);
+      return query.linkLength(r'bills', length, true, length, true);
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      pricesWorkIsEmpty() {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> billsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'pricesWork', 0, true, 0, true);
+      return query.linkLength(r'bills', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      pricesWorkIsNotEmpty() {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> billsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'pricesWork', 0, false, 999999, true);
+      return query.linkLength(r'bills', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      pricesWorkLengthLessThan(
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> billsLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'pricesWork', 0, true, length, include);
+      return query.linkLength(r'bills', 0, true, length, include);
     });
   }
 
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      pricesWorkLengthGreaterThan(
+      billsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'pricesWork', length, include, 999999, true);
+      return query.linkLength(r'bills', length, include, 999999, true);
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      pricesWorkLengthBetween(
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> billsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1250,7 +1290,7 @@ extension AmigurumiQueryLinks
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'pricesWork', lower, includeLower, upper, includeUpper);
+          r'bills', lower, includeLower, upper, includeUpper);
     });
   }
 }
@@ -1280,18 +1320,6 @@ extension AmigurumiQuerySortBy on QueryBuilder<Amigurumi, Amigurumi, QSortBy> {
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByPriceMaterial() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'priceMaterial', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByPriceMaterialDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'priceMaterial', Sort.desc);
-    });
-  }
-
   QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.asc);
@@ -1301,18 +1329,6 @@ extension AmigurumiQuerySortBy on QueryBuilder<Amigurumi, Amigurumi, QSortBy> {
   QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByStatusDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByTotal() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'total', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByTotalDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'total', Sort.desc);
     });
   }
 
@@ -1403,18 +1419,6 @@ extension AmigurumiQuerySortThenBy
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByPriceMaterial() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'priceMaterial', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByPriceMaterialDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'priceMaterial', Sort.desc);
-    });
-  }
-
   QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.asc);
@@ -1424,18 +1428,6 @@ extension AmigurumiQuerySortThenBy
   QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByStatusDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByTotal() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'total', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByTotalDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'total', Sort.desc);
     });
   }
 
@@ -1496,6 +1488,18 @@ extension AmigurumiQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByMaterials() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'materials');
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByMaterialsTypes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'materialsTypes');
+    });
+  }
+
   QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1503,22 +1507,9 @@ extension AmigurumiQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByPriceMaterial() {
+  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByStatus() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'priceMaterial');
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByStatus(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'status', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByTotal() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'total');
+      return query.addDistinctBy(r'status');
     });
   }
 
@@ -1561,10 +1552,16 @@ extension AmigurumiQueryProperty
     });
   }
 
-  QueryBuilder<Amigurumi, List<MaterialSnapshot>, QQueryOperations>
-      materialsProperty() {
+  QueryBuilder<Amigurumi, List<int>, QQueryOperations> materialsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'materials');
+    });
+  }
+
+  QueryBuilder<Amigurumi, List<String>, QQueryOperations>
+      materialsTypesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'materialsTypes');
     });
   }
 
@@ -1574,21 +1571,9 @@ extension AmigurumiQueryProperty
     });
   }
 
-  QueryBuilder<Amigurumi, double, QQueryOperations> priceMaterialProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'priceMaterial');
-    });
-  }
-
   QueryBuilder<Amigurumi, AmigurumiStatus, QQueryOperations> statusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'status');
-    });
-  }
-
-  QueryBuilder<Amigurumi, double, QQueryOperations> totalProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'total');
     });
   }
 

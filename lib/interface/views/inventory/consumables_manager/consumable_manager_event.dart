@@ -15,3 +15,10 @@ class CategorySelectEvent extends ConsumableManagerEvent {
 
   const CategorySelectEvent(this.type);
 }
+
+class AddThreadBrandEvent extends ConsumableManagerEvent {
+  final ThreadBrand brand;
+  // final MaterialActions action;
+
+  const AddThreadBrandEvent(this.brand);
+}

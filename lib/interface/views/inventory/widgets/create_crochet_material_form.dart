@@ -1,11 +1,15 @@
+import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/data/models/models.dart';
+import 'package:anju/data/models/threads/thread_brand.dart';
+import 'package:anju/data/services/anju_alerts.dart';
 import 'package:anju/interface/views/inventory/consumables_manager/consumable_manager_bloc.dart';
 import 'package:anju/interface/widgets/forms/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateCrochetMaterialForm extends StatefulWidget {
-  const CreateCrochetMaterialForm({super.key});
+  const CreateCrochetMaterialForm({super.key, this.material});
+  final Crochet? material;
 
   @override
   State<CreateCrochetMaterialForm> createState() =>
@@ -13,70 +17,174 @@ class CreateCrochetMaterialForm extends StatefulWidget {
 }
 
 class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
-  static final TextEditingController _nameController = TextEditingController();
-  static final TextEditingController _quantityController =
-      TextEditingController();
-  static final TextEditingController _purchasePriceController =
-      TextEditingController();
-  static final TextEditingController _shapeController = TextEditingController();
-  static final TextEditingController _sizeController = TextEditingController();
+  late final TextEditingController _nameController;
+  // late final TextEditingController _quantityController;
+  // late final TextEditingController _purchasePriceController;
+  late final TextEditingController _shapeController;
+  late final TextEditingController _sizeController;
+  late final TextEditingController _thicknessController;
+
+  ThreadStatus? threadStatus;
+  UnitWeight? unit;
+  @override
+  void initState() {
+    super.initState();
+
+    _nameController = TextEditingController(text: widget.material?.name);
+    // _quantityController = TextEditingController(
+    //     text: widget.material is Thread
+    //         ? (widget.material as Thread).quantity.toString()
+    //         : '');
+    _thicknessController = TextEditingController(
+        text: widget.material is Thread
+            ? (widget.material as Thread).thickness.toString()
+            : '');
+    // _purchasePriceController =
+    //     TextEditingController(text: widget.material?.purchasePrice.toString());
+    _shapeController = TextEditingController(
+        text: widget.material is SafetyEyes
+            ? (widget.material as SafetyEyes).shape
+            : '');
+    _sizeController = TextEditingController(
+        text: widget.material is SafetyEyes
+            ? (widget.material as SafetyEyes).size
+            : '');
+    if (widget.material is Thread) {
+      threadStatus = (widget.material as Thread).status;
+      unit = (widget.material as Thread).unit;
+      (widget.material as Thread).thickness;
+    }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _shapeController.dispose();
+    _sizeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ConsumableManagerBloc, ConsumableManagerState>(
       builder: (context, state) {
         if (state is ConsumableManagerChoose) {
-          return buildFormForType(state.type);
+          return buildFormForType(state);
         }
         return AnjuAddButton(onTap: () {});
       },
     );
   }
 
-  Widget buildFormForType(CrochetType type) {
-    final formFields = _formFields[type] ?? [];
+  Widget buildFormForType(ConsumableManagerState state) {
+    final formFields = _buildFormFields(state);
 
     return Column(
       children: [
         ...formFields,
-        AnjuAddButton(onTap: () {}),
+        AnjuAddButton(onTap: () {
+          // TODO:Handle form submission
+          // TODO: add alerts
+          if (_nameController.text.isEmpty && unit == null) return;
+          final consumable =
+              _createConsumableFromForm(state as ConsumableManagerChoose);
+          if (consumable != null) {
+            // TODO:Pass the consumable object to the appropriate method or state
+            // todo: For example: context.read<ConsumableManagerBloc>().add(ConsumableEvent.save(consumable));
+          }
+        }),
       ],
     );
   }
 
-  static List<Widget> buildCommonFields() {
-    return [
-      AnjuTextField(controller: _nameController, label: 'Nombre'),
-      AnjuTextField(
-        controller: _purchasePriceController,
-        label: 'Precio Compra (\$)',
-        keyboardType: TextInputType.number,
-      ),
-    ];
+  List<Widget> _buildFormFields(ConsumableManagerState state) {
+    final myState = (state as ConsumableManagerChoose);
+    switch (myState.type) {
+      case CrochetType.thread:
+        return [
+          ..._buildCommonFields(),
+          // TODO: IMPLEMENT
+          AnjuDropDown<ThreadBrand>(
+              hintText: 'Marca',
+              // value: UnitWeight.gr,
+              onChange: (value) {
+                print(value);
+              },
+              value: myState.currentBrand,
+              items: [
+                ...myState.brands.map((brand) => DropdownMenuItem<ThreadBrand>(
+                      // TODO: IMPLEMENT SELECTION OF BRAND
+                      onTap: () {},
+                      value: brand,
+                      child: Text(brand.name),
+                    )),
+                DropdownMenuItem<ThreadBrand>(
+                  value: ThreadBrand()
+                    ..id = 0
+                    ..name = 'Agregar nueva marca',
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.add,
+                      color: AnjuColors.primary,
+                    ),
+                    title: const Text('Agregar nueva marca'),
+                    onTap: AnjuAlerts.addThreadBrand,
+                  ),
+                ),
+              ]),
+          const SizedBox(height: 30),
+          AnjuTextField(
+            controller: _thicknessController,
+            label: 'Grosor (mm)',
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: 15),
+          AnjuDropDown<ThreadStatus>(
+            hintText: 'Estado del hilo',
+            value: ThreadStatus.nuevo,
+            onChange: (value) {
+              print(value);
+            },
+            items: ThreadStatus.values
+                .map(
+                  (status) => DropdownMenuItem<ThreadStatus>(
+                    value: status,
+                    child: Text(status.name),
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 30),
+        ];
+      case CrochetType.filling:
+        return [
+          ..._buildCommonFields(),
+          const SizedBox(height: 15),
+        ];
+      case CrochetType.safetyEyes:
+        return [
+          ..._buildCommonFields(),
+          AnjuTextField(controller: _shapeController, label: 'Forma'),
+          AnjuTextField(
+            controller: _sizeController,
+            label: 'Tamaño',
+            keyboardType: TextInputType.number,
+          ),
+        ];
+      case CrochetType.accessories:
+        return _buildCommonFields();
+      case CrochetType.keychains:
+        return _buildCommonFields();
+      case CrochetType.prepacking:
+        return _buildCommonFields();
+      default:
+        return [];
+    }
   }
 
-  final Map<CrochetType, List<Widget>> _formFields = {
-    CrochetType.thread: [
-      ...buildCommonFields(),
-      AnjuTextField(
-          controller: _quantityController,
-          label: 'Cantidad',
-          keyboardType: TextInputType.number),
-      AnjuDropDown<ThreadStatus>(
-        hintText: 'Estado del hilo',
-        value: ThreadStatus.nuevo,
-        onChange: (value) {
-          print(value);
-        },
-        items: ThreadStatus.values
-            .map(
-              (status) => DropdownMenuItem<ThreadStatus>(
-                value: status,
-                child: Text(status.name),
-              ),
-            )
-            .toList(),
-      ),
+  List<Widget> _buildCommonFields() {
+    return [
+      AnjuTextField(controller: _nameController, label: 'Nombre'),
       const SizedBox(height: 15),
       AnjuDropDown<UnitWeight>(
         hintText: 'Unidad',
@@ -93,30 +201,68 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
             )
             .toList(),
       ),
-      const SizedBox(height: 15),
-    ],
-    CrochetType.filling: [
-      AnjuTextField(
-        controller: _purchasePriceController,
-        label: 'Precio Compra (\$)',
-        keyboardType: TextInputType.number,
-      ),
-      const SizedBox(height: 15),
-    ],
-    CrochetType.safetyEyes: [
-      ...buildCommonFields(),
-      AnjuTextField(controller: _shapeController, label: 'Forma'),
-      AnjuTextField(
-        controller: _sizeController,
-        label: 'Tamaño',
-        keyboardType: TextInputType.number,
-      ),
-    ],
-    // TODO: AGREGAR LO DEL SELECTOR DE COLOR
-    CrochetType.accessories: buildCommonFields(),
-    // TODO: AGREGAR LO DEL SELECTOR DE COLOR
-    CrochetType.keychains: buildCommonFields(),
+      const SizedBox(height: 30),
+    ];
+  }
 
-    CrochetType.prepacking: buildCommonFields(),
-  };
+  Crochet? _createConsumableFromForm(ConsumableManagerChoose state) {
+    switch (state.type) {
+      case CrochetType.thread:
+        return Thread()
+              ..name = _nameController.text
+              ..stock = 0
+              ..unit = unit!
+            // ..purchasePrice = 0.0
+            // Add additional properties as needed
+            ;
+      case CrochetType.filling:
+        return Filling()
+              ..name = _nameController.text
+              ..stock = 0
+              ..unit = unit!
+
+            // ..purchasePrice = 0.0
+            // Add additional properties as needed
+            ;
+      case CrochetType.safetyEyes:
+        return SafetyEyes()
+              ..name = _nameController.text
+              ..shape = _shapeController.text
+              ..size = _sizeController.text
+              ..stock = 0
+              ..unit = unit!
+
+            // ..purchasePrice = 0.0
+            // Add additional properties as needed
+            ;
+      case CrochetType.accessories:
+        return Accessories()
+              ..name = _nameController.text
+              ..stock = 0
+              ..unit = unit!
+
+            // ..purchasePrice = 0.0
+            // Add additional properties as needed
+            ;
+      case CrochetType.keychains:
+        return Keychains()
+              ..name = _nameController.text
+              ..stock = 0
+              ..unit = unit!
+            // ..purchasePrice = 0.0
+            // Add additional properties as needed
+            ;
+      case CrochetType.prepacking:
+        return PrePacking()
+              ..name = _nameController.text
+              ..stock = 0
+              ..unit = unit!
+
+            // ..purchasePrice = 0.0
+            // Add additional properties as needed
+            ;
+      default:
+        return null;
+    }
+  }
 }

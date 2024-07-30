@@ -1,8 +1,16 @@
+import 'package:anju/data/database/isar_crochet_db.dart';
 import 'package:anju/data/models/crochet.dart';
+import 'package:anju/data/models/threads/thread_brand.dart';
 import 'package:anju/data/repository/consumables_repository.dart';
 import 'package:isar/isar.dart';
 
 class ConsumablesService extends ConsumablesRepository {
+  ConsumablesService(super.manager);
+  static Future<ConsumablesService> createInstance() async {
+    final manager = await IsarCrochetDb.initializeIsarDb();
+    return ConsumablesService(manager);
+  }
+
   @override
   Future<int> createOrUpdateConsumable(Crochet consumable) async {
     // Map to associate Crochet types with their database operations
@@ -66,5 +74,15 @@ class ConsumablesService extends ConsumablesRepository {
       case CrochetType.prepacking:
         return manager.db.prePackings.get(id);
     }
+  }
+
+  @override
+  Future<int> createOrUpdateBrand(ThreadBrand brand) async {
+    return manager.db.writeTxn(() => manager.db.threadBrands.put(brand));
+  }
+
+  @override
+  Future<List<ThreadBrand>> getThreadBrands() {
+    return manager.db.collection<ThreadBrand>().where().findAll();
   }
 }

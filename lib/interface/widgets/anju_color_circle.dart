@@ -1,6 +1,6 @@
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/config/utils/extensions.dart';
-import 'package:anju/data/models/thread_color.dart';
+import 'package:anju/data/models/threads/thread_color.dart';
 import 'package:anju/interface/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 

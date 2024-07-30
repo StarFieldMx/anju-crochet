@@ -84,7 +84,7 @@ class _StatsGraphCircularState extends State<StatsGraphCircular> {
     if (widget.data.length == 2) {
       return '${((100 * data.money) / widget.data.totalBill).toStringAsFixed(2)}%';
     }
-    if (data is Expenses) {
+    if (data.type == BillingType.expenses) {
       return '${((100 * data.money) / widget.data.totalExpenses).toStringAsFixed(2)}%';
     }
     return '${((100 * data.money) / widget.data.totalIncome).toStringAsFixed(2)}%';

@@ -1,6 +1,7 @@
 import 'package:anju/config/router/anju_router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 
 @AutoRouterConfig()
 class AnjuRouter extends $AnjuRouter {
@@ -45,4 +46,6 @@ class AnjuRouteCubit extends Cubit<AnjuRouter> {
 
   void goCategory({dynamic something}) => state.push(const CategoryRoute());
   void addMaterial() => state.push(ConsumablesManagerRoute());
+
+  BuildContext get context => state.navigatorKey.currentContext!;
 }

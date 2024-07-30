@@ -1,4 +1,4 @@
-import 'package:anju/config/servicelocator.dart';
+import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/data/models/crochet.dart';
 import 'package:anju/interface/views/inventory/consumables_manager/consumable_manager_bloc.dart';

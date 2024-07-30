@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:anju/config/router/anju_router.dart';
 import 'package:anju/config/router/anju_router.gr.dart';
-import 'package:anju/config/servicelocator.dart';
+import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/config/utils/images_constant.dart';
 import 'package:anju/data/models/amigurumi.dart';
