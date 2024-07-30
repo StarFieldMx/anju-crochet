@@ -25,14 +25,14 @@ class CategoryScreen extends StatelessWidget {
           future: getIt<ConsumablesService>().getConsumables(type),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              snapshot.data!.map((crochet) =>
-                  Text('${crochet.name} - stock: ${crochet.stock}'));
+              snapshot.data!.map(
+                  (crochet) => Text('${crochet.id} - stock: ${crochet.stock}'));
               return Column(
                 children: snapshot.data!
                     .map((crochet) => Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child:
-                              Text('${crochet.name} - stock: ${crochet.stock}'),
+                          child: Text(
+                              '${crochet.threadColor.value?.name ?? 'Sin nombre :O'} - stock: ${crochet.stock}'),
                         ))
                     .toList(),
               );

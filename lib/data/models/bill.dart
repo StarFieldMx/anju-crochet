@@ -20,7 +20,7 @@ class Bill {
   final amigurumi = IsarLink<Amigurumi>();
 
   // References to different types of Crochet materials
-  final thread = IsarLink<Thread>();
+  final thread = IsarLink<Yarn>();
   final filling = IsarLink<Filling>();
   final safetyEye = IsarLink<SafetyEyes>();
   final accessory = IsarLink<Accessories>();

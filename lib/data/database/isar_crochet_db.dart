@@ -14,7 +14,7 @@ class IsarCrochetDb {
     final isar = await Isar.open(
       [
         // CrochetSchema,
-        ThreadSchema,
+        YarnSchema,
         FillingSchema,
         SafetyEyesSchema,
         AccessoriesSchema,

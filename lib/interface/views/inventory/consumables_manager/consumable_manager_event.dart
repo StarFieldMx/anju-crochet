@@ -23,6 +23,20 @@ class AddThreadBrandEvent extends ConsumableManagerEvent {
   const AddThreadBrandEvent(this.brand);
 }
 
+class AddThreadTypeEvent extends ConsumableManagerEvent {
+  final ThreadType type;
+  // final MaterialActions action;
+
+  const AddThreadTypeEvent(this.type);
+}
+
+class AddThreadColorEvent extends ConsumableManagerEvent {
+  final ThreadColor color;
+  // final MaterialActions action;
+
+  const AddThreadColorEvent(this.color);
+}
+
 class ResetEvent extends ConsumableManagerEvent {
   // final ThreadBrand brand;
   // final MaterialActions action;

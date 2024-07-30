@@ -62,11 +62,14 @@ class AmigurumiDetailsScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: MultiColorCircle(colors: [
-                        Colors.amber,
-                        Colors.brown,
-                        Colors.white,
-                      ]),
+                      child: MultiColorCircle(
+                        colors: [
+                          Colors.amber,
+                          Colors.brown,
+                          Colors.white,
+                        ],
+                        isSelected: true,
+                      ),
                     );
                   },
                 ),

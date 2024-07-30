@@ -15,20 +15,21 @@ class ConsumablesService extends ConsumablesRepository {
 
   @override
   Future<int> createOrUpdateConsumable(Crochet consumable,
-      {List<ThreadColor>? colors, ThreadType? threadType}) async {
+      {required List<ThreadColor> colors, ThreadType? threadType}) async {
     // Map to associate Crochet types with their database operations
     final Map<Type, Future<int> Function()> operations = {
-      Thread: () => manager.db.writeTxn(() async {
-            final thread = consumable as Thread;
-            final id = await manager.db.threads.put(thread);
+      Yarn: () => manager.db.writeTxn(() async {
+            final thread = consumable as Yarn;
+            final id = await manager.db.yarns.put(thread);
             await thread.brand.save();
-            if (colors != null && colors.isNotEmpty) {
+            if (colors.isNotEmpty) {
               for (var color in colors) {
-                thread.threadColor.add(color);
+                thread.threadColors.add(color);
               }
-              thread.threadColor.save();
+              thread.threadColors.save();
             }
             if (threadType != null) {
+              thread.threadType.value = threadType;
               await thread.threadType.save();
             }
             return id;
@@ -59,8 +60,8 @@ class ConsumablesService extends ConsumablesRepository {
   @override
   Future<List<Crochet>> getConsumables(CrochetType type) async {
     switch (type) {
-      case CrochetType.thread:
-        return manager.db.collection<Thread>().where().findAll();
+      case CrochetType.yarn:
+        return manager.db.collection<Yarn>().where().findAll();
       case CrochetType.filling:
         return manager.db.collection<Filling>().where().findAll();
       case CrochetType.safetyEyes:
@@ -71,14 +72,16 @@ class ConsumablesService extends ConsumablesRepository {
         return manager.db.collection<Keychains>().where().findAll();
       case CrochetType.prepacking:
         return manager.db.collection<PrePacking>().where().findAll();
+      case CrochetType.hooks:
+        return manager.db.collection<Hooks>().where().findAll();
     }
   }
 
   @override
   Future<Crochet?> readConsumable(CrochetType type, int id) {
     switch (type) {
-      case CrochetType.thread:
-        return manager.db.threads.get(id);
+      case CrochetType.yarn:
+        return manager.db.yarns.get(id);
       case CrochetType.filling:
         return manager.db.fillings.get(id);
       case CrochetType.safetyEyes:
@@ -89,6 +92,8 @@ class ConsumablesService extends ConsumablesRepository {
         return manager.db.keychains.get(id);
       case CrochetType.prepacking:
         return manager.db.prePackings.get(id);
+      case CrochetType.hooks:
+        return manager.db.hooks.get(id);
     }
   }
 
@@ -100,5 +105,25 @@ class ConsumablesService extends ConsumablesRepository {
   @override
   Future<List<ThreadBrand>> getThreadBrands() {
     return manager.db.collection<ThreadBrand>().where().findAll();
+  }
+
+  @override
+  Future<int> createOrUpdateThreadType(ThreadType type) {
+    return manager.db.writeTxn(() => manager.db.threadTypes.put(type));
+  }
+
+  @override
+  Future<int> createOrUpdateThreadColor(ThreadColor color) {
+    return manager.db.writeTxn(() => manager.db.threadColors.put(color));
+  }
+
+  @override
+  Future<List<ThreadColor>> getThreadColors() {
+    return manager.db.collection<ThreadColor>().where().findAll();
+  }
+
+  @override
+  Future<List<ThreadType>> getThreadTypes() {
+    return manager.db.collection<ThreadType>().where().findAll();
   }
 }

@@ -6,34 +6,36 @@ import 'package:isar/isar.dart';
 
 part 'crochet.g.dart';
 
-enum UnitWeight { gr, kg, pza }
+enum UnitWeight { gr, kg, pza, mm, cm }
 
 enum CrochetType {
-  thread,
+  yarn,
   filling,
   safetyEyes,
   accessories,
   keychains,
   prepacking,
+  hooks,
 }
 
 enum ThreadStatus { nuevo, medio, pocoloco, agotado }
 
 abstract class Crochet {
   Id id = Isar.autoIncrement;
-  late String name;
+  // late String name;
+  final threadColor = IsarLink<ThreadColor>();
+
   @enumerated
   late CrochetType type;
   late int stock;
   // late double purchasePrice;
-  // TODO: MIGRAR A UN NUEVO MODELO QUE SEA PARA LAS VENTAS
   @enumerated
   late UnitWeight unit;
 }
 
-@collection
-class Thread extends Crochet {
-  final threadColor = IsarLinks<ThreadColor>();
+@Collection(ignore: {'threadColor'})
+class Yarn extends Crochet {
+  final threadColors = IsarLinks<ThreadColor>();
   final threadType = IsarLink<ThreadType>();
   final brand = IsarLink<ThreadBrand>();
   late double thickness;
@@ -41,14 +43,14 @@ class Thread extends Crochet {
   late ThreadStatus status;
 
   bool get isMultiColor {
-    return threadColor.isNotEmpty && threadColor.length > 1;
+    return threadColors.isNotEmpty && threadColors.length > 1;
   }
 
   @Backlink(to: 'thread')
   final bills = IsarLinks<Bill>();
 }
 
-@collection
+@Collection(ignore: {'threadColor'})
 class Filling extends Crochet {
   late bool available;
   @Backlink(to: 'filling')
@@ -63,22 +65,29 @@ class SafetyEyes extends Crochet {
   final bills = IsarLinks<Bill>();
 }
 
-@collection
+@Collection(ignore: {'threadColor'})
 class Accessories extends Crochet {
-  late List<String> colors;
+  final threadColors = IsarLinks<ThreadColor>();
+
   @Backlink(to: 'accessory')
   final bills = IsarLinks<Bill>();
 }
 
 @collection
 class Keychains extends Crochet {
-  late String color;
   @Backlink(to: 'keychains')
   final bills = IsarLinks<Bill>();
 }
 
-@collection
+@Collection(ignore: {'threadColor'})
 class PrePacking extends Crochet {
+  @Backlink(to: 'prePacking')
+  final bills = IsarLinks<Bill>();
+}
+
+@Collection(ignore: {'threadColor'})
+class Hooks extends Crochet {
+  late double thickness;
   @Backlink(to: 'prePacking')
   final bills = IsarLinks<Bill>();
 }

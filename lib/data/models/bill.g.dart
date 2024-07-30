@@ -65,7 +65,7 @@ const BillSchema = CollectionSchema(
     r'thread': LinkSchema(
       id: 4859543112089249480,
       name: r'thread',
-      target: r'Thread',
+      target: r'Yarn',
       single: true,
     ),
     r'filling': LinkSchema(
@@ -208,7 +208,7 @@ void _billAttach(IsarCollection<dynamic> col, Id id, Bill object) {
   object.id = id;
   object.amigurumi
       .attach(col, col.isar.collection<Amigurumi>(), r'amigurumi', id);
-  object.thread.attach(col, col.isar.collection<Thread>(), r'thread', id);
+  object.thread.attach(col, col.isar.collection<Yarn>(), r'thread', id);
   object.filling.attach(col, col.isar.collection<Filling>(), r'filling', id);
   object.safetyEye
       .attach(col, col.isar.collection<SafetyEyes>(), r'safetyEye', id);
@@ -857,8 +857,7 @@ extension BillQueryLinks on QueryBuilder<Bill, Bill, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Bill, Bill, QAfterFilterCondition> thread(
-      FilterQuery<Thread> q) {
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> thread(FilterQuery<Yarn> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'thread');
     });
