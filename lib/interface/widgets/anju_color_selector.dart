@@ -32,7 +32,7 @@ class ColorTypeSelectorState extends State<ColorTypeSelector> {
     return Column(
       children: [
         RadioListTile<ColorType>(
-          title: Text('Primario'),
+          title: const Text('Primario'),
           selected: selectedColorType == ColorType.primary,
           value: ColorType.primary,
           activeColor: AnjuColors.primary,
@@ -48,7 +48,7 @@ class ColorTypeSelectorState extends State<ColorTypeSelector> {
         RadioListTile<ColorType>(
           activeColor: AnjuColors.secondary,
           selected: selectedColorType == ColorType.secondary,
-          title: Text('Secundario'),
+          title: const Text('Secundario'),
           value: ColorType.secondary,
           groupValue: selectedColorType,
           onChanged: (ColorType? value) {

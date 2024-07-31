@@ -36,10 +36,14 @@ class ConsumablesService extends ConsumablesRepository {
           }),
       Filling: () => manager.db
           .writeTxn(() => manager.db.fillings.put(consumable as Filling)),
+      // TODO: Agregar threadColor
       SafetyEyes: () => manager.db
           .writeTxn(() => manager.db.safetyEyes.put(consumable as SafetyEyes)),
+      // TODO: Agregar threadColor
+
       Accessories: () => manager.db.writeTxn(
           () => manager.db.accessories.put(consumable as Accessories)),
+      // TODO: Agregar threadColor
       Keychains: () => manager.db
           .writeTxn(() => manager.db.keychains.put(consumable as Keychains)),
       PrePacking: () => manager.db
