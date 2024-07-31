@@ -4,15 +4,9 @@ import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/config/utils/utils.dart';
 import 'package:anju/data/models/crochet.dart';
 import 'package:anju/interface/widgets/anju_item_list_viewer.dart';
-import 'package:anju/interface/widgets/inventory/inventory_item.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-List<DataItem> items = [
-  DataItem(Icons.category, 'Materiales'),
-  DataItem(Icons.card_giftcard, 'Empaquetado')
-];
 
 @RoutePage()
 class InventoryScreen extends StatelessWidget {
@@ -42,13 +36,17 @@ class CategoryBasedCrochet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: EdgeInsets.zero,
       leading: SvgPicture.asset(
         width: 80,
         _getIconBasedOnType(type),
         colorFilter: ColorFilter.mode(AnjuColors.primary, BlendMode.srcIn),
       ),
-      title: Text(type.spanishPlural),
-      trailing: const Icon(Icons.arrow_forward_ios),
+      title: Text(
+        type.spanishPlural,
+        style: const TextStyle(fontSize: 18),
+      ),
+      trailing: Icon(Icons.arrow_forward_ios, color: AnjuColors.primary),
       onTap: onTap,
     );
   }

@@ -16,7 +16,7 @@ class AnjuItemListViewer<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
       children: [
         Text(title, style: AnjuTextStyles.titleScreens),
         const SizedBox(height: 20),

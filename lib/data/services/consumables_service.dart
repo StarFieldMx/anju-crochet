@@ -44,6 +44,8 @@ class ConsumablesService extends ConsumablesRepository {
           .writeTxn(() => manager.db.keychains.put(consumable as Keychains)),
       PrePacking: () => manager.db
           .writeTxn(() => manager.db.prePackings.put(consumable as PrePacking)),
+      Hooks: () =>
+          manager.db.writeTxn(() => manager.db.hooks.put(consumable as Hooks)),
     };
 
     // Perform the operation based on the consumable's type
@@ -125,5 +127,15 @@ class ConsumablesService extends ConsumablesRepository {
   @override
   Future<List<ThreadType>> getThreadTypes() {
     return manager.db.collection<ThreadType>().where().findAll();
+  }
+
+  @override
+  Future<Filling?> getFilling() {
+    return manager.db.collection<Filling>().where().findFirst();
+  }
+
+  @override
+  Future<List<Hooks>> getHooks() {
+    return manager.db.collection<Hooks>().where().findAll();
   }
 }

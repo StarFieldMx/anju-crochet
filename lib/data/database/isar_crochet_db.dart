@@ -26,6 +26,7 @@ class IsarCrochetDb {
         BillSchema,
         AmigurumiSchema,
         AmigurumiImageSchema,
+        HooksSchema,
         // IncomeSchema,
         // ExpensesSchema,
       ],

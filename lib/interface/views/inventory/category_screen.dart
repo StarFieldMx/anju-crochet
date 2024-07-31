@@ -1,15 +1,8 @@
 import 'package:anju/config/service_locator.dart';
 import 'package:anju/data/models/models.dart';
 import 'package:anju/data/services/consumables_service.dart';
-import 'package:anju/interface/widgets/inventory/inventory_item.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-
-List<DataItem> items = [
-  DataItem(Icons.yard_outlined, 'Hilo'),
-  DataItem(Icons.cloud, 'Relleno'),
-  DataItem(Icons.key, 'Llaveros')
-];
 
 @RoutePage()
 class CategoryScreen extends StatelessWidget {
@@ -37,7 +30,7 @@ class CategoryScreen extends StatelessWidget {
                     .toList(),
               );
             }
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }),
     );
   }

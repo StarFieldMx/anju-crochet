@@ -8,14 +8,23 @@ abstract class ConsumablesRepository {
   final IsarCrochetDb manager;
 
   ConsumablesRepository(this.manager);
+  // Create or update
   Future<int> createOrUpdateConsumable(Crochet consumable,
       {required List<ThreadColor> colors, ThreadType? threadType});
   Future<int> createOrUpdateBrand(ThreadBrand brand);
   Future<int> createOrUpdateThreadType(ThreadType type);
   Future<int> createOrUpdateThreadColor(ThreadColor color);
-  Future<Crochet?> readConsumable(CrochetType type, int id);
+
+  // Get Collecction
   Future<List<Crochet>> getConsumables(CrochetType type);
   Future<List<ThreadBrand>> getThreadBrands();
   Future<List<ThreadType>> getThreadTypes();
   Future<List<ThreadColor>> getThreadColors();
+  Future<List<Hooks>> getHooks();
+
+  // READ ONE OBJECT FROM A COLLECTION
+  Future<Crochet?> readConsumable(CrochetType type, int id);
+
+  // ONLY ONE FILL
+  Future<Filling?> getFilling();
 }

@@ -36,7 +36,7 @@ const YarnSchema = CollectionSchema(
     r'thickness': PropertySchema(
       id: 3,
       name: r'thickness',
-      type: IsarType.double,
+      type: IsarType.int,
     ),
     r'type': PropertySchema(
       id: 4,
@@ -109,7 +109,7 @@ void _yarnSerialize(
   writer.writeBool(offsets[0], object.isMultiColor);
   writer.writeByte(offsets[1], object.status.index);
   writer.writeLong(offsets[2], object.stock);
-  writer.writeDouble(offsets[3], object.thickness);
+  writer.writeInt(offsets[3], object.thickness);
   writer.writeByte(offsets[4], object.type.index);
   writer.writeByte(offsets[5], object.unit.index);
 }
@@ -125,7 +125,7 @@ Yarn _yarnDeserialize(
   object.status = _YarnstatusValueEnumMap[reader.readByteOrNull(offsets[1])] ??
       ThreadStatus.nuevo;
   object.stock = reader.readLong(offsets[2]);
-  object.thickness = reader.readDouble(offsets[3]);
+  object.thickness = reader.readInt(offsets[3]);
   object.type = _YarntypeValueEnumMap[reader.readByteOrNull(offsets[4])] ??
       CrochetType.yarn;
   object.unit =
@@ -148,7 +148,7 @@ P _yarnDeserializeProp<P>(
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readInt(offset)) as P;
     case 4:
       return (_YarntypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CrochetType.yarn) as P;
@@ -466,55 +466,46 @@ extension YarnQueryFilter on QueryBuilder<Yarn, Yarn, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Yarn, Yarn, QAfterFilterCondition> thicknessEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
+  QueryBuilder<Yarn, Yarn, QAfterFilterCondition> thicknessEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'thickness',
         value: value,
-        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Yarn, Yarn, QAfterFilterCondition> thicknessGreaterThan(
-    double value, {
+    int value, {
     bool include = false,
-    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'thickness',
         value: value,
-        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Yarn, Yarn, QAfterFilterCondition> thicknessLessThan(
-    double value, {
+    int value, {
     bool include = false,
-    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'thickness',
         value: value,
-        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Yarn, Yarn, QAfterFilterCondition> thicknessBetween(
-    double lower,
-    double upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -523,7 +514,6 @@ extension YarnQueryFilter on QueryBuilder<Yarn, Yarn, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        epsilon: epsilon,
       ));
     });
   }
@@ -999,7 +989,7 @@ extension YarnQueryProperty on QueryBuilder<Yarn, Yarn, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Yarn, double, QQueryOperations> thicknessProperty() {
+  QueryBuilder<Yarn, int, QQueryOperations> thicknessProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'thickness');
     });
@@ -1733,7 +1723,7 @@ const SafetyEyesSchema = CollectionSchema(
     r'size': PropertySchema(
       id: 1,
       name: r'size',
-      type: IsarType.string,
+      type: IsarType.int,
     ),
     r'stock': PropertySchema(
       id: 2,
@@ -1788,7 +1778,6 @@ int _safetyEyesEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.shape.length * 3;
-  bytesCount += 3 + object.size.length * 3;
   return bytesCount;
 }
 
@@ -1799,7 +1788,7 @@ void _safetyEyesSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.shape);
-  writer.writeString(offsets[1], object.size);
+  writer.writeInt(offsets[1], object.size);
   writer.writeLong(offsets[2], object.stock);
   writer.writeByte(offsets[3], object.type.index);
   writer.writeByte(offsets[4], object.unit.index);
@@ -1814,7 +1803,7 @@ SafetyEyes _safetyEyesDeserialize(
   final object = SafetyEyes();
   object.id = id;
   object.shape = reader.readString(offsets[0]);
-  object.size = reader.readString(offsets[1]);
+  object.size = reader.readInt(offsets[1]);
   object.stock = reader.readLong(offsets[2]);
   object.type =
       _SafetyEyestypeValueEnumMap[reader.readByteOrNull(offsets[3])] ??
@@ -1835,7 +1824,7 @@ P _safetyEyesDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readInt(offset)) as P;
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
@@ -2161,54 +2150,46 @@ extension SafetyEyesQueryFilter
   }
 
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'size',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeGreaterThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'size',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeLessThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'size',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeBetween(
-    String lower,
-    String upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -2217,75 +2198,6 @@ extension SafetyEyesQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'size',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'size',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'size',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'size',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'size',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'size',
-        value: '',
       ));
     });
   }
@@ -2677,10 +2589,9 @@ extension SafetyEyesQueryWhereDistinct
     });
   }
 
-  QueryBuilder<SafetyEyes, SafetyEyes, QDistinct> distinctBySize(
-      {bool caseSensitive = true}) {
+  QueryBuilder<SafetyEyes, SafetyEyes, QDistinct> distinctBySize() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'size', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'size');
     });
   }
 
@@ -2717,7 +2628,7 @@ extension SafetyEyesQueryProperty
     });
   }
 
-  QueryBuilder<SafetyEyes, String, QQueryOperations> sizeProperty() {
+  QueryBuilder<SafetyEyes, int, QQueryOperations> sizeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'size');
     });
@@ -2778,18 +2689,18 @@ const AccessoriesSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'threadColors': LinkSchema(
-      id: 8317186689593832106,
-      name: r'threadColors',
-      target: r'ThreadColor',
-      single: false,
-    ),
     r'bills': LinkSchema(
       id: 4522008295364413064,
       name: r'bills',
       target: r'Bill',
       single: false,
       linkName: r'accessory',
+    ),
+    r'threadColor': LinkSchema(
+      id: -7705529871074513647,
+      name: r'threadColor',
+      target: r'ThreadColor',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -2895,15 +2806,15 @@ Id _accessoriesGetId(Accessories object) {
 }
 
 List<IsarLinkBase<dynamic>> _accessoriesGetLinks(Accessories object) {
-  return [object.threadColors, object.bills];
+  return [object.bills, object.threadColor];
 }
 
 void _accessoriesAttach(
     IsarCollection<dynamic> col, Id id, Accessories object) {
   object.id = id;
-  object.threadColors
-      .attach(col, col.isar.collection<ThreadColor>(), r'threadColors', id);
   object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
+  object.threadColor
+      .attach(col, col.isar.collection<ThreadColor>(), r'threadColor', id);
 }
 
 extension AccessoriesQueryWhereSort
@@ -3205,67 +3116,6 @@ extension AccessoriesQueryObject
 
 extension AccessoriesQueryLinks
     on QueryBuilder<Accessories, Accessories, QFilterCondition> {
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> threadColors(
-      FilterQuery<ThreadColor> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'threadColors');
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      threadColorsLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'threadColors', length, true, length, true);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      threadColorsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'threadColors', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      threadColorsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'threadColors', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      threadColorsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'threadColors', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      threadColorsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'threadColors', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
-      threadColorsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(
-          r'threadColors', lower, includeLower, upper, includeUpper);
-    });
-  }
-
   QueryBuilder<Accessories, Accessories, QAfterFilterCondition> bills(
       FilterQuery<Bill> q) {
     return QueryBuilder.apply(this, (query) {
@@ -3323,6 +3173,20 @@ extension AccessoriesQueryLinks
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'bills', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> threadColor(
+      FilterQuery<ThreadColor> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'threadColor');
+    });
+  }
+
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition>
+      threadColorIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'threadColor', 0, true, 0, true);
     });
   }
 }
@@ -4143,19 +4007,29 @@ const PrePackingSchema = CollectionSchema(
   name: r'PrePacking',
   id: -1846694688209697710,
   properties: {
-    r'stock': PropertySchema(
+    r'name': PropertySchema(
       id: 0,
+      name: r'name',
+      type: IsarType.string,
+    ),
+    r'size': PropertySchema(
+      id: 1,
+      name: r'size',
+      type: IsarType.int,
+    ),
+    r'stock': PropertySchema(
+      id: 2,
       name: r'stock',
       type: IsarType.long,
     ),
     r'type': PropertySchema(
-      id: 1,
+      id: 3,
       name: r'type',
       type: IsarType.byte,
       enumMap: _PrePackingtypeEnumValueMap,
     ),
     r'unit': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'unit',
       type: IsarType.byte,
       enumMap: _PrePackingunitEnumValueMap,
@@ -4189,6 +4063,7 @@ int _prePackingEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
 
@@ -4198,9 +4073,11 @@ void _prePackingSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.stock);
-  writer.writeByte(offsets[1], object.type.index);
-  writer.writeByte(offsets[2], object.unit.index);
+  writer.writeString(offsets[0], object.name);
+  writer.writeInt(offsets[1], object.size);
+  writer.writeLong(offsets[2], object.stock);
+  writer.writeByte(offsets[3], object.type.index);
+  writer.writeByte(offsets[4], object.unit.index);
 }
 
 PrePacking _prePackingDeserialize(
@@ -4211,12 +4088,14 @@ PrePacking _prePackingDeserialize(
 ) {
   final object = PrePacking();
   object.id = id;
-  object.stock = reader.readLong(offsets[0]);
+  object.name = reader.readString(offsets[0]);
+  object.size = reader.readInt(offsets[1]);
+  object.stock = reader.readLong(offsets[2]);
   object.type =
-      _PrePackingtypeValueEnumMap[reader.readByteOrNull(offsets[1])] ??
+      _PrePackingtypeValueEnumMap[reader.readByteOrNull(offsets[3])] ??
           CrochetType.yarn;
   object.unit =
-      _PrePackingunitValueEnumMap[reader.readByteOrNull(offsets[2])] ??
+      _PrePackingunitValueEnumMap[reader.readByteOrNull(offsets[4])] ??
           UnitWeight.gr;
   return object;
 }
@@ -4229,11 +4108,15 @@ P _prePackingDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 1:
+      return (reader.readInt(offset)) as P;
+    case 2:
+      return (reader.readLong(offset)) as P;
+    case 3:
       return (_PrePackingtypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CrochetType.yarn) as P;
-    case 2:
+    case 4:
       return (_PrePackingunitValueEnumMap[reader.readByteOrNull(offset)] ??
           UnitWeight.gr) as P;
     default:
@@ -4411,6 +4294,189 @@ extension PrePackingQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> nameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> nameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> nameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> nameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> nameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> nameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> sizeEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'size',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> sizeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'size',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> sizeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'size',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> sizeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'size',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -4647,6 +4713,30 @@ extension PrePackingQueryLinks
 
 extension PrePackingQuerySortBy
     on QueryBuilder<PrePacking, PrePacking, QSortBy> {
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortBySize() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'size', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortBySizeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'size', Sort.desc);
+    });
+  }
+
   QueryBuilder<PrePacking, PrePacking, QAfterSortBy> sortByStock() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'stock', Sort.asc);
@@ -4698,6 +4788,30 @@ extension PrePackingQuerySortThenBy
     });
   }
 
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenBySize() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'size', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenBySizeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'size', Sort.desc);
+    });
+  }
+
   QueryBuilder<PrePacking, PrePacking, QAfterSortBy> thenByStock() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'stock', Sort.asc);
@@ -4737,6 +4851,19 @@ extension PrePackingQuerySortThenBy
 
 extension PrePackingQueryWhereDistinct
     on QueryBuilder<PrePacking, PrePacking, QDistinct> {
+  QueryBuilder<PrePacking, PrePacking, QDistinct> distinctByName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QDistinct> distinctBySize() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'size');
+    });
+  }
+
   QueryBuilder<PrePacking, PrePacking, QDistinct> distinctByStock() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'stock');
@@ -4761,6 +4888,18 @@ extension PrePackingQueryProperty
   QueryBuilder<PrePacking, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<PrePacking, String, QQueryOperations> nameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<PrePacking, int, QQueryOperations> sizeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'size');
     });
   }
 
@@ -4802,7 +4941,7 @@ const HooksSchema = CollectionSchema(
     r'thickness': PropertySchema(
       id: 1,
       name: r'thickness',
-      type: IsarType.double,
+      type: IsarType.int,
     ),
     r'type': PropertySchema(
       id: 2,
@@ -4855,7 +4994,7 @@ void _hooksSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.stock);
-  writer.writeDouble(offsets[1], object.thickness);
+  writer.writeInt(offsets[1], object.thickness);
   writer.writeByte(offsets[2], object.type.index);
   writer.writeByte(offsets[3], object.unit.index);
 }
@@ -4869,7 +5008,7 @@ Hooks _hooksDeserialize(
   final object = Hooks();
   object.id = id;
   object.stock = reader.readLong(offsets[0]);
-  object.thickness = reader.readDouble(offsets[1]);
+  object.thickness = reader.readInt(offsets[1]);
   object.type = _HookstypeValueEnumMap[reader.readByteOrNull(offsets[2])] ??
       CrochetType.yarn;
   object.unit = _HooksunitValueEnumMap[reader.readByteOrNull(offsets[3])] ??
@@ -4887,7 +5026,7 @@ P _hooksDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readInt(offset)) as P;
     case 2:
       return (_HookstypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CrochetType.yarn) as P;
@@ -5126,54 +5265,46 @@ extension HooksQueryFilter on QueryBuilder<Hooks, Hooks, QFilterCondition> {
   }
 
   QueryBuilder<Hooks, Hooks, QAfterFilterCondition> thicknessEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'thickness',
         value: value,
-        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Hooks, Hooks, QAfterFilterCondition> thicknessGreaterThan(
-    double value, {
+    int value, {
     bool include = false,
-    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'thickness',
         value: value,
-        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Hooks, Hooks, QAfterFilterCondition> thicknessLessThan(
-    double value, {
+    int value, {
     bool include = false,
-    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'thickness',
         value: value,
-        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Hooks, Hooks, QAfterFilterCondition> thicknessBetween(
-    double lower,
-    double upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -5182,7 +5313,6 @@ extension HooksQueryFilter on QueryBuilder<Hooks, Hooks, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        epsilon: epsilon,
       ));
     });
   }
@@ -5504,7 +5634,7 @@ extension HooksQueryProperty on QueryBuilder<Hooks, Hooks, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Hooks, double, QQueryOperations> thicknessProperty() {
+  QueryBuilder<Hooks, int, QQueryOperations> thicknessProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'thickness');
     });

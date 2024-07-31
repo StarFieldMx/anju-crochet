@@ -20,6 +20,8 @@ enum CrochetType {
 
 enum ThreadStatus { nuevo, medio, pocoloco, agotado }
 
+// TODO: VER COMO MANEJAR LOS PRECIOS DE LOS PRODUCCTOS (DIFERENTE A LOS BILLS)
+
 abstract class Crochet {
   Id id = Isar.autoIncrement;
   // late String name;
@@ -38,7 +40,9 @@ class Yarn extends Crochet {
   final threadColors = IsarLinks<ThreadColor>();
   final threadType = IsarLink<ThreadType>();
   final brand = IsarLink<ThreadBrand>();
-  late double thickness;
+
+  /// Milimetros de grosor
+  late short thickness;
   @enumerated
   late ThreadStatus status;
 
@@ -60,14 +64,16 @@ class Filling extends Crochet {
 @collection
 class SafetyEyes extends Crochet {
   late String shape;
-  late String size;
+  late short size;
+
   @Backlink(to: 'safetyEye')
   final bills = IsarLinks<Bill>();
 }
 
-@Collection(ignore: {'threadColor'})
+// @Collection(ignore: {'threadColor'})
+@collection
 class Accessories extends Crochet {
-  final threadColors = IsarLinks<ThreadColor>();
+  // final threadColors = IsarLinks<ThreadColor>();
 
   @Backlink(to: 'accessory')
   final bills = IsarLinks<Bill>();
@@ -81,13 +87,17 @@ class Keychains extends Crochet {
 
 @Collection(ignore: {'threadColor'})
 class PrePacking extends Crochet {
+  late String name;
+  late short size;
+
   @Backlink(to: 'prePacking')
   final bills = IsarLinks<Bill>();
 }
 
 @Collection(ignore: {'threadColor'})
 class Hooks extends Crochet {
-  late double thickness;
+  /// Milimetros de grosor
+  late short thickness;
   @Backlink(to: 'hooks')
   final bills = IsarLinks<Bill>();
 }

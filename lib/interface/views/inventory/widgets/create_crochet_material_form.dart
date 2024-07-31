@@ -27,6 +27,9 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
   late final TextEditingController _sizeController;
   late final TextEditingController _thicknessController;
 
+  /// For prepacking only
+  late final TextEditingController _nameController;
+
   ThreadStatus threadStatus = ThreadStatus.nuevo;
   UnitWeight unit = UnitWeight.gr;
   ThreadBrand? brand;
@@ -42,16 +45,24 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
     _thicknessController = TextEditingController(
       text: widget.material is Yarn
           ? (widget.material as Yarn).thickness.toString()
-          : '',
+          : widget.material is Hooks
+              ? (widget.material as Hooks).thickness.toString()
+              : '',
     );
     _shapeController = TextEditingController(
       text: widget.material is SafetyEyes
           ? (widget.material as SafetyEyes).shape
           : '',
     );
+
+    _nameController = TextEditingController(
+      text: widget.material is PrePacking
+          ? (widget.material as PrePacking).name
+          : '',
+    );
     _sizeController = TextEditingController(
       text: widget.material is SafetyEyes
-          ? (widget.material as SafetyEyes).size
+          ? (widget.material as SafetyEyes).size.toString()
           : '',
     );
 
@@ -139,6 +150,13 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
             return;
           }
 
+          if (state.type == CrochetType.hooks &&
+              _thicknessController.text.isEmpty) {
+            await AnjuAlerts.missingField(
+                text: 'Se te olvido agregar el grosor del gancho.');
+            return;
+          }
+
           final consumable = _createConsumableFromForm(state);
           if (consumable != null) {
             getIt<ConsumablesService>().createOrUpdateConsumable(consumable,
@@ -152,9 +170,9 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
     );
   }
 
-  List<Widget> _buildFormFields(ConsumableManagerState state) {
-    final myState = (state as ConsumableManagerChoose);
-    switch (myState.type) {
+  List<Widget> _buildFormFields(ConsumableManagerChoose state) {
+    // final state = (state as ConsumableManagerChoose);
+    switch (state.type) {
       case CrochetType.yarn:
         return [
           ..._buildCommonFields(),
@@ -165,9 +183,9 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
                 brand = value;
               });
             },
-            value: myState.brands.isNotEmpty ? myState.brands.first : brand,
+            value: state.brands.isNotEmpty ? state.brands.first : brand,
             items: [
-              ...myState.brands.map((brand) => DropdownMenuItem<ThreadBrand>(
+              ...state.brands.map((brand) => DropdownMenuItem<ThreadBrand>(
                     value: brand,
                     child: Text(brand.name),
                   )),
@@ -214,11 +232,11 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
                 threadType = value;
               });
             },
-            value: myState.threadTypes.isNotEmpty
-                ? myState.threadTypes.first
+            value: state.threadTypes.isNotEmpty
+                ? state.threadTypes.first
                 : threadType,
             items: [
-              ...myState.threadTypes.map((type) => DropdownMenuItem<ThreadType>(
+              ...state.threadTypes.map((type) => DropdownMenuItem<ThreadType>(
                     value: type,
                     child: Text(type.name),
                   )),
@@ -234,39 +252,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
               ),
             ],
           ),
-          // const SizedBox(height: 15),
-          const SizedBox(height: 30),
-          if (myState.threadColors.isNotEmpty)
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 80),
-              child: ListView.builder(
-                itemCount: myState.threadColors.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return AnjuColorCircle(
-                    onTap: (p0) {
-                      final threadColor = p0[0];
-                      if (threadColors.contains(threadColor)) {
-                        threadColors.remove(threadColor);
-                        return;
-                      }
-                      threadColors.add(threadColor);
-                    },
-                    size: 60,
-                    colors: [myState.threadColors[index]],
-                  );
-                },
-              ),
-            ),
-          AnjuAddColor(
-            onSelectCOlor: (ThreadColor? color) {
-              print(color);
-              setState(() {
-                if (color == null) return;
-                getIt<ConsumableManagerBloc>().add(AddThreadColorEvent(color));
-              });
-            },
-          ),
+          ...addColor(state),
         ];
       case CrochetType.safetyEyes:
         return [
@@ -277,11 +263,27 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
             label: 'Tamaño',
             keyboardType: TextInputType.text,
           ),
+          ...addColor(state),
+        ];
+      case CrochetType.hooks:
+        return [
+          ..._buildCommonFields(),
+          AnjuTextField(
+              controller: _thicknessController, label: 'Grosor (${unit.name})'),
+        ];
+      case CrochetType.prepacking:
+        // case CrochetType.hooks:
+        return [
+          ..._buildCommonFields(),
+          AnjuTextField(controller: _nameController, label: 'Nombre'),
+          AnjuTextField(controller: _sizeController, label: 'Tamaño (cm x cm)'),
         ];
       case CrochetType.accessories:
       case CrochetType.keychains:
-      case CrochetType.prepacking:
-        return _buildCommonFields();
+        return [
+          ..._buildCommonFields(),
+          ...addColor(state),
+        ];
       default:
         return [];
     }
@@ -320,7 +322,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
               ..brand.value = brand
               ..status = threadStatus
               ..type = CrochetType.yarn
-              ..thickness = double.parse(_thicknessController.text)
+              ..thickness = int.parse(_thicknessController.text)
             // ..threadColor
             // ..threadType
             ;
@@ -328,7 +330,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         return SafetyEyes()
           // ..name = _nameController.text
           ..shape = _shapeController.text
-          ..size = _sizeController.text
+          ..size = int.parse(_sizeController.text)
           ..stock = 0
           ..unit = unit
           ..type = CrochetType.safetyEyes;
@@ -336,15 +338,14 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         return Accessories()
           // ..name = _nameController.text
           ..stock = 0
-          ..unit = unit
+          ..unit = unit == UnitWeight.gr ? UnitWeight.pza : unit
           ..type = CrochetType.accessories;
       // TODO: ADD CUSTOM COLORS
-      // ..colors = [Colors.blue.toHex(), Colors.blueGrey.toHex()];
       case CrochetType.keychains:
         return Keychains()
           // ..name = _nameController.text
           ..stock = 0
-          ..unit = unit
+          ..unit = unit == UnitWeight.gr ? UnitWeight.pza : unit
           ..type = CrochetType.keychains;
       // TODO: ADD CUSTOM COLORS
       // ..color = Colors.amber.toHex();
@@ -352,10 +353,56 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         return PrePacking()
           // ..name = _nameController.text
           ..stock = 0
+          ..unit = UnitWeight.cm
+          ..type = CrochetType.prepacking
+          ..size = int.parse(_sizeController.text)
+          ..name = _nameController.text;
+      case CrochetType.hooks:
+        return Hooks()
+          // ..name = _nameController.text
+          ..stock = 0
           ..unit = unit
-          ..type = CrochetType.prepacking;
+          ..type = CrochetType.hooks
+          ..thickness = int.parse(_thicknessController.text);
       default:
         return null;
     }
+  }
+
+  List<Widget> addColor(ConsumableManagerChoose state) {
+    if (state.threadColors.isNotEmpty) {
+      return [
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 80),
+          child: ListView.builder(
+            itemCount: state.threadColors.length,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return AnjuColorCircle(
+                onTap: (p0) {
+                  final threadColor = p0[0];
+                  if (threadColors.contains(threadColor)) {
+                    threadColors.remove(threadColor);
+                    return;
+                  }
+                  threadColors.add(threadColor);
+                },
+                size: 60,
+                colors: [state.threadColors[index]],
+              );
+            },
+          ),
+        ),
+        AnjuAddColor(
+          onSelectCOlor: (ThreadColor? color) {
+            setState(() {
+              if (color == null) return;
+              getIt<ConsumableManagerBloc>().add(AddThreadColorEvent(color));
+            });
+          },
+        ),
+      ];
+    }
+    return [];
   }
 }
