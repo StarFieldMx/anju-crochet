@@ -183,7 +183,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
                 brand = value;
               });
             },
-            value: state.brands.isNotEmpty ? state.brands.first : brand,
+            // value: state.brands.isNotEmpty ? state.brands.first : brand,
             items: [
               ...state.brands.map((brand) => DropdownMenuItem<ThreadBrand>(
                     value: brand,
@@ -232,9 +232,9 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
                 threadType = value;
               });
             },
-            value: state.threadTypes.isNotEmpty
-                ? state.threadTypes.first
-                : threadType,
+            // value: state.threadTypes.isNotEmpty
+            //     ? state.threadTypes.first
+            //     : threadType,
             items: [
               ...state.threadTypes.map((type) => DropdownMenuItem<ThreadType>(
                     value: type,
@@ -252,6 +252,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
               ),
             ],
           ),
+          const SizedBox(height: 15),
           ...addColor(state),
         ];
       case CrochetType.safetyEyes:
@@ -263,6 +264,8 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
             label: 'Tamaño',
             keyboardType: TextInputType.text,
           ),
+          const SizedBox(height: 15),
+          const SizedBox(height: 15),
           ...addColor(state),
         ];
       case CrochetType.hooks:
@@ -282,6 +285,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
       case CrochetType.keychains:
         return [
           ..._buildCommonFields(),
+          const SizedBox(height: 15),
           ...addColor(state),
         ];
       default:
@@ -377,18 +381,22 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
           child: ListView.builder(
             itemCount: state.threadColors.length,
             scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
-              return AnjuColorCircle(
-                onTap: (p0) {
-                  final threadColor = p0[0];
-                  if (threadColors.contains(threadColor)) {
-                    threadColors.remove(threadColor);
-                    return;
-                  }
-                  threadColors.add(threadColor);
-                },
-                size: 60,
-                colors: [state.threadColors[index]],
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.5),
+                child: AnjuColorCircle(
+                  onTap: (p0) {
+                    final threadColor = p0[0];
+                    if (threadColors.contains(threadColor)) {
+                      threadColors.remove(threadColor);
+                      return;
+                    }
+                    threadColors.add(threadColor);
+                  },
+                  size: 60,
+                  colors: [state.threadColors[index]],
+                ),
               );
             },
           ),

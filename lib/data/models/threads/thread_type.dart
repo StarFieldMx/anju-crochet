@@ -8,4 +8,6 @@ class ThreadType {
 
   @Index(unique: true)
   late String name;
+
+  String? imagePath;
 }

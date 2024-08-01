@@ -17,8 +17,13 @@ const ThreadTypeSchema = CollectionSchema(
   name: r'ThreadType',
   id: -4278256125147218103,
   properties: {
-    r'name': PropertySchema(
+    r'imagePath': PropertySchema(
       id: 0,
+      name: r'imagePath',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 1,
       name: r'name',
       type: IsarType.string,
     )
@@ -57,6 +62,12 @@ int _threadTypeEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.imagePath;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
@@ -67,7 +78,8 @@ void _threadTypeSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
+  writer.writeString(offsets[0], object.imagePath);
+  writer.writeString(offsets[1], object.name);
 }
 
 ThreadType _threadTypeDeserialize(
@@ -78,7 +90,8 @@ ThreadType _threadTypeDeserialize(
 ) {
   final object = ThreadType();
   object.id = id;
-  object.name = reader.readString(offsets[0]);
+  object.imagePath = reader.readStringOrNull(offsets[0]);
+  object.name = reader.readString(offsets[1]);
   return object;
 }
 
@@ -90,6 +103,8 @@ P _threadTypeDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readStringOrNull(offset)) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -339,6 +354,158 @@ extension ThreadTypeQueryFilter
     });
   }
 
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition>
+      imagePathIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'imagePath',
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition>
+      imagePathIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'imagePath',
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition> imagePathEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition>
+      imagePathGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition> imagePathLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition> imagePathBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'imagePath',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition>
+      imagePathStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition> imagePathEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition> imagePathContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition> imagePathMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'imagePath',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition>
+      imagePathIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imagePath',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition>
+      imagePathIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'imagePath',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<ThreadType, ThreadType, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -478,6 +645,18 @@ extension ThreadTypeQueryLinks
 
 extension ThreadTypeQuerySortBy
     on QueryBuilder<ThreadType, ThreadType, QSortBy> {
+  QueryBuilder<ThreadType, ThreadType, QAfterSortBy> sortByImagePath() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePath', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterSortBy> sortByImagePathDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePath', Sort.desc);
+    });
+  }
+
   QueryBuilder<ThreadType, ThreadType, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -505,6 +684,18 @@ extension ThreadTypeQuerySortThenBy
     });
   }
 
+  QueryBuilder<ThreadType, ThreadType, QAfterSortBy> thenByImagePath() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePath', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ThreadType, ThreadType, QAfterSortBy> thenByImagePathDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePath', Sort.desc);
+    });
+  }
+
   QueryBuilder<ThreadType, ThreadType, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -520,6 +711,13 @@ extension ThreadTypeQuerySortThenBy
 
 extension ThreadTypeQueryWhereDistinct
     on QueryBuilder<ThreadType, ThreadType, QDistinct> {
+  QueryBuilder<ThreadType, ThreadType, QDistinct> distinctByImagePath(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'imagePath', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<ThreadType, ThreadType, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -533,6 +731,12 @@ extension ThreadTypeQueryProperty
   QueryBuilder<ThreadType, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<ThreadType, String?, QQueryOperations> imagePathProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'imagePath');
     });
   }
 
