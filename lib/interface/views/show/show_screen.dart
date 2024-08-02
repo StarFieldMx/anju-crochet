@@ -4,6 +4,7 @@ import 'package:anju/config/router/anju_router.dart';
 import 'package:anju/config/router/anju_router.gr.dart';
 import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
+import 'package:anju/config/utils/hero_tags.dart';
 import 'package:anju/config/utils/images_constant.dart';
 import 'package:anju/data/models/amigurumi.dart';
 import 'package:anju/interface/widgets/anju_image.dart';
@@ -48,8 +49,8 @@ class _ShowWidget extends StatelessWidget {
         child: Stack(
           children: [
             AnjuImage(
-              id: 0,
-              imagePath: amigurumi.images.isNotEmpty
+              tag: HeroTag.ordersItem(0),
+              imageUrl: amigurumi.images.isNotEmpty
                   ? amigurumi.images.first.url
                   : AnjuImages.borrego,
               hero: false,

@@ -136,8 +136,8 @@ class _DetailsCard extends StatelessWidget {
           const SizedBox(height: 10),
           AnjuImage(
             // id: 0,
-            imagePath: AnjuImages.test,
-            type: ImageType.details,
+            imageUrl: AnjuImages.test,
+            type: ImageBorderType.details,
             //TODO: SET TRUE AND PASS ID
             hero: false,
             width: width,

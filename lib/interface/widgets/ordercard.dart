@@ -27,7 +27,7 @@ class OrderCard extends StatelessWidget {
           children: [
             const AnjuImage(
               // id: order.id,
-              imagePath: AnjuImages.test,
+              imageUrl: AnjuImages.test,
               hero: false,
             ),
             const SizedBox(width: 20),
