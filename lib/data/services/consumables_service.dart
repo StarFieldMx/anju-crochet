@@ -22,50 +22,49 @@ class ConsumablesService extends ConsumablesRepository {
             final thread = consumable as Yarn;
             final id = await manager.db.yarns.put(thread);
             await thread.brand.save();
+
             if (colors.isNotEmpty) {
               for (var color in colors) {
                 thread.threadColors.add(color);
               }
-              thread.threadColors.save();
+              await thread.threadColors.save();
             }
             if (threadType != null) {
               thread.threadType.value = threadType;
               await thread.threadType.save();
             }
+            await thread.brand.save();
             return id;
           }),
       Filling: () => manager.db
           .writeTxn(() => manager.db.fillings.put(consumable as Filling)),
       SafetyEyes: () => manager.db.writeTxn(() async {
-            consumable as SafetyEyes;
-
-            final id = manager.db.safetyEyes.put(consumable);
+            final eyes = consumable as SafetyEyes;
+            final id = await manager.db.safetyEyes.put(eyes);
             if (colors.isNotEmpty) {
               final myColor = colors[0];
-              consumable.threadColor.value = myColor;
-              await consumable.threadColor.save();
+              eyes.threadColor.value = myColor;
+              await eyes.threadColor.save();
             }
             return id;
           }),
       Accessories: () => manager.db.writeTxn(() async {
-            consumable as Accessories;
-            final id = manager.db.accessories.put(consumable);
-
+            final accessory = consumable as Accessories;
+            final id = await manager.db.accessories.put(accessory);
             if (colors.isNotEmpty) {
               final myColor = colors[0];
-              consumable.threadColor.value = myColor;
-              await consumable.threadColor.save();
+              accessory.threadColor.value = myColor;
+              await accessory.threadColor.save();
             }
             return id;
           }),
       Keychains: () => manager.db.writeTxn(() async {
-            consumable as Keychains;
-
-            final id = manager.db.keychains.put(consumable);
+            final keychain = consumable as Keychains;
+            final id = await manager.db.keychains.put(keychain);
             if (colors.isNotEmpty) {
               final myColor = colors[0];
-              consumable.threadColor.value = myColor;
-              await consumable.threadColor.save();
+              keychain.threadColor.value = myColor;
+              await keychain.threadColor.save();
             }
             return id;
           }),
@@ -83,7 +82,6 @@ class ConsumablesService extends ConsumablesRepository {
 
     // Return -1 if the type is not recognized
     throw Exception('No type found');
-    // return -1;
   }
 
   @override
