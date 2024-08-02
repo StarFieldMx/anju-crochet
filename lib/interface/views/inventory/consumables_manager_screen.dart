@@ -1,5 +1,6 @@
 import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
+import 'package:anju/config/utils/extensions.dart';
 import 'package:anju/data/models/crochet.dart';
 import 'package:anju/interface/views/inventory/consumables_manager/consumable_manager_bloc.dart';
 import 'package:anju/interface/views/inventory/widgets/create_crochet_material_form.dart';
@@ -48,7 +49,7 @@ class ConsumablesManagerScreen extends StatelessWidget {
                     .map(
                       (type) => DropdownMenuItem<CrochetType>(
                         value: type, // <--- Asegúrate de asignar el valor aquí
-                        child: Text(type.name),
+                        child: Text(type.spanishSingle),
                       ),
                     )
                     .toList(),

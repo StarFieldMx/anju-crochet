@@ -71,6 +71,8 @@ class _AnjuTopBarState extends State<AnjuTopBar> {
   Widget build(BuildContext context) {
     return AppBar(
       // * remove color when scrolling
+      actionsIconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: const IconThemeData(color: Colors.white),
       surfaceTintColor: Colors.transparent,
       actions: widget.actions ?? getActions(context),
       backgroundColor: AnjuColors.primary,

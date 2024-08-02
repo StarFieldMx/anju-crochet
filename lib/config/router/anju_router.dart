@@ -20,6 +20,10 @@ class AnjuRouter extends $AnjuRouter {
           ],
         ),
         AutoRoute(page: CategoryRoute.page),
+        AutoRoute(page: YarnLayoutRoute.page, children: [
+          AutoRoute(page: YarnByBrandRoute.page),
+          AutoRoute(page: YarnRoute.page),
+        ]),
         AutoRoute(page: DetailsOrderRoute.page),
         AutoRoute(page: PdfViewRoute.page),
         AutoRoute(page: AmigurumiDetailsRoute.page),
@@ -45,8 +49,17 @@ class AnjuRouteCubit extends Cubit<AnjuRouter> {
   void goHomeFromSplash() =>
       state.replace(const AnjuHomeLayout(children: [HomeRoute()]));
 
-  void goCategory({required CrochetType type}) =>
-      state.push(CategoryRoute(type: type));
+  void goCategory({required CrochetType type}) {
+    if (type == CrochetType.yarn) {
+      state.push(const YarnLayoutRoute(children: [YarnByBrandRoute()]));
+      return;
+    }
+    state.push(CategoryRoute(type: type));
+  }
+
+  void goYarnScreen(String brand) {
+    state.push(YarnLayoutRoute(children: [YarnRoute(brand: brand)]));
+  }
 
   void addMaterial() => state.push(ConsumablesManagerRoute());
 

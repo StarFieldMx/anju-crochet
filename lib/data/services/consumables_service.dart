@@ -83,6 +83,14 @@ class ConsumablesService extends ConsumablesRepository {
     }
   }
 
+  Future<List<Yarn>> getYarnByBrand(String brand) async {
+    return manager.db
+        .collection<Yarn>()
+        .filter()
+        .brand((q) => q.nameEqualTo(brand))
+        .findAll();
+  }
+
   @override
   Future<Crochet?> readConsumable(CrochetType type, int id) {
     switch (type) {
@@ -110,7 +118,11 @@ class ConsumablesService extends ConsumablesRepository {
 
   @override
   Future<List<ThreadBrand>> getThreadBrands() {
-    return manager.db.collection<ThreadBrand>().where().findAll();
+    return manager.db
+        .collection<ThreadBrand>()
+        .where()
+        .sortByNameDesc()
+        .findAll();
   }
 
   @override

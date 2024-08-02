@@ -1,5 +1,6 @@
 import 'package:anju/data/models/bill.dart';
 import 'package:anju/data/models/crochet.dart';
+import 'package:anju/data/models/threads/thread_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -150,5 +151,18 @@ extension BillsExtensions on List<Bill> {
 
   double get balance {
     return totalIncome - totalExpenses;
+  }
+}
+
+extension ThreadColorExtensions on List<ThreadColor> {
+  String get colorNamed {
+    String name = '';
+    if (length == 1) {
+      return this[0].name;
+    }
+    for (var color in this) {
+      name += color.name[0];
+    }
+    return name.toUpperCase();
   }
 }

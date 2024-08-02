@@ -39,6 +39,7 @@ abstract class Crochet {
 class Yarn extends Crochet {
   final threadColors = IsarLinks<ThreadColor>();
   final threadType = IsarLink<ThreadType>();
+
   final brand = IsarLink<ThreadBrand>();
 
   /// Milimetros de grosor

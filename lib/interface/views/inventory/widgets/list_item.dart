@@ -2,12 +2,13 @@ import 'package:anju/interface/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class ListItemInventory extends StatelessWidget {
-  const ListItemInventory(
-      {super.key,
-      required this.title,
-      this.subtitle,
-      required this.source,
-      required this.imageUrl});
+  const ListItemInventory({
+    super.key,
+    required this.title,
+    this.subtitle,
+    required this.source,
+    required this.imageUrl,
+  });
   final String title;
   final String? subtitle;
   final ImageSource source;
