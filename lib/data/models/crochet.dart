@@ -65,7 +65,7 @@ class Filling extends Crochet {
 @collection
 class SafetyEyes extends Crochet {
   late String shape;
-  late short size;
+  late String size;
 
   @Backlink(to: 'safetyEye')
   final bills = IsarLinks<Bill>();

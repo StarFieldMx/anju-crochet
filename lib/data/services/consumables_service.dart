@@ -36,16 +36,39 @@ class ConsumablesService extends ConsumablesRepository {
           }),
       Filling: () => manager.db
           .writeTxn(() => manager.db.fillings.put(consumable as Filling)),
-      // TODO: Agregar threadColor
-      SafetyEyes: () => manager.db
-          .writeTxn(() => manager.db.safetyEyes.put(consumable as SafetyEyes)),
-      // TODO: Agregar threadColor
+      SafetyEyes: () => manager.db.writeTxn(() async {
+            consumable as SafetyEyes;
 
-      Accessories: () => manager.db.writeTxn(
-          () => manager.db.accessories.put(consumable as Accessories)),
-      // TODO: Agregar threadColor
-      Keychains: () => manager.db
-          .writeTxn(() => manager.db.keychains.put(consumable as Keychains)),
+            final id = manager.db.safetyEyes.put(consumable);
+            if (colors.isNotEmpty) {
+              final myColor = colors[0];
+              consumable.threadColor.value = myColor;
+              await consumable.threadColor.save();
+            }
+            return id;
+          }),
+      Accessories: () => manager.db.writeTxn(() async {
+            consumable as Accessories;
+            final id = manager.db.accessories.put(consumable);
+
+            if (colors.isNotEmpty) {
+              final myColor = colors[0];
+              consumable.threadColor.value = myColor;
+              await consumable.threadColor.save();
+            }
+            return id;
+          }),
+      Keychains: () => manager.db.writeTxn(() async {
+            consumable as Keychains;
+
+            final id = manager.db.keychains.put(consumable);
+            if (colors.isNotEmpty) {
+              final myColor = colors[0];
+              consumable.threadColor.value = myColor;
+              await consumable.threadColor.save();
+            }
+            return id;
+          }),
       PrePacking: () => manager.db
           .writeTxn(() => manager.db.prePackings.put(consumable as PrePacking)),
       Hooks: () =>

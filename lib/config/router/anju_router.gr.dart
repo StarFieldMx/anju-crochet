@@ -131,7 +131,7 @@ abstract class $AnjuRouter extends _i16.RootStackRouter {
         child: const _i13.YarnByBrandScreen(),
       );
     },
-    YarnLayoutRoute.name: (routeData) {
+    YarnLayout.name: (routeData) {
       return _i16.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i14.YarnLayout(),
@@ -432,10 +432,10 @@ class YarnByBrandRoute extends _i16.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i14.YarnLayout]
-class YarnLayoutRoute extends _i16.PageRouteInfo<void> {
-  const YarnLayoutRoute({List<_i16.PageRouteInfo>? children})
+class YarnLayout extends _i16.PageRouteInfo<void> {
+  const YarnLayout({List<_i16.PageRouteInfo>? children})
       : super(
-          YarnLayoutRoute.name,
+          YarnLayout.name,
           initialChildren: children,
         );
 

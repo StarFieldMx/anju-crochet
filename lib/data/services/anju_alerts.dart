@@ -141,6 +141,18 @@ abstract class AnjuAlerts {
     );
   }
 
+  static Future<void> alertError({String? text = 'Algo mal mi amor!'}) async {
+    await ArtSweetAlert.show(
+      context: context,
+      artDialogArgs: ArtDialogArgs(
+        type: ArtSweetAlertType.danger,
+        title: "Pipipipi!",
+        text: text,
+        confirmButtonText: 'Okokok',
+      ),
+    );
+  }
+
   static Future<ThreadColor?> openColorSelector() async {
     final Completer<ThreadColor?> completer = Completer<ThreadColor?>();
     String? color;

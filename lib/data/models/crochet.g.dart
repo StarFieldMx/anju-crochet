@@ -1723,7 +1723,7 @@ const SafetyEyesSchema = CollectionSchema(
     r'size': PropertySchema(
       id: 1,
       name: r'size',
-      type: IsarType.int,
+      type: IsarType.string,
     ),
     r'stock': PropertySchema(
       id: 2,
@@ -1778,6 +1778,7 @@ int _safetyEyesEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.shape.length * 3;
+  bytesCount += 3 + object.size.length * 3;
   return bytesCount;
 }
 
@@ -1788,7 +1789,7 @@ void _safetyEyesSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.shape);
-  writer.writeInt(offsets[1], object.size);
+  writer.writeString(offsets[1], object.size);
   writer.writeLong(offsets[2], object.stock);
   writer.writeByte(offsets[3], object.type.index);
   writer.writeByte(offsets[4], object.unit.index);
@@ -1803,7 +1804,7 @@ SafetyEyes _safetyEyesDeserialize(
   final object = SafetyEyes();
   object.id = id;
   object.shape = reader.readString(offsets[0]);
-  object.size = reader.readInt(offsets[1]);
+  object.size = reader.readString(offsets[1]);
   object.stock = reader.readLong(offsets[2]);
   object.type =
       _SafetyEyestypeValueEnumMap[reader.readByteOrNull(offsets[3])] ??
@@ -1824,7 +1825,7 @@ P _safetyEyesDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readInt(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
@@ -2150,46 +2151,54 @@ extension SafetyEyesQueryFilter
   }
 
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeEqualTo(
-      int value) {
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'size',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeGreaterThan(
-    int value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'size',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeLessThan(
-    int value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'size',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeBetween(
-    int lower,
-    int upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -2198,6 +2207,75 @@ extension SafetyEyesQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'size',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'size',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'size',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'size',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'size',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> sizeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'size',
+        value: '',
       ));
     });
   }
@@ -2589,9 +2667,10 @@ extension SafetyEyesQueryWhereDistinct
     });
   }
 
-  QueryBuilder<SafetyEyes, SafetyEyes, QDistinct> distinctBySize() {
+  QueryBuilder<SafetyEyes, SafetyEyes, QDistinct> distinctBySize(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'size');
+      return query.addDistinctBy(r'size', caseSensitive: caseSensitive);
     });
   }
 
@@ -2628,7 +2707,7 @@ extension SafetyEyesQueryProperty
     });
   }
 
-  QueryBuilder<SafetyEyes, int, QQueryOperations> sizeProperty() {
+  QueryBuilder<SafetyEyes, String, QQueryOperations> sizeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'size');
     });

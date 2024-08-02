@@ -159,11 +159,15 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
 
           final consumable = _createConsumableFromForm(state);
           if (consumable != null) {
-            getIt<ConsumablesService>().createOrUpdateConsumable(consumable,
-                colors: threadColors, threadType: threadType);
-            await AnjuAlerts.alertSuccess(
-                text: 'Producto agregado correctamente, eso!');
-            Navigator.of(context).pop();
+            try {
+              getIt<ConsumablesService>().createOrUpdateConsumable(consumable,
+                  colors: threadColors, threadType: threadType);
+              await AnjuAlerts.alertSuccess(
+                  text: 'Producto agregado correctamente, eso!');
+              Navigator.of(context).pop();
+            } catch (e) {
+              await AnjuAlerts.alertError(text: 'Producto no agregado: $e');
+            }
           }
         }),
       ],
@@ -265,7 +269,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
             keyboardType: TextInputType.text,
           ),
           const SizedBox(height: 15),
-          const SizedBox(height: 15),
+          // const SizedBox(height: 15),
           ...addColor(state),
         ];
       case CrochetType.hooks:
@@ -334,7 +338,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
         return SafetyEyes()
           // ..name = _nameController.text
           ..shape = _shapeController.text
-          ..size = int.parse(_sizeController.text)
+          ..size = _sizeController.text
           ..stock = 0
           ..unit = unit
           ..type = CrochetType.safetyEyes;
