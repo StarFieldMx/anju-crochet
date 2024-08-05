@@ -31,7 +31,7 @@ class YarnScreen extends StatelessWidget {
               onTap: () => AnjuAlerts.showDetailsConsumable(crochet: yarn),
               child: ListItemInventory(
                 title: yarn.threadColors.toList().colorNamed,
-                source: ImageSource.network,
+                source: ImageSourceAnju.network,
                 imageUrl: 'https://placehold.co/600x400.png',
               ),
             ),

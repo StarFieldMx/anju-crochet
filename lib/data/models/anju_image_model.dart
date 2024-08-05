@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 
 part 'anju_image_model.g.dart';
 
-enum ImageSource { local, network }
+enum ImageSourceAnju { local, network }
 
 @collection
 class AnjuImageModel {
@@ -10,5 +10,5 @@ class AnjuImageModel {
   late String url;
 
   @enumerated
-  late ImageSource type;
+  late ImageSourceAnju type;
 }

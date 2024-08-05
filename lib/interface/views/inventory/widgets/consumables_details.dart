@@ -3,141 +3,207 @@ import 'package:anju/data/models/models.dart';
 import 'package:anju/interface/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-class ConsumableDetails extends StatelessWidget {
-  const ConsumableDetails({super.key, required this.item});
-  final Crochet item;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _buildItemDetails(context),
-    );
+List<Widget> buildItemDetails(BuildContext context, Crochet item) {
+  List<Widget> details = [];
+  final size = MediaQuery.of(context).size;
+  if (item.image.value != null) {
+    details.add(AnjuImage(
+      imageUrl: item.image.value!.url,
+      source: item.image.value!.type,
+      // tag: '${item.type.name}_${item.id}',
+      width: size.width * 0.8,
+      height: size.height * 0.2,
+    ));
   }
 
-  List<Widget> _buildItemDetails(BuildContext context) {
-    List<Widget> details = [];
-    final size = MediaQuery.of(context).size;
-    if (item.image.value != null) {
-      details.add(AnjuImage(
-        imageUrl: item.image.value!.url,
-        source: item.image.value!.type,
-        tag: '${item.type.name}_${item.id}',
-        // hero: true,
-        width: size.width * 0.8,
-        height: size.height * 0.2,
-      ));
-    }
-
-    if (item is Yarn) {
-      final yarn = item as Yarn;
-      details.addAll([
-        if (yarn.threadColor.value != null)
-          Text(
-            yarn.threadColor.value!.name,
-            style: AnjuTextStyles.itemTitle,
-          ),
-        Text(
+  if (item is Yarn) {
+    final yarn = item as Yarn;
+    details.addAll([
+      if (yarn.threadColors.isNotEmpty)
+        ...yarn.threadColors
+            .map(
+              (color) => Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  color.color,
+                  style: AnjuTextStyles.itemTitle,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            )
+            .toList(),
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Hilo ${yarn.brand.value?.name ?? 'Sin marca'}',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-        Text(
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Grosor: ${yarn.thickness.toString()}',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-        Text(
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Estado: ${yarn.status.name}',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-        if (yarn.threadType.value != null)
-          Text(
+      ),
+      if (yarn.threadType.value != null)
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
             'Tipo: ${yarn.threadType.value!.name}',
             style: AnjuTextStyles.descriptionConsumable,
+            textAlign: TextAlign.start,
           ),
-        Text(
+        ),
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Stock: ${yarn.stock} (${yarn.unit.name})',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-      ]);
-    } else if (item is Filling) {
-      final filling = item as Filling;
-      details.addAll([
-        Text(
+      ),
+    ]);
+  } else if (item is Filling) {
+    final filling = item as Filling;
+    details.addAll([
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Disponible: ${filling.available ? 'Sí' : 'No'}',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-        Text(
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Stock: ${filling.stock} (${filling.unit.name})',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-      ]);
-    } else if (item is SafetyEyes) {
-      final eyes = item as SafetyEyes;
-      details.addAll([
-        Text(
+      ),
+    ]);
+  } else if (item is SafetyEyes) {
+    final eyes = item as SafetyEyes;
+    details.addAll([
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Forma: ${eyes.shape}',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-        Text(
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Tamaño: ${eyes.size}',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-        Text(
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Stock: ${eyes.stock} (${eyes.unit.name})',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-      ]);
-    } else if (item is Accessories) {
-      details.addAll([
-        Text(
+      ),
+    ]);
+  } else if (item is Accessories) {
+    details.addAll([
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Stock: ${item.stock} (${item.unit.name})',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-      ]);
-    } else if (item is Keychains) {
-      details.addAll([
-        Text(
+      ),
+    ]);
+  } else if (item is Keychains) {
+    details.addAll([
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Stock: ${item.stock} (${item.unit.name})',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-      ]);
-    } else if (item is PrePacking) {
-      final prePacking = item as PrePacking;
-      details.addAll([
-        Text(
+      ),
+    ]);
+  } else if (item is PrePacking) {
+    final prePacking = item as PrePacking;
+    details.addAll([
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Nombre: ${prePacking.name}',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-        Text(
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Tamaño: ${prePacking.size}',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-        Text(
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Stock: ${prePacking.stock} (${prePacking.unit.name})',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-      ]);
-    } else if (item is Hooks) {
-      final hooks = item as Hooks;
-      details.addAll([
-        Text(
+      ),
+    ]);
+  } else if (item is Hooks) {
+    final hooks = item as Hooks;
+    details.addAll([
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Grosor: ${hooks.thickness.toString()}',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-        Text(
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Stock: ${hooks.stock} (${hooks.unit.name})',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-      ]);
-    } else {
-      details.addAll([
-        Text(
+      ),
+    ]);
+  } else {
+    details.addAll([
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
           'Stock: ${item.stock} (${item.unit.name})',
           style: AnjuTextStyles.descriptionConsumable,
+          textAlign: TextAlign.start,
         ),
-      ]);
-    }
-
-    return details;
+      ),
+    ]);
   }
+  details.add(const SizedBox(height: 20));
+  return details;
 }

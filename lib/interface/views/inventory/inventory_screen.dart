@@ -38,7 +38,7 @@ class CategoryBasedCrochet extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListItemInventory(
       title: type.spanishPlural,
-      source: ImageSource.network,
+      source: ImageSourceAnju.network,
       imageUrl: 'https://picsum.photos/seed/picsum/200/300',
     );
   }

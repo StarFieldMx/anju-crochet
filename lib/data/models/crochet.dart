@@ -58,7 +58,7 @@ class Yarn extends Crochet {
   final bills = IsarLinks<Bill>();
 }
 
-@Collection(ignore: {'threadColor'})
+@Collection(ignore: {'threadColor', 'image'})
 class Filling extends Crochet {
   late bool available;
   @Backlink(to: 'filling')

@@ -73,7 +73,7 @@ AnjuImageModel _anjuImageModelDeserialize(
   object.id = id;
   object.type =
       _AnjuImageModeltypeValueEnumMap[reader.readByteOrNull(offsets[0])] ??
-          ImageSource.local;
+          ImageSourceAnju.local;
   object.url = reader.readString(offsets[1]);
   return object;
 }
@@ -87,7 +87,7 @@ P _anjuImageModelDeserializeProp<P>(
   switch (propertyId) {
     case 0:
       return (_AnjuImageModeltypeValueEnumMap[reader.readByteOrNull(offset)] ??
-          ImageSource.local) as P;
+          ImageSourceAnju.local) as P;
     case 1:
       return (reader.readString(offset)) as P;
     default:
@@ -100,8 +100,8 @@ const _AnjuImageModeltypeEnumValueMap = {
   'network': 1,
 };
 const _AnjuImageModeltypeValueEnumMap = {
-  0: ImageSource.local,
-  1: ImageSource.network,
+  0: ImageSourceAnju.local,
+  1: ImageSourceAnju.network,
 };
 
 Id _anjuImageModelGetId(AnjuImageModel object) {
@@ -256,7 +256,7 @@ extension AnjuImageModelQueryFilter
   }
 
   QueryBuilder<AnjuImageModel, AnjuImageModel, QAfterFilterCondition>
-      typeEqualTo(ImageSource value) {
+      typeEqualTo(ImageSourceAnju value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'type',
@@ -267,7 +267,7 @@ extension AnjuImageModelQueryFilter
 
   QueryBuilder<AnjuImageModel, AnjuImageModel, QAfterFilterCondition>
       typeGreaterThan(
-    ImageSource value, {
+    ImageSourceAnju value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -281,7 +281,7 @@ extension AnjuImageModelQueryFilter
 
   QueryBuilder<AnjuImageModel, AnjuImageModel, QAfterFilterCondition>
       typeLessThan(
-    ImageSource value, {
+    ImageSourceAnju value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -295,8 +295,8 @@ extension AnjuImageModelQueryFilter
 
   QueryBuilder<AnjuImageModel, AnjuImageModel, QAfterFilterCondition>
       typeBetween(
-    ImageSource lower,
-    ImageSource upper, {
+    ImageSourceAnju lower,
+    ImageSourceAnju upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -544,7 +544,8 @@ extension AnjuImageModelQueryProperty
     });
   }
 
-  QueryBuilder<AnjuImageModel, ImageSource, QQueryOperations> typeProperty() {
+  QueryBuilder<AnjuImageModel, ImageSourceAnju, QQueryOperations>
+      typeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'type');
     });

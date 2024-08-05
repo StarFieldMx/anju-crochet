@@ -235,13 +235,14 @@ abstract class AnjuAlerts {
     await ArtSweetAlert.show(
       context: context,
       artDialogArgs: ArtDialogArgs(
+        dialogDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.white,
+        ),
         // type: ArtSweetAlertType.,
         title: "Detalles del ${crochet.type.spanishSingle}",
-        customColumns: [
-          ConsumableDetails(
-            item: crochet,
-          )
-        ],
+        dialogAlignment: Alignment.centerLeft,
+        customColumns: [...buildItemDetails(context, crochet)],
         confirmButtonText: 'Listo',
       ),
     );

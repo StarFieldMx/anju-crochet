@@ -1,5 +1,6 @@
 import 'package:anju/data/database/isar_crochet_db.dart';
 import 'package:anju/data/models/crochet.dart';
+import 'package:anju/data/models/models.dart';
 import 'package:anju/data/models/threads/thread_brand.dart';
 import 'package:anju/data/models/threads/thread_color.dart';
 import 'package:anju/data/models/threads/thread_type.dart';
@@ -15,7 +16,9 @@ class ConsumablesService extends ConsumablesRepository {
 
   @override
   Future<int> createOrUpdateConsumable(Crochet consumable,
-      {required List<ThreadColor> colors, ThreadType? threadType}) async {
+      {required List<ThreadColor> colors,
+      ThreadType? threadType,
+      AnjuImageModel? image}) async {
     // Map to associate Crochet types with their database operations
     final Map<Type, Future<int> Function()> operations = {
       Yarn: () => manager.db.writeTxn(() async {
@@ -33,6 +36,10 @@ class ConsumablesService extends ConsumablesRepository {
               thread.threadType.value = threadType;
               await thread.threadType.save();
             }
+            if (image != null) {
+              thread.image.value = image;
+              await thread.image.save();
+            }
             await thread.brand.save();
             return id;
           }),
@@ -46,6 +53,10 @@ class ConsumablesService extends ConsumablesRepository {
               eyes.threadColor.value = myColor;
               await eyes.threadColor.save();
             }
+            if (image != null) {
+              eyes.image.value = image;
+              await eyes.image.save();
+            }
             return id;
           }),
       Accessories: () => manager.db.writeTxn(() async {
@@ -55,6 +66,10 @@ class ConsumablesService extends ConsumablesRepository {
               final myColor = colors[0];
               accessory.threadColor.value = myColor;
               await accessory.threadColor.save();
+            }
+            if (image != null) {
+              accessory.image.value = image;
+              await accessory.image.save();
             }
             return id;
           }),
@@ -66,12 +81,30 @@ class ConsumablesService extends ConsumablesRepository {
               keychain.threadColor.value = myColor;
               await keychain.threadColor.save();
             }
+            if (image != null) {
+              keychain.image.value = image;
+              await keychain.image.save();
+            }
             return id;
           }),
-      PrePacking: () => manager.db
-          .writeTxn(() => manager.db.prePackings.put(consumable as PrePacking)),
-      Hooks: () =>
-          manager.db.writeTxn(() => manager.db.hooks.put(consumable as Hooks)),
+      PrePacking: () => manager.db.writeTxn(() async {
+            final prepacking = consumable as PrePacking;
+            final id = manager.db.prePackings.put(prepacking);
+            if (image != null) {
+              prepacking.image.value = image;
+              await prepacking.image.save();
+            }
+            return id;
+          }),
+      Hooks: () => manager.db.writeTxn(() async {
+            final hooks = consumable as Hooks;
+            final id = manager.db.hooks.put(hooks);
+            if (image != null) {
+              hooks.image.value = image;
+              await hooks.image.save();
+            }
+            return id;
+          }),
     };
 
     // Perform the operation based on the consumable's type
@@ -174,5 +207,10 @@ class ConsumablesService extends ConsumablesRepository {
   @override
   Future<List<Hooks>> getHooks() {
     return manager.db.collection<Hooks>().where().findAll();
+  }
+
+  @override
+  Future<int> createOrUpdateAnjuImageModel(AnjuImageModel image) {
+    return manager.db.writeTxn(() => manager.db.anjuImageModels.put(image));
   }
 }

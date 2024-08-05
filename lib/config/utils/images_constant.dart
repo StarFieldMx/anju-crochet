@@ -28,6 +28,7 @@ abstract class AnjuSvg {
   static const keychains = '$absolutePath/app/keychains.svg';
   static const yarn = '$absolutePath/app/yarn.svg';
   static const yarn2 = '$absolutePath/app/yarn2.svg';
+  static const gallery = '$absolutePath/app/gallery.svg';
 
   static Set<String> get values => {
         balance,

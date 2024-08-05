@@ -47,32 +47,32 @@ class CategoryScreen extends StatelessWidget {
     if (crochet is SafetyEyes) {
       return ListItemInventory(
         title: crochet.threadColor.value?.name ?? crochet.shape,
-        source: ImageSource.network,
+        source: ImageSourceAnju.network,
         imageUrl: 'https://placehold.co/600x400.png',
       );
     } else if (crochet is Accessories) {
       return ListItemInventory(
         title: crochet.threadColor.value?.name ?? crochet.type.spanishSingle,
-        source: ImageSource.network,
+        source: ImageSourceAnju.network,
         imageUrl: 'https://placehold.co/600x400.png',
       );
     } else if (crochet is Keychains) {
       return ListItemInventory(
         title: crochet.threadColor.value?.name ?? crochet.type.spanishSingle,
-        source: ImageSource.network,
+        source: ImageSourceAnju.network,
         imageUrl: 'https://placehold.co/600x400.png',
       );
     } else if (crochet is PrePacking) {
       return ListItemInventory(
         title: crochet.name,
-        source: ImageSource.network,
+        source: ImageSourceAnju.network,
         imageUrl: 'https://placehold.co/600x400.png',
       );
     } else if (crochet is Hooks) {
       return ListItemInventory(
         title:
             '${crochet.type.spanishSingle} - ${crochet.thickness} (${crochet.unit.name})',
-        source: ImageSource.network,
+        source: ImageSourceAnju.network,
         imageUrl: 'https://placehold.co/600x400.png',
       );
     }

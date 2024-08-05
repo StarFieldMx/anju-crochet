@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:anju/data/models/anju_image_model.dart';
 // utils
@@ -13,14 +15,14 @@ class AnjuImage extends StatelessWidget {
     this.width,
     this.type = ImageBorderType.orders,
     this.hero = false,
-    this.source = ImageSource.local,
+    this.source = ImageSourceAnju.local,
   }) : assert(hero ? tag != null : tag == null);
   final bool hero;
   // final int id;
   final String? tag;
   final String imageUrl;
   final ImageBorderType type;
-  final ImageSource source;
+  final ImageSourceAnju source;
   final double? height;
   final double? width;
 
@@ -48,9 +50,9 @@ class AnjuImage extends StatelessWidget {
   }
 
   Image get _imageBasedType {
-    return source == ImageSource.local
-        ? Image.asset(
-            imageUrl,
+    return source == ImageSourceAnju.local
+        ? Image.file(
+            File(imageUrl),
             height: height,
             width: width,
             fit: BoxFit.cover,

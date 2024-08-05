@@ -29,7 +29,7 @@ class YarnByBrandScreen extends StatelessWidget {
               onTap: () => getIt<AnjuRouteCubit>().goYarnScreen(brand.name),
               child: ListItemInventory(
                 title: brand.name,
-                source: ImageSource.network,
+                source: ImageSourceAnju.network,
                 imageUrl: 'https://placehold.co/600x400.png',
               ),
             ),

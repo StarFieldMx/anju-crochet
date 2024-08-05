@@ -1,9 +1,10 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/themes/anju_colors.dart';
+import 'package:anju/config/utils/images_constant.dart';
 import 'package:anju/data/models/models.dart';
-import 'package:anju/data/models/threads/thread_brand.dart';
-import 'package:anju/data/models/threads/thread_color.dart';
-import 'package:anju/data/models/threads/thread_type.dart';
 import 'package:anju/data/services/anju_alerts.dart';
 import 'package:anju/data/services/consumables_service.dart';
 import 'package:anju/interface/views/inventory/consumables_manager/consumable_manager_bloc.dart';
@@ -12,6 +13,8 @@ import 'package:anju/interface/widgets/forms/forms.dart';
 import 'package:anju/interface/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateCrochetMaterialForm extends StatefulWidget {
   const CreateCrochetMaterialForm({super.key, this.material});
@@ -36,7 +39,8 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
   ThreadType? threadType;
   final List<ThreadColor> threadColors =
       List<ThreadColor>.empty(growable: true);
-
+  final ImagePicker picker = ImagePicker();
+  XFile? image;
   @override
   void initState() {
     super.initState();
@@ -69,6 +73,15 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
     if (widget.material is Yarn) {
       threadStatus = (widget.material as Yarn).status;
       unit = (widget.material as Yarn).unit;
+    }
+  }
+
+  void getImage() async {
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      print(image?.path);
+      image = picked;
+      setState(() {});
     }
   }
 
@@ -159,9 +172,23 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
 
           final consumable = _createConsumableFromForm(state);
           if (consumable != null) {
+            AnjuImageModel? consumableImage;
+            if (image != null) {
+              // TODO: SI ES LA MEJOR MANERA DE GUARDARLO?
+              consumableImage = AnjuImageModel()
+                ..type = ImageSourceAnju.local
+                ..url = image!.path;
+              final id = await getIt<ConsumablesService>()
+                  .createOrUpdateAnjuImageModel(consumableImage);
+              consumableImage.id = id;
+            }
             try {
-              getIt<ConsumablesService>().createOrUpdateConsumable(consumable,
-                  colors: threadColors, threadType: threadType);
+              getIt<ConsumablesService>().createOrUpdateConsumable(
+                consumable,
+                colors: threadColors,
+                threadType: threadType,
+                image: consumableImage,
+              );
               await AnjuAlerts.alertSuccess(
                   text: 'Producto agregado correctamente, eso!');
               Navigator.of(context).pop();
@@ -299,6 +326,34 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
 
   List<Widget> _buildCommonFields() {
     return [
+      if (image != null)
+        GestureDetector(onTap: getImage, child: Image.file(File(image!.path))),
+      if (image == null)
+        GestureDetector(
+          onTap: getImage,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+                child: Card(
+                    color: Colors.grey.shade400,
+                    shadowColor: Colors.black,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.75,
+                      height: MediaQuery.of(context).size.width * 0.75,
+                    )),
+              ),
+              SvgPicture.asset(
+                width: 60,
+                height: 60,
+                AnjuSvg.gallery,
+                colorFilter:
+                    const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              ),
+            ],
+          ),
+        ),
       const SizedBox(height: 15),
       AnjuDropDown<UnitWeight>(
         hintText: 'Unidad',

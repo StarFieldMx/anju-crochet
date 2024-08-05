@@ -12,7 +12,7 @@ class ListItemInventory extends StatelessWidget {
   });
   final String title;
   final String? subtitle;
-  final ImageSource source;
+  final ImageSourceAnju source;
   final String imageUrl;
   @override
   Widget build(BuildContext context) {
@@ -32,6 +32,7 @@ class ListItemInventory extends StatelessWidget {
             height: _size(context).height * 0.105,
             source: source,
             type: ImageBorderType.inventory,
+            hero: false,
             // hero: true,
             // tag: title,
             // fit: BoxFit.cover,
