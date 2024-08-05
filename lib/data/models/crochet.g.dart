@@ -82,6 +82,12 @@ const YarnSchema = CollectionSchema(
       target: r'Bill',
       single: false,
       linkName: r'thread',
+    ),
+    r'image': LinkSchema(
+      id: 6183793196005124697,
+      name: r'image',
+      target: r'AnjuImageModel',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -210,7 +216,13 @@ Id _yarnGetId(Yarn object) {
 }
 
 List<IsarLinkBase<dynamic>> _yarnGetLinks(Yarn object) {
-  return [object.threadColors, object.threadType, object.brand, object.bills];
+  return [
+    object.threadColors,
+    object.threadType,
+    object.brand,
+    object.bills,
+    object.image
+  ];
 }
 
 void _yarnAttach(IsarCollection<dynamic> col, Id id, Yarn object) {
@@ -221,6 +233,7 @@ void _yarnAttach(IsarCollection<dynamic> col, Id id, Yarn object) {
       .attach(col, col.isar.collection<ThreadType>(), r'threadType', id);
   object.brand.attach(col, col.isar.collection<ThreadBrand>(), r'brand', id);
   object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
+  object.image.attach(col, col.isar.collection<AnjuImageModel>(), r'image', id);
 }
 
 extension YarnQueryWhereSort on QueryBuilder<Yarn, Yarn, QWhere> {
@@ -764,6 +777,19 @@ extension YarnQueryLinks on QueryBuilder<Yarn, Yarn, QFilterCondition> {
           r'bills', lower, includeLower, upper, includeUpper);
     });
   }
+
+  QueryBuilder<Yarn, Yarn, QAfterFilterCondition> image(
+      FilterQuery<AnjuImageModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'image');
+    });
+  }
+
+  QueryBuilder<Yarn, Yarn, QAfterFilterCondition> imageIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'image', 0, true, 0, true);
+    });
+  }
 }
 
 extension YarnQuerySortBy on QueryBuilder<Yarn, Yarn, QSortBy> {
@@ -1055,6 +1081,12 @@ const FillingSchema = CollectionSchema(
       target: r'Bill',
       single: false,
       linkName: r'filling',
+    ),
+    r'image': LinkSchema(
+      id: -3101477177537796741,
+      name: r'image',
+      target: r'AnjuImageModel',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -1162,12 +1194,13 @@ Id _fillingGetId(Filling object) {
 }
 
 List<IsarLinkBase<dynamic>> _fillingGetLinks(Filling object) {
-  return [object.bills];
+  return [object.bills, object.image];
 }
 
 void _fillingAttach(IsarCollection<dynamic> col, Id id, Filling object) {
   object.id = id;
   object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
+  object.image.attach(col, col.isar.collection<AnjuImageModel>(), r'image', id);
 }
 
 extension FillingQueryWhereSort on QueryBuilder<Filling, Filling, QWhere> {
@@ -1529,6 +1562,19 @@ extension FillingQueryLinks
           r'bills', lower, includeLower, upper, includeUpper);
     });
   }
+
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> image(
+      FilterQuery<AnjuImageModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'image');
+    });
+  }
+
+  QueryBuilder<Filling, Filling, QAfterFilterCondition> imageIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'image', 0, true, 0, true);
+    });
+  }
 }
 
 extension FillingQuerySortBy on QueryBuilder<Filling, Filling, QSortBy> {
@@ -1762,6 +1808,12 @@ const SafetyEyesSchema = CollectionSchema(
       name: r'threadColor',
       target: r'ThreadColor',
       single: true,
+    ),
+    r'image': LinkSchema(
+      id: 5439787095928148316,
+      name: r'image',
+      target: r'AnjuImageModel',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -1877,7 +1929,7 @@ Id _safetyEyesGetId(SafetyEyes object) {
 }
 
 List<IsarLinkBase<dynamic>> _safetyEyesGetLinks(SafetyEyes object) {
-  return [object.bills, object.threadColor];
+  return [object.bills, object.threadColor, object.image];
 }
 
 void _safetyEyesAttach(IsarCollection<dynamic> col, Id id, SafetyEyes object) {
@@ -1885,6 +1937,7 @@ void _safetyEyesAttach(IsarCollection<dynamic> col, Id id, SafetyEyes object) {
   object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
   object.threadColor
       .attach(col, col.isar.collection<ThreadColor>(), r'threadColor', id);
+  object.image.attach(col, col.isar.collection<AnjuImageModel>(), r'image', id);
 }
 
 extension SafetyEyesQueryWhereSort
@@ -2518,6 +2571,19 @@ extension SafetyEyesQueryLinks
       return query.linkLength(r'threadColor', 0, true, 0, true);
     });
   }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> image(
+      FilterQuery<AnjuImageModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'image');
+    });
+  }
+
+  QueryBuilder<SafetyEyes, SafetyEyes, QAfterFilterCondition> imageIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'image', 0, true, 0, true);
+    });
+  }
 }
 
 extension SafetyEyesQuerySortBy
@@ -2780,6 +2846,12 @@ const AccessoriesSchema = CollectionSchema(
       name: r'threadColor',
       target: r'ThreadColor',
       single: true,
+    ),
+    r'image': LinkSchema(
+      id: 740451350075948757,
+      name: r'image',
+      target: r'AnjuImageModel',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -2885,7 +2957,7 @@ Id _accessoriesGetId(Accessories object) {
 }
 
 List<IsarLinkBase<dynamic>> _accessoriesGetLinks(Accessories object) {
-  return [object.bills, object.threadColor];
+  return [object.bills, object.threadColor, object.image];
 }
 
 void _accessoriesAttach(
@@ -2894,6 +2966,7 @@ void _accessoriesAttach(
   object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
   object.threadColor
       .attach(col, col.isar.collection<ThreadColor>(), r'threadColor', id);
+  object.image.attach(col, col.isar.collection<AnjuImageModel>(), r'image', id);
 }
 
 extension AccessoriesQueryWhereSort
@@ -3268,6 +3341,19 @@ extension AccessoriesQueryLinks
       return query.linkLength(r'threadColor', 0, true, 0, true);
     });
   }
+
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> image(
+      FilterQuery<AnjuImageModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'image');
+    });
+  }
+
+  QueryBuilder<Accessories, Accessories, QAfterFilterCondition> imageIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'image', 0, true, 0, true);
+    });
+  }
 }
 
 extension AccessoriesQuerySortBy
@@ -3456,6 +3542,12 @@ const KeychainsSchema = CollectionSchema(
       name: r'threadColor',
       target: r'ThreadColor',
       single: true,
+    ),
+    r'image': LinkSchema(
+      id: -3043848709240460310,
+      name: r'image',
+      target: r'AnjuImageModel',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -3559,7 +3651,7 @@ Id _keychainsGetId(Keychains object) {
 }
 
 List<IsarLinkBase<dynamic>> _keychainsGetLinks(Keychains object) {
-  return [object.bills, object.threadColor];
+  return [object.bills, object.threadColor, object.image];
 }
 
 void _keychainsAttach(IsarCollection<dynamic> col, Id id, Keychains object) {
@@ -3567,6 +3659,7 @@ void _keychainsAttach(IsarCollection<dynamic> col, Id id, Keychains object) {
   object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
   object.threadColor
       .attach(col, col.isar.collection<ThreadColor>(), r'threadColor', id);
+  object.image.attach(col, col.isar.collection<AnjuImageModel>(), r'image', id);
 }
 
 extension KeychainsQueryWhereSort
@@ -3936,6 +4029,19 @@ extension KeychainsQueryLinks
       return query.linkLength(r'threadColor', 0, true, 0, true);
     });
   }
+
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> image(
+      FilterQuery<AnjuImageModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'image');
+    });
+  }
+
+  QueryBuilder<Keychains, Keychains, QAfterFilterCondition> imageIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'image', 0, true, 0, true);
+    });
+  }
 }
 
 extension KeychainsQuerySortBy on QueryBuilder<Keychains, Keychains, QSortBy> {
@@ -4127,6 +4233,12 @@ const PrePackingSchema = CollectionSchema(
       target: r'Bill',
       single: false,
       linkName: r'prePacking',
+    ),
+    r'image': LinkSchema(
+      id: 179469538533251837,
+      name: r'image',
+      target: r'AnjuImageModel',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -4241,12 +4353,13 @@ Id _prePackingGetId(PrePacking object) {
 }
 
 List<IsarLinkBase<dynamic>> _prePackingGetLinks(PrePacking object) {
-  return [object.bills];
+  return [object.bills, object.image];
 }
 
 void _prePackingAttach(IsarCollection<dynamic> col, Id id, PrePacking object) {
   object.id = id;
   object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
+  object.image.attach(col, col.isar.collection<AnjuImageModel>(), r'image', id);
 }
 
 extension PrePackingQueryWhereSort
@@ -4788,6 +4901,19 @@ extension PrePackingQueryLinks
           r'bills', lower, includeLower, upper, includeUpper);
     });
   }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> image(
+      FilterQuery<AnjuImageModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'image');
+    });
+  }
+
+  QueryBuilder<PrePacking, PrePacking, QAfterFilterCondition> imageIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'image', 0, true, 0, true);
+    });
+  }
 }
 
 extension PrePackingQuerySortBy
@@ -5048,6 +5174,12 @@ const HooksSchema = CollectionSchema(
       target: r'Bill',
       single: false,
       linkName: r'hooks',
+    ),
+    r'image': LinkSchema(
+      id: 4063077811317328298,
+      name: r'image',
+      target: r'AnjuImageModel',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -5155,12 +5287,13 @@ Id _hooksGetId(Hooks object) {
 }
 
 List<IsarLinkBase<dynamic>> _hooksGetLinks(Hooks object) {
-  return [object.bills];
+  return [object.bills, object.image];
 }
 
 void _hooksAttach(IsarCollection<dynamic> col, Id id, Hooks object) {
   object.id = id;
   object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
+  object.image.attach(col, col.isar.collection<AnjuImageModel>(), r'image', id);
 }
 
 extension HooksQueryWhereSort on QueryBuilder<Hooks, Hooks, QWhere> {
@@ -5558,6 +5691,19 @@ extension HooksQueryLinks on QueryBuilder<Hooks, Hooks, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'bills', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<Hooks, Hooks, QAfterFilterCondition> image(
+      FilterQuery<AnjuImageModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'image');
+    });
+  }
+
+  QueryBuilder<Hooks, Hooks, QAfterFilterCondition> imageIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'image', 0, true, 0, true);
     });
   }
 }

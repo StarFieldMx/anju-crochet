@@ -1,3 +1,4 @@
+import 'package:anju/data/models/anju_image_model.dart';
 import 'package:anju/data/models/bill.dart';
 import 'package:isar/isar.dart';
 part 'amigurumi.g.dart';
@@ -21,7 +22,7 @@ class Amigurumi {
   // @Enumerated(EnumType.name)
   late List<String> materialsTypes;
 
-  final images = IsarLinks<AmigurumiImage>();
+  final images = IsarLinks<AnjuImageModel>();
 
   /// Status of the amigurumi
   @enumerated
@@ -46,14 +47,3 @@ class Amigurumi {
         'materials and materialsTypes must have the same length');
   }
 }
-
-@collection
-class AmigurumiImage {
-  Id id = Isar.autoIncrement;
-  late String url;
-
-  @Enumerated(EnumType.name)
-  late ImageType type;
-}
-
-enum ImageType { local, network }

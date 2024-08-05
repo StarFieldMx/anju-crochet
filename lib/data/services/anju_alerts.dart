@@ -4,10 +4,12 @@ import 'package:anju/config/router/anju_router.dart';
 import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/config/utils/extensions.dart';
+import 'package:anju/data/models/models.dart';
 import 'package:anju/data/models/threads/thread_brand.dart';
 import 'package:anju/data/models/threads/thread_color.dart';
 import 'package:anju/data/models/threads/thread_type.dart';
 import 'package:anju/interface/views/inventory/consumables_manager/consumable_manager_bloc.dart';
+import 'package:anju/interface/views/inventory/widgets/consumables_details.dart';
 import 'package:anju/interface/widgets/anju_color_selector.dart';
 import 'package:anju/interface/widgets/forms/anju_textfield.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
@@ -227,5 +229,21 @@ abstract class AnjuAlerts {
     );
 
     return completer.future;
+  }
+
+  static Future<void> showDetailsConsumable({required Crochet crochet}) async {
+    await ArtSweetAlert.show(
+      context: context,
+      artDialogArgs: ArtDialogArgs(
+        // type: ArtSweetAlertType.,
+        title: "Detalles del ${crochet.type.spanishSingle}",
+        customColumns: [
+          ConsumableDetails(
+            item: crochet,
+          )
+        ],
+        confirmButtonText: 'Listo',
+      ),
+    );
   }
 }

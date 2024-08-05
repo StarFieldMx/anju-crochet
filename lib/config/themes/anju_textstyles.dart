@@ -77,4 +77,9 @@ abstract class AnjuTextStyles {
     fontWeight: FontWeight.w100,
     color: Colors.black.withOpacity(0.4),
   );
+  static TextStyle descriptionConsumable = defaultStyle.copyWith(
+    fontSize: 16,
+    fontWeight: FontWeight.w800,
+    color: Colors.black,
+  );
 }

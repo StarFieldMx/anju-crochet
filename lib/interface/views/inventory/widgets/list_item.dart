@@ -1,3 +1,4 @@
+import 'package:anju/data/models/anju_image_model.dart';
 import 'package:anju/interface/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 

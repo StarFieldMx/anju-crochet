@@ -1,11 +1,10 @@
 import 'package:anju/config/router/anju_router.dart';
 import 'package:anju/config/service_locator.dart';
+import 'package:anju/data/models/anju_image_model.dart';
 import 'package:anju/data/models/threads/thread_brand.dart';
 import 'package:anju/data/services/consumables_service.dart';
 import 'package:anju/interface/views/inventory/widgets/list_item.dart';
-import 'package:anju/interface/widgets/anju_image.dart';
 import 'package:anju/interface/widgets/anju_item_list_viewer.dart';
-import 'package:anju/interface/widgets/widgets.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 

@@ -1,6 +1,8 @@
 import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/utils/extensions.dart';
+import 'package:anju/data/models/anju_image_model.dart';
 import 'package:anju/data/models/models.dart';
+import 'package:anju/data/services/anju_alerts.dart';
 import 'package:anju/data/services/consumables_service.dart';
 import 'package:anju/interface/views/inventory/widgets/list_item.dart';
 import 'package:anju/interface/widgets/anju_item_list_viewer.dart';
@@ -29,6 +31,7 @@ class CategoryScreen extends StatelessWidget {
           } else {
             return AnjuItemListViewer(
               childBuilder: (crochet) => GestureDetector(
+                onTap: () => AnjuAlerts.showDetailsConsumable(crochet: crochet),
                 child: _buildListItem(crochet),
               ),
               list: snapshot.data!,

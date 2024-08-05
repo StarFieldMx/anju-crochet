@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:anju/data/models/anju_image_model.dart';
 // utils
 
 enum ImageBorderType { orders, details, inventory }
-
-enum ImageSource { local, network }
 
 class AnjuImage extends StatelessWidget {
   const AnjuImage({

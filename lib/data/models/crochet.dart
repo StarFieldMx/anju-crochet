@@ -1,4 +1,5 @@
 import 'package:anju/data/models/bill.dart';
+import 'package:anju/data/models/models.dart';
 import 'package:anju/data/models/threads/thread_brand.dart';
 import 'package:anju/data/models/threads/thread_color.dart';
 import 'package:anju/data/models/threads/thread_type.dart';
@@ -33,6 +34,8 @@ abstract class Crochet {
   // late double purchasePrice;
   @enumerated
   late UnitWeight unit;
+
+  final image = IsarLink<AnjuImageModel>();
 }
 
 @Collection(ignore: {'threadColor'})
