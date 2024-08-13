@@ -28,8 +28,8 @@ class _AnjuCarouselState extends State<AnjuCarousel> {
               .map(
                 (e) => AnjuImage(
                   width: MediaQuery.of(context).size.width,
-                  type: ImageType.orders,
-                  imagePath: e,
+                  type: ImageBorderType.orders,
+                  imageUrl: e,
                   hero: false,
                 ),
               )

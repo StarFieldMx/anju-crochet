@@ -19,82 +19,82 @@ class WalletScreen extends StatefulWidget {
 }
 
 class _WalletScreenState extends State<WalletScreen> {
-  final bills = [
-    Expenses(
-      money: 200,
-      title: 'Pedido Mario',
-      subtitle: 'Corazones y borregos',
-      date: DateTime(2024, 2, 26),
-    ),
-    Expenses(
-      money: 150,
-      title: 'Factura eléctrica',
-      subtitle: 'Energía consumida',
-      date: DateTime(2024, 2, 21),
-    ),
-    Expenses(
-      money: 100,
-      title: 'Compra supermercado',
-      subtitle: 'Productos de primera necesidad',
-      date: DateTime(2024, 2, 18),
-    ),
-    Expenses(
-      money: 50,
-      title: 'Transporte público',
-      subtitle: 'Viaje en metro',
-      date: DateTime(2024, 2, 14),
-    ),
-    Expenses(
-      money: 300,
-      title: 'Alquiler de local',
-      subtitle: 'Pago mensual del alquiler',
-      date: DateTime(2024, 2, 10),
-    ),
-    Expenses(
-      money: 300,
-      title: 'Hilo sinfonía',
-      subtitle: 'Compre hilo',
-      date: DateTime(2024, 2, 10),
-    ),
-    Income(
-      money: 1000,
-      title: 'Salario',
-      subtitle: 'Pago mensual',
-      date: DateTime(2024, 2, 10),
-    ),
-    Income(
-      money: 300,
-      title: 'Ingreso extra',
-      subtitle: 'Trabajo adicional',
-      date: DateTime(2024, 2, 25),
-    ),
-    Income(
-      money: 500,
-      title: 'Reembolso de impuestos',
-      subtitle: 'Devolución de impuestos',
-      date: DateTime(2024, 2, 20),
-    ),
-    Income(
-      money: 200,
-      title: 'Venta de muebles',
-      subtitle: 'Ingresos adicionales',
-      date: DateTime(2024, 2, 16),
-    ),
-    Income(
-      money: 800,
-      title: 'Bonificación',
-      subtitle: 'Premio por desempeño',
-      date: DateTime(2024, 2, 5),
-    ),
-    Income(
-      money: 500,
-      title: 'Crochet',
-      subtitle: 'Premio por crochet',
-      date: DateTime(2024, 2, 6),
-    ),
+  final List<Bill> bills = [
+    Bill()
+      ..money = 200
+      ..title = 'Pedido Mario'
+      ..subtitle = 'Corazones y borregos'
+      ..dueAt = DateTime(2024, 2, 26)
+      ..type = BillingType.expenses,
+    Bill()
+      ..money = 150
+      ..title = 'Factura eléctrica'
+      ..subtitle = 'Energía consumida'
+      ..dueAt = DateTime(2024, 2, 21)
+      ..type = BillingType.expenses,
+    Bill()
+      ..money = 100
+      ..title = 'Compra supermercado'
+      ..subtitle = 'Productos de primera necesidad'
+      ..dueAt = DateTime(2024, 2, 18)
+      ..type = BillingType.expenses,
+    Bill()
+      ..money = 50
+      ..title = 'Transporte público'
+      ..subtitle = 'Viaje en metro'
+      ..dueAt = DateTime(2024, 2, 14)
+      ..type = BillingType.expenses,
+    Bill()
+      ..money = 300
+      ..title = 'Alquiler de local'
+      ..subtitle = 'Pago mensual del alquiler'
+      ..dueAt = DateTime(2024, 2, 10)
+      ..type = BillingType.expenses,
+    Bill()
+      ..money = 300
+      ..title = 'Hilo sinfonía'
+      ..subtitle = 'Compre hilo'
+      ..dueAt = DateTime(2024, 2, 10)
+      ..type = BillingType.expenses,
+    Bill()
+      ..money = 1000
+      ..title = 'Salario'
+      ..subtitle = 'Pago mensual'
+      ..dueAt = DateTime(2024, 2, 10)
+      ..type = BillingType.incomes,
+    Bill()
+      ..money = 300
+      ..title = 'Ingreso extra'
+      ..subtitle = 'Trabajo adicional'
+      ..dueAt = DateTime(2024, 2, 25)
+      ..type = BillingType.incomes,
+    Bill()
+      ..money = 500
+      ..title = 'Reembolso de impuestos'
+      ..subtitle = 'Devolución de impuestos'
+      ..dueAt = DateTime(2024, 2, 20)
+      ..type = BillingType.incomes,
+    Bill()
+      ..money = 200
+      ..title = 'Venta de muebles'
+      ..subtitle = 'Ingresos adicionales'
+      ..dueAt = DateTime(2024, 2, 16)
+      ..type = BillingType.incomes,
+    Bill()
+      ..money = 800
+      ..title = 'Bonificación'
+      ..subtitle = 'Premio por desempeño'
+      ..dueAt = DateTime(2024, 2, 5)
+      ..type = BillingType.incomes,
+    Bill()
+      ..money = 500
+      ..title = 'Crochet'
+      ..subtitle = 'Premio por crochet'
+      ..dueAt = DateTime(2024, 2, 6)
+      ..type = BillingType.incomes,
   ];
 
-  BillType type = BillType.balance;
+  BillTypeScreen type = BillTypeScreen.balance;
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +113,7 @@ class _WalletScreenState extends State<WalletScreen> {
               children: [
                 GestureDetector(
                   onTap: () => setState(() {
-                    type = BillType.balance;
+                    type = BillTypeScreen.balance;
                   }),
                   child: Column(
                     children: [
@@ -125,7 +125,7 @@ class _WalletScreenState extends State<WalletScreen> {
                         'Balance',
                         style: AnjuTextStyles.defaultStyle,
                       ),
-                      if (type == BillType.balance)
+                      if (type == BillTypeScreen.balance)
                         SizedBox(
                           width: 80,
                           child: Divider(
@@ -138,7 +138,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 ),
                 GestureDetector(
                   onTap: () => setState(() {
-                    type = BillType.stats;
+                    type = BillTypeScreen.stats;
                   }),
                   child: Column(
                     children: [
@@ -150,7 +150,7 @@ class _WalletScreenState extends State<WalletScreen> {
                         'Estadistica',
                         style: AnjuTextStyles.defaultStyle,
                       ),
-                      if (type == BillType.stats)
+                      if (type == BillTypeScreen.stats)
                         SizedBox(
                           width: 80,
                           child: Divider(
@@ -168,7 +168,7 @@ class _WalletScreenState extends State<WalletScreen> {
               pickDate: (time, range) {},
             ),
             const SizedBox(height: 15),
-            if (type == BillType.balance)
+            if (type == BillTypeScreen.balance)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -199,13 +199,13 @@ class _WalletScreenState extends State<WalletScreen> {
             const SizedBox(height: 15),
 
             // TODO: Cambiar según si es Balance o Stats
-            if (type == BillType.balance)
+            if (type == BillTypeScreen.balance)
               ...bills.billsByDate.map(
                 (e) => BillisByDate(
                   bills: e,
                 ),
               ),
-            if (type == BillType.stats) StatsView(allBills: bills),
+            if (type == BillTypeScreen.stats) StatsView(allBills: bills),
             const SizedBox(height: 80.0),
           ],
         ),
@@ -223,13 +223,13 @@ class BillisByDate extends StatelessWidget {
 
   bool _checkAllBillsHaveSameDate() {
     if (bills.isEmpty) return true;
-    final firstDate = bills.first.date;
-    return bills.every((bill) => bill.date == firstDate);
+    final firstDate = bills.first.dueAt;
+    return bills.every((bill) => bill.dueAt == firstDate);
   }
 
   @override
   Widget build(BuildContext context) {
-    assert(_checkAllBillsHaveSameDate(), 'All bills must have the same date');
+    assert(_checkAllBillsHaveSameDate(), 'All bills must have the same dueAt');
     return Card(
       color: Colors.white,
       surfaceTintColor: Colors.white,
@@ -241,12 +241,12 @@ class BillisByDate extends StatelessWidget {
               children: [
                 const SizedBox(width: 10),
                 Text(
-                  '${bills.first.date.day}',
+                  '${bills.first.dueAt.day}',
                   style: AnjuTextStyles.walletCards,
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  bills.first.date.weekdayAbbreviation,
+                  bills.first.dueAt.weekdayAbbreviation,
                   style: AnjuTextStyles.defaultStyle
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
@@ -276,7 +276,7 @@ class BillisByDate extends StatelessWidget {
               ),
               trailing: Text(
                 '\$${bill.money}',
-                style: bill is Income
+                style: bill.type == BillingType.incomes
                     ? AnjuTextStyles.income
                     : AnjuTextStyles.expenses,
               ),

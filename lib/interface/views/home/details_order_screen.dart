@@ -1,6 +1,6 @@
 import 'package:anju/config/themes/anju_colors.dart';
 import 'package:anju/config/utils/images_constant.dart';
-import 'package:anju/data/models/thread_color.dart';
+import 'package:anju/data/models/threads/thread_color.dart';
 import 'package:flutter/material.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/interface/widgets/widgets.dart';
@@ -135,8 +135,9 @@ class _DetailsCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           AnjuImage(
-            imagePath: AnjuImages.test,
-            type: ImageType.details,
+            // id: 0,
+            imageUrl: AnjuImages.test,
+            type: ImageBorderType.details,
             //TODO: SET TRUE AND PASS ID
             hero: false,
             width: width,

@@ -1,5 +1,8 @@
 import 'package:anju/data/models/bill.dart';
+import 'package:anju/data/models/crochet.dart';
+import 'package:anju/data/models/threads/thread_color.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 extension ColorExtension on String {
   Color toColor({double opacity = 1.0}) {
@@ -17,6 +20,46 @@ extension ColorExtension on String {
 extension HexExtension on Color {
   String toHex() {
     return '#${value.toRadixString(16).substring(2)}';
+  }
+}
+
+extension CrochetTypeExtension on CrochetType {
+  String get spanishPlural {
+    switch (this) {
+      case CrochetType.yarn:
+        return 'Hilos';
+      case CrochetType.filling:
+        return 'Relleno';
+      case CrochetType.safetyEyes:
+        return 'Ojos de seguridad';
+      case CrochetType.accessories:
+        return 'Acccesorios';
+      case CrochetType.keychains:
+        return 'Llaveros';
+      case CrochetType.prepacking:
+        return 'Empaques';
+      case CrochetType.hooks:
+        return 'Ganchos';
+    }
+  }
+
+  String get spanishSingle {
+    switch (this) {
+      case CrochetType.yarn:
+        return 'Hilo';
+      case CrochetType.filling:
+        return 'Relleno';
+      case CrochetType.safetyEyes:
+        return 'Ojo de seguridad';
+      case CrochetType.accessories:
+        return 'Acccesorio';
+      case CrochetType.keychains:
+        return 'Llavero';
+      case CrochetType.prepacking:
+        return 'Empaque';
+      case CrochetType.hooks:
+        return 'Gancho';
+    }
   }
 }
 
@@ -48,10 +91,10 @@ extension BillsExtensions on List<Bill> {
     Map<DateTime, List<Bill>> billsMap = {};
 
     for (var bill in this) {
-      if (billsMap.containsKey(bill.date)) {
-        billsMap[bill.date]!.add(bill);
+      if (billsMap.containsKey(bill.dueAt)) {
+        billsMap[bill.dueAt]!.add(bill);
       } else {
-        billsMap[bill.date] = [bill];
+        billsMap[bill.dueAt] = [bill];
       }
     }
 
@@ -67,14 +110,13 @@ extension BillsExtensions on List<Bill> {
   }
 
   double get totalExpenses {
-    final amount = where((bill) => bill is Expenses)
+    return where((bill) => bill.type == BillingType.expenses)
         .map((bill) => bill.money)
         .fold(0.0, (prev, amount) => prev + amount);
-    return amount;
   }
 
   double get totalIncome {
-    return where((bill) => bill is Income)
+    return where((bill) => bill.type == BillingType.incomes)
         .map((bill) => bill.money)
         .fold(0.0, (prev, amount) => prev + amount);
   }
@@ -85,30 +127,42 @@ extension BillsExtensions on List<Bill> {
 
   List<Bill> get incomeAndExpense {
     return [
-      Income(
-        money: totalIncome,
-        title: 'Ingreso',
-        subtitle: 'Mis ingresos',
-        date: first.date,
-      ),
-      Expenses(
-        money: totalExpenses,
-        title: 'Egreso',
-        subtitle: 'Mis rgresos',
-        date: first.date,
-      ),
+      Bill()
+        ..money = totalIncome
+        ..title = 'Ingreso'
+        ..subtitle = 'Mis ingresos'
+        ..dueAt = first.dueAt,
+      Bill()
+        ..money = totalExpenses
+        ..title = 'Egreso'
+        ..subtitle = 'Mis egresos'
+        ..dueAt = first.dueAt
+        ..type = BillingType.expenses,
     ];
   }
 
   List<Bill> get incomes {
-    return where((bill) => bill is Income).toList();
+    return where((bill) => bill.type == BillingType.incomes).toList();
   }
 
   List<Bill> get expenses {
-    return where((bill) => bill is Expenses).toList();
+    return where((bill) => bill.type == BillingType.expenses).toList();
   }
 
   double get balance {
     return totalIncome - totalExpenses;
+  }
+}
+
+extension ThreadColorExtensions on List<ThreadColor> {
+  String get colorNamed {
+    String name = '';
+    if (length == 1) {
+      return this[0].name;
+    }
+    for (var color in this) {
+      name += color.name[0];
+    }
+    return name.toUpperCase();
   }
 }

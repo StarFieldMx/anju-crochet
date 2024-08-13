@@ -5,24 +5,26 @@ import 'package:flutter/material.dart';
 class MultiColorCircle extends StatelessWidget {
   final List<Color> colors;
   final double size;
-
-  const MultiColorCircle({super.key, required this.colors, this.size = 80});
+  final bool isSelected;
+  const MultiColorCircle(
+      {super.key,
+      required this.colors,
+      this.size = 80,
+      required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       size: Size(size, size),
-      painter: _MultiColorCirclePainter(colors),
+      painter: _MultiColorCirclePainter(colors, isSelected),
     );
   }
 }
 
 class _MultiColorCirclePainter extends CustomPainter {
   final List<Color> colors;
-
-  _MultiColorCirclePainter(
-    this.colors,
-  );
+  final bool isSelected;
+  _MultiColorCirclePainter(this.colors, this.isSelected);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -31,8 +33,14 @@ class _MultiColorCirclePainter extends CustomPainter {
     double centerY = size.height / 2;
 
     // Dibujar el borde
+    late Color color;
+    if (isSelected) {
+      color = AnjuColors.primary;
+    } else {
+      color = Colors.white;
+    }
     Paint borderPaint = Paint()
-      ..color = AnjuColors.primary
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4;
 

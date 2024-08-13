@@ -1,263 +1,107 @@
-// Abstract main class for all materials
-// ignore_for_file: avoid_print
+import 'package:anju/data/models/bill.dart';
+import 'package:anju/data/models/models.dart';
+import 'package:anju/data/models/threads/thread_brand.dart';
+import 'package:anju/data/models/threads/thread_color.dart';
+import 'package:anju/data/models/threads/thread_type.dart';
+import 'package:isar/isar.dart';
 
-import 'dart:ui';
+part 'crochet.g.dart';
 
-import 'package:anju/config/utils/utils.dart';
-import 'package:anju/data/models/thread_color.dart';
+enum UnitWeight { gr, kg, pza, mm, cm }
 
 enum CrochetType {
-  thread,
+  yarn,
   filling,
   safetyEyes,
   accessories,
   keychains,
   prepacking,
-}
-
-abstract class Crochet {
-  String? id;
-  String name;
-  int stock;
-  CrochetType type;
-  Crochet(this.name, this.stock, this.id, this.type);
-
-  // Method to display basic information of the material
-  void showInfo() {
-    print('Name: $name');
-    print('Stock: $stock');
-  }
-
-  Map<String, dynamic> toJson();
-
-  factory Crochet.fromJson(Map<String, dynamic> json) {
-    switch (json['type'] as String) {
-      case 'thread':
-        return Thread.fromJson(json);
-      case 'filling':
-        return Filling.fromJson(json);
-      case 'safetyEyes':
-        return SafetyEyes.fromJson(json);
-      case 'accessories':
-        return Accessories.fromJson(json);
-      case 'keychains':
-        return Keychains.fromJson(json);
-      case 'prepacking':
-        return PrePacking.fromJson(json);
-
-      default:
-        // TODO: IMPLEMENT DEFAUTL MATERIAL
-        throw ArgumentError('Invalid material type');
-    }
-  }
+  hooks,
 }
 
 enum ThreadStatus { nuevo, medio, pocoloco, agotado }
 
-// "Hilo"
-class Thread extends Crochet {
-  ThreadColor threadColor;
-  String brand;
-  double thickness;
-  ThreadStatus status;
-  bool isMultiColor;
-  Thread._({
-    String? id,
-    required String name,
-    required int stock,
-    required this.threadColor,
-    required this.brand,
-    required this.thickness,
-    required this.status,
-    this.isMultiColor = false,
-  }) : super(name, stock, id, CrochetType.thread);
+// TODO: VER COMO MANEJAR LOS PRECIOS DE LOS PRODUCCTOS (DIFERENTE A LOS BILLS)
 
-  @override
-  void showInfo() {
-    super.showInfo();
-    print('Color: $threadColor');
-    print('Brand: $brand');
-    print('Thickness: $thickness');
-  }
+abstract class Crochet {
+  Id id = Isar.autoIncrement;
+  // late String name;
+  final threadColor = IsarLink<ThreadColor>();
 
-  static Thread fromJson(Map<String, dynamic> json) => Thread._(
-        id: json['id'],
-        name: json['name'],
-        stock: json['stock'],
-        status: ThreadStatus.values
-            .firstWhere((status) => status.name == json['status']),
-        threadColor: ThreadColor.fromJson(json['threadColor']),
-        brand: json['brand'],
-        thickness: json['thickness'],
-        isMultiColor: json['muticolor'],
-      );
+  @enumerated
+  late CrochetType type;
+  late int stock;
+  // late double purchasePrice;
+  @enumerated
+  late UnitWeight unit;
 
-  @override
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'stock': stock,
-        'type': type.name,
-        'color': threadColor.toJson(),
-        'status': status.name,
-        'brand': brand,
-        'thickness': thickness,
-        'muticolor': isMultiColor,
-      };
+  final image = IsarLink<AnjuImageModel>();
 }
 
-// "Relleno"
+@Collection(ignore: {'threadColor'})
+class Yarn extends Crochet {
+  final threadColors = IsarLinks<ThreadColor>();
+  final threadType = IsarLink<ThreadType>();
+
+  final brand = IsarLink<ThreadBrand>();
+
+  /// Milimetros de grosor
+  late short thickness;
+  @enumerated
+  late ThreadStatus status;
+
+  bool get isMultiColor {
+    return threadColors.isNotEmpty && threadColors.length > 1;
+  }
+
+  @Backlink(to: 'thread')
+  final bills = IsarLinks<Bill>();
+}
+
+@Collection(ignore: {'threadColor', 'image'})
 class Filling extends Crochet {
-  bool available;
-
-  Filling._({
-    String? id,
-    String name = 'Relleno',
-    // No es medible así
-    int stock = 1,
-    required this.available,
-  }) : super(name, stock, id, CrochetType.filling);
-
-  @override
-  void showInfo() {
-    super.showInfo();
-    print('Available: $available');
-  }
-
-  static Filling fromJson(Map<String, dynamic> json) => Filling._(
-        id: json['id'],
-        name: json['name'],
-        stock: json['stock'],
-        available: json['available'],
-      );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'stock': stock,
-        'type': type.name,
-        'available': available,
-      };
+  late bool available;
+  @Backlink(to: 'filling')
+  final bills = IsarLinks<Bill>();
 }
 
-// "SafeEyes"
+@collection
 class SafetyEyes extends Crochet {
-  String shape;
-  double size;
-  SafetyEyes._({
-    String? id,
-    required String name,
-    required int stock,
-    required this.shape,
-    required this.size,
-  }) : super(name, stock, id, CrochetType.safetyEyes);
+  late String shape;
+  late String size;
 
-  @override
-  void showInfo() {
-    super.showInfo();
-    print('Shape: $shape');
-    print('Size: $size mm');
-  }
-
-  static SafetyEyes fromJson(Map<String, dynamic> json) => SafetyEyes._(
-        id: json['id'],
-        name: json['name'],
-        stock: json['stock'],
-        shape: json['shape'],
-        size: json['size'],
-      );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'stock': stock,
-        'type': type.name,
-        'shape': shape,
-        'size': size,
-      };
+  @Backlink(to: 'safetyEye')
+  final bills = IsarLinks<Bill>();
 }
 
-// "Accessories"
+// @Collection(ignore: {'threadColor'})
+@collection
 class Accessories extends Crochet {
-  List<String> colors;
+  // final threadColors = IsarLinks<ThreadColor>();
 
-  Accessories._({
-    String? id,
-    required String name,
-    required int stock,
-    required this.colors,
-  }) : super(name, stock, id, CrochetType.accessories);
-
-  @override
-  void showInfo() {
-    super.showInfo();
-    print('Available colors: $colors');
-  }
-
-  static Accessories fromJson(Map<String, dynamic> json) => Accessories._(
-        id: json['id'],
-        name: json['name'],
-        stock: json['stock'],
-        colors: json['colors'],
-      );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'stock': stock,
-        'type': type.name,
-        'colors': colors,
-      };
+  @Backlink(to: 'accessory')
+  final bills = IsarLinks<Bill>();
 }
 
-// "Llavero"
+@collection
 class Keychains extends Crochet {
-  Color color;
-
-  Keychains._({
-    String? id,
-    required String name,
-    required int stock,
-    required this.color,
-  }) : super(name, stock, id, CrochetType.keychains);
-
-  @override
-  void showInfo() {
-    super.showInfo();
-    print('Color: ${color.toHex()}');
-  }
-
-  static Keychains fromJson(Map<String, dynamic> json) => Keychains._(
-        id: json['id'],
-        name: json['name'],
-        stock: json['stock'],
-        color: (json['color'] as String).toColor(),
-      );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'stock': stock,
-        'type': type.name,
-        'color': color.toHex(),
-      };
+  @Backlink(to: 'keychains')
+  final bills = IsarLinks<Bill>();
 }
 
+@Collection(ignore: {'threadColor'})
 class PrePacking extends Crochet {
-  PrePacking._({
-    String? id,
-    required String name,
-    required int stock,
-  }) : super(name, stock, id, CrochetType.prepacking);
+  late String name;
+  late short size;
 
-  @override
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'stock': stock,
-        'type': type.name,
-      };
+  @Backlink(to: 'prePacking')
+  final bills = IsarLinks<Bill>();
+}
 
-  static PrePacking fromJson(Map<String, dynamic> json) => PrePacking._(
-        id: json['id'],
-        name: json['name'],
-        stock: json['stock'],
-      );
+@Collection(ignore: {'threadColor'})
+class Hooks extends Crochet {
+  /// Milimetros de grosor
+  late short thickness;
+  @Backlink(to: 'hooks')
+  final bills = IsarLinks<Bill>();
 }

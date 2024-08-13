@@ -14,8 +14,8 @@ List<Order> orders = List.generate(40, (index) => Order.unique());
 @RoutePage()
 
 /// Muestra los pedidos pendiente
-class OrdersScreen extends StatelessWidget {
-  const OrdersScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

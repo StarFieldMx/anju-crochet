@@ -1,36 +1,33 @@
-enum BillType { balance, stats }
+import 'package:anju/data/models/models.dart';
+import 'package:isar/isar.dart';
+part 'bill.g.dart';
 
-abstract class Bill {
-  final double money;
-  final String title;
-  final String subtitle;
-  final int amount;
-  final DateTime date;
-  const Bill({
-    required this.money,
-    required this.title,
-    required this.subtitle,
-    required this.date,
-    this.amount = 1,
-  });
-}
+enum BillTypeScreen { balance, stats }
 
-class Income extends Bill {
-  const Income({
-    required super.money,
-    required super.title,
-    required super.subtitle,
-    required super.date,
-    super.amount,
-  });
-}
+enum BillingType { expenses, incomes }
 
-class Expenses extends Bill {
-  const Expenses({
-    required super.money,
-    required super.title,
-    required super.subtitle,
-    required super.date,
-    super.amount,
-  });
+@collection
+class Bill {
+  Id id = Isar.autoIncrement;
+  late double money;
+  late String title;
+  String? subtitle;
+  late int amount;
+  @enumerated
+  late BillingType type;
+
+  // A reference to the Amigurumi
+  final amigurumi = IsarLink<Amigurumi>();
+
+  // References to different types of Crochet materials
+  final thread = IsarLink<Yarn>();
+  final filling = IsarLink<Filling>();
+  final safetyEye = IsarLink<SafetyEyes>();
+  final accessory = IsarLink<Accessories>();
+  final keychains = IsarLink<Keychains>();
+  final prePacking = IsarLink<PrePacking>();
+  final hooks = IsarLink<Hooks>();
+
+  /// UTC
+  late DateTime dueAt;
 }

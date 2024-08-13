@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:anju/config/router/anju_router.dart';
 import 'package:anju/config/router/anju_router.gr.dart';
-import 'package:anju/config/servicelocator.dart';
+import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/themes/anju_textstyles.dart';
+import 'package:anju/config/utils/hero_tags.dart';
+import 'package:anju/config/utils/images_constant.dart';
 import 'package:anju/data/models/amigurumi.dart';
 import 'package:anju/interface/widgets/anju_image.dart';
 import 'package:anju/interface/widgets/anju_item_list_viewer.dart';
@@ -18,12 +20,8 @@ class AmigurumiShowScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: REMOVE
-    List<Amigurumi> amigurumis =
-        List.generate(10, (index) => Amigurumi.random());
-
     return AnjuItemListViewer<Amigurumi>(
-      list: amigurumis,
+      list: const [],
       childBuilder: (amigurumi) => Card(
         clipBehavior: Clip.hardEdge,
         shadowColor: Colors.black,
@@ -51,7 +49,10 @@ class _ShowWidget extends StatelessWidget {
         child: Stack(
           children: [
             AnjuImage(
-              imagePath: amigurumi.images.first.url,
+              tag: HeroTag.ordersItem(0),
+              imageUrl: amigurumi.images.isNotEmpty
+                  ? amigurumi.images.first.url
+                  : AnjuImages.borrego,
               hero: false,
               height: 412,
             ),
