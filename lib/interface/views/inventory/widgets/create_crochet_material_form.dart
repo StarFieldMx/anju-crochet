@@ -1,19 +1,15 @@
-import 'dart:io';
-import 'dart:ui';
-
 import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/themes/anju_colors.dart';
-import 'package:anju/config/utils/images_constant.dart';
 import 'package:anju/data/models/models.dart';
 import 'package:anju/data/services/anju_alerts.dart';
 import 'package:anju/data/services/consumables_service.dart';
 import 'package:anju/interface/views/inventory/consumables_manager/consumable_manager_bloc.dart';
 import 'package:anju/interface/widgets/anju_add_color.dart';
+import 'package:anju/interface/widgets/anju_pick_image.dart';
 import 'package:anju/interface/widgets/forms/forms.dart';
 import 'package:anju/interface/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateCrochetMaterialForm extends StatefulWidget {
@@ -326,34 +322,12 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
 
   List<Widget> _buildCommonFields() {
     return [
-      if (image != null)
-        GestureDetector(onTap: getImage, child: Image.file(File(image!.path))),
-      if (image == null)
-        GestureDetector(
-          onTap: getImage,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-                child: Card(
-                    color: Colors.grey.shade400,
-                    shadowColor: Colors.black,
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      height: MediaQuery.of(context).size.width * 0.75,
-                    )),
-              ),
-              SvgPicture.asset(
-                width: 60,
-                height: 60,
-                AnjuSvg.gallery,
-                colorFilter:
-                    const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-              ),
-            ],
-          ),
-        ),
+      AnjuPickImage(
+        onPickImage: (p0) {
+          image = p0;
+          setState(() {});
+        },
+      ),
       const SizedBox(height: 15),
       AnjuDropDown<UnitWeight>(
         hintText: 'Unidad',

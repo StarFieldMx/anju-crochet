@@ -1,6 +1,5 @@
 import 'package:anju/config/service_locator.dart';
 import 'package:anju/config/utils/extensions.dart';
-import 'package:anju/data/models/anju_image_model.dart';
 import 'package:anju/data/models/models.dart';
 import 'package:anju/data/services/anju_alerts.dart';
 import 'package:anju/data/services/consumables_service.dart';

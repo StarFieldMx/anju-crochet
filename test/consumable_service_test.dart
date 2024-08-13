@@ -1,6 +1,4 @@
-import 'package:anju/data/models/crochet.dart';
 import 'package:anju/data/models/models.dart';
-import 'package:anju/data/models/threads/thread_brand.dart';
 import 'package:anju/data/services/consumables_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';

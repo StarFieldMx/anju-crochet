@@ -1,9 +1,5 @@
 import 'package:anju/data/database/isar_crochet_db.dart';
-import 'package:anju/data/models/crochet.dart';
 import 'package:anju/data/models/models.dart';
-import 'package:anju/data/models/threads/thread_brand.dart';
-import 'package:anju/data/models/threads/thread_color.dart';
-import 'package:anju/data/models/threads/thread_type.dart';
 import 'package:anju/data/repository/consumables_repository.dart';
 import 'package:isar/isar.dart';
 

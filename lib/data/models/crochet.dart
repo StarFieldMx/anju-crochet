@@ -1,8 +1,5 @@
 import 'package:anju/data/models/bill.dart';
 import 'package:anju/data/models/models.dart';
-import 'package:anju/data/models/threads/thread_brand.dart';
-import 'package:anju/data/models/threads/thread_color.dart';
-import 'package:anju/data/models/threads/thread_type.dart';
 import 'package:isar/isar.dart';
 
 part 'crochet.g.dart';

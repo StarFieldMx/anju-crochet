@@ -17,7 +17,7 @@ List<Widget> buildItemDetails(BuildContext context, Crochet item) {
   }
 
   if (item is Yarn) {
-    final yarn = item as Yarn;
+    final yarn = item;
     details.addAll([
       if (yarn.threadColors.isNotEmpty)
         ...yarn.threadColors
@@ -31,7 +31,7 @@ List<Widget> buildItemDetails(BuildContext context, Crochet item) {
                 ),
               ),
             )
-            .toList(),
+            ,
       Container(
         alignment: Alignment.centerLeft,
         child: Text(
@@ -75,7 +75,7 @@ List<Widget> buildItemDetails(BuildContext context, Crochet item) {
       ),
     ]);
   } else if (item is Filling) {
-    final filling = item as Filling;
+    final filling = item;
     details.addAll([
       Container(
         alignment: Alignment.centerLeft,
@@ -95,7 +95,7 @@ List<Widget> buildItemDetails(BuildContext context, Crochet item) {
       ),
     ]);
   } else if (item is SafetyEyes) {
-    final eyes = item as SafetyEyes;
+    final eyes = item;
     details.addAll([
       Container(
         alignment: Alignment.centerLeft,
@@ -145,7 +145,7 @@ List<Widget> buildItemDetails(BuildContext context, Crochet item) {
       ),
     ]);
   } else if (item is PrePacking) {
-    final prePacking = item as PrePacking;
+    final prePacking = item;
     details.addAll([
       Container(
         alignment: Alignment.centerLeft,
@@ -173,7 +173,7 @@ List<Widget> buildItemDetails(BuildContext context, Crochet item) {
       ),
     ]);
   } else if (item is Hooks) {
-    final hooks = item as Hooks;
+    final hooks = item;
     details.addAll([
       Container(
         alignment: Alignment.centerLeft,

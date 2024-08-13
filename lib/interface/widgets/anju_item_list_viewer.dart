@@ -1,4 +1,4 @@
-import 'package:anju/config/themes/anju_textstyles.dart';
+import 'package:anju/interface/widgets/title_screen_widget.dart';
 import 'package:flutter/material.dart';
 
 class AnjuItemListViewer<T> extends StatelessWidget {
@@ -20,9 +20,7 @@ class AnjuItemListViewer<T> extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           horizontal: hasPadding ? 20.0 : 0.0, vertical: 10),
       children: [
-        Padding(
-            padding: EdgeInsets.only(left: !hasPadding ? 12.5 : 0.0),
-            child: Text(title, style: AnjuTextStyles.titleScreens)),
+        TitleScreenWidget(hasPadding: hasPadding, title: title),
         const SizedBox(height: 20),
         ...list.map((item) {
           final childWidget = childBuilder(item);

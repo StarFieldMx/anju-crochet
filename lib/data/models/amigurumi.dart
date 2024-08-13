@@ -1,32 +1,39 @@
-import 'package:anju/data/models/anju_image_model.dart';
 import 'package:anju/data/models/bill.dart';
+import 'package:anju/data/models/models.dart';
 import 'package:isar/isar.dart';
 part 'amigurumi.g.dart';
 
-enum AmigurumiStatus { disponible, sobrepedido, proximamente }
+enum AmigurumiAvailability { disponible, sobrepedido, proximamente }
 
-enum AmigurumiType { special, normal }
+enum AmigurumiType { especial, normal }
 
 @collection
 class Amigurumi {
   Id id = Isar.autoIncrement;
   late String name;
 
-  /// Precio de la mano de obra
-  late int workedHours;
+  /// Tiempo de la mano de obra
+  late short workedTime;
 
-  late int workedMinutes;
+  @ignore
+  Duration get workedDuration {
+    return Duration(milliseconds: workedTime);
+  }
 
-  /// Materials
-  late List<int> materials;
-  // @Enumerated(EnumType.name)
+  @ignore
+  final List<Crochet> crochetMaterials = [];
+
+  /// Materials IDS
+  late List<int> ids;
+
+  /// types of material IDS
   late List<String> materialsTypes;
 
   final images = IsarLinks<AnjuImageModel>();
 
   /// Status of the amigurumi
   @enumerated
-  late AmigurumiStatus status;
+  late AmigurumiAvailability status;
 
   /// UTC time
   late DateTime createdAt;
@@ -34,16 +41,42 @@ class Amigurumi {
   /// UTC time
   late DateTime updatedAt;
 
-  // final pricesWork = IsarLinks<Work>();
-
   @Backlink(to: 'amigurumi')
   final bills = IsarLinks<Bill>();
+
+  set bills(IsarLinks<Bill> value) {
+    bills = value;
+  }
 
   @enumerated
   late AmigurumiType type;
 
+  /// MAX (0 to 255)Dependiendo de la disponibilidad (si hay existente entonces hay stock si no no)
+  byte stock = 0;
+
   Amigurumi() {
-    assert(materials.length == materialsTypes.length,
+    assert(ids.length == materialsTypes.length,
         'materials and materialsTypes must have the same length');
+  }
+
+  Amigurumi copyWith({
+    List<int>? ids,
+    List<String>? materialsTypes,
+    AmigurumiAvailability? status,
+    AmigurumiType? type,
+    byte? stock,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    IsarLinks<Bill>? bills,
+  }) {
+    return Amigurumi()
+      ..ids = ids ?? this.ids
+      ..materialsTypes = materialsTypes ?? this.materialsTypes
+      ..status = status ?? this.status
+      ..type = type ?? this.type
+      ..stock = stock ?? this.stock
+      ..createdAt = createdAt ?? this.createdAt
+      ..updatedAt = updatedAt ?? this.updatedAt
+      ..bills = bills ?? this.bills;
   }
 }

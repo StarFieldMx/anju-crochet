@@ -44,7 +44,10 @@ class _AnjuTopBarState extends State<AnjuTopBar> {
     switch (currentRoute) {
       case AnjuRoutes.shopping:
         // TODO: Handle this case.
-        return [icon];
+        return [
+          IconButton(
+              onPressed: getIt<AnjuRouteCubit>().addAmigurumi, icon: icon)
+        ];
       case AnjuRoutes.pdfpatrons:
         return null;
       case AnjuRoutes.orders:

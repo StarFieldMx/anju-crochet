@@ -22,9 +22,9 @@ const AmigurumiSchema = CollectionSchema(
       name: r'createdAt',
       type: IsarType.dateTime,
     ),
-    r'materials': PropertySchema(
+    r'ids': PropertySchema(
       id: 1,
-      name: r'materials',
+      name: r'ids',
       type: IsarType.longList,
     ),
     r'materialsTypes': PropertySchema(
@@ -43,26 +43,26 @@ const AmigurumiSchema = CollectionSchema(
       type: IsarType.byte,
       enumMap: _AmigurumistatusEnumValueMap,
     ),
-    r'type': PropertySchema(
+    r'stock': PropertySchema(
       id: 5,
+      name: r'stock',
+      type: IsarType.byte,
+    ),
+    r'type': PropertySchema(
+      id: 6,
       name: r'type',
       type: IsarType.byte,
       enumMap: _AmigurumitypeEnumValueMap,
     ),
     r'updatedAt': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'updatedAt',
       type: IsarType.dateTime,
     ),
-    r'workedHours': PropertySchema(
-      id: 7,
-      name: r'workedHours',
-      type: IsarType.long,
-    ),
-    r'workedMinutes': PropertySchema(
+    r'workedTime': PropertySchema(
       id: 8,
-      name: r'workedMinutes',
-      type: IsarType.long,
+      name: r'workedTime',
+      type: IsarType.int,
     )
   },
   estimateSize: _amigurumiEstimateSize,
@@ -99,7 +99,7 @@ int _amigurumiEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.materials.length * 8;
+  bytesCount += 3 + object.ids.length * 8;
   bytesCount += 3 + object.materialsTypes.length * 3;
   {
     for (var i = 0; i < object.materialsTypes.length; i++) {
@@ -118,14 +118,14 @@ void _amigurumiSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.createdAt);
-  writer.writeLongList(offsets[1], object.materials);
+  writer.writeLongList(offsets[1], object.ids);
   writer.writeStringList(offsets[2], object.materialsTypes);
   writer.writeString(offsets[3], object.name);
   writer.writeByte(offsets[4], object.status.index);
-  writer.writeByte(offsets[5], object.type.index);
-  writer.writeDateTime(offsets[6], object.updatedAt);
-  writer.writeLong(offsets[7], object.workedHours);
-  writer.writeLong(offsets[8], object.workedMinutes);
+  writer.writeByte(offsets[5], object.stock);
+  writer.writeByte(offsets[6], object.type.index);
+  writer.writeDateTime(offsets[7], object.updatedAt);
+  writer.writeInt(offsets[8], object.workedTime);
 }
 
 Amigurumi _amigurumiDeserialize(
@@ -137,17 +137,17 @@ Amigurumi _amigurumiDeserialize(
   final object = Amigurumi();
   object.createdAt = reader.readDateTime(offsets[0]);
   object.id = id;
-  object.materials = reader.readLongList(offsets[1]) ?? [];
+  object.ids = reader.readLongList(offsets[1]) ?? [];
   object.materialsTypes = reader.readStringList(offsets[2]) ?? [];
   object.name = reader.readString(offsets[3]);
   object.status =
       _AmigurumistatusValueEnumMap[reader.readByteOrNull(offsets[4])] ??
-          AmigurumiStatus.disponible;
-  object.type = _AmigurumitypeValueEnumMap[reader.readByteOrNull(offsets[5])] ??
-      AmigurumiType.special;
-  object.updatedAt = reader.readDateTime(offsets[6]);
-  object.workedHours = reader.readLong(offsets[7]);
-  object.workedMinutes = reader.readLong(offsets[8]);
+          AmigurumiAvailability.disponible;
+  object.stock = reader.readByte(offsets[5]);
+  object.type = _AmigurumitypeValueEnumMap[reader.readByteOrNull(offsets[6])] ??
+      AmigurumiType.especial;
+  object.updatedAt = reader.readDateTime(offsets[7]);
+  object.workedTime = reader.readInt(offsets[8]);
   return object;
 }
 
@@ -168,16 +168,16 @@ P _amigurumiDeserializeProp<P>(
       return (reader.readString(offset)) as P;
     case 4:
       return (_AmigurumistatusValueEnumMap[reader.readByteOrNull(offset)] ??
-          AmigurumiStatus.disponible) as P;
+          AmigurumiAvailability.disponible) as P;
     case 5:
-      return (_AmigurumitypeValueEnumMap[reader.readByteOrNull(offset)] ??
-          AmigurumiType.special) as P;
+      return (reader.readByte(offset)) as P;
     case 6:
-      return (reader.readDateTime(offset)) as P;
+      return (_AmigurumitypeValueEnumMap[reader.readByteOrNull(offset)] ??
+          AmigurumiType.especial) as P;
     case 7:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 8:
-      return (reader.readLong(offset)) as P;
+      return (reader.readInt(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -189,16 +189,16 @@ const _AmigurumistatusEnumValueMap = {
   'proximamente': 2,
 };
 const _AmigurumistatusValueEnumMap = {
-  0: AmigurumiStatus.disponible,
-  1: AmigurumiStatus.sobrepedido,
-  2: AmigurumiStatus.proximamente,
+  0: AmigurumiAvailability.disponible,
+  1: AmigurumiAvailability.sobrepedido,
+  2: AmigurumiAvailability.proximamente,
 };
 const _AmigurumitypeEnumValueMap = {
-  'special': 0,
+  'especial': 0,
   'normal': 1,
 };
 const _AmigurumitypeValueEnumMap = {
-  0: AmigurumiType.special,
+  0: AmigurumiType.especial,
   1: AmigurumiType.normal,
 };
 
@@ -403,46 +403,44 @@ extension AmigurumiQueryFilter
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      materialsElementEqualTo(int value) {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> idsElementEqualTo(
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'materials',
+        property: r'ids',
         value: value,
       ));
     });
   }
 
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      materialsElementGreaterThan(
+      idsElementGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'materials',
+        property: r'ids',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      materialsElementLessThan(
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> idsElementLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'materials',
+        property: r'ids',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      materialsElementBetween(
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> idsElementBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -450,7 +448,7 @@ extension AmigurumiQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'materials',
+        property: r'ids',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -459,11 +457,11 @@ extension AmigurumiQueryFilter
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      materialsLengthEqualTo(int length) {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> idsLengthEqualTo(
+      int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'materials',
+        r'ids',
         length,
         true,
         length,
@@ -472,10 +470,10 @@ extension AmigurumiQueryFilter
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> materialsIsEmpty() {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> idsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'materials',
+        r'ids',
         0,
         true,
         0,
@@ -484,11 +482,10 @@ extension AmigurumiQueryFilter
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      materialsIsNotEmpty() {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> idsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'materials',
+        r'ids',
         0,
         false,
         999999,
@@ -497,14 +494,13 @@ extension AmigurumiQueryFilter
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      materialsLengthLessThan(
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> idsLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'materials',
+        r'ids',
         0,
         true,
         length,
@@ -514,13 +510,13 @@ extension AmigurumiQueryFilter
   }
 
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      materialsLengthGreaterThan(
+      idsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'materials',
+        r'ids',
         length,
         include,
         999999,
@@ -529,8 +525,7 @@ extension AmigurumiQueryFilter
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      materialsLengthBetween(
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> idsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -538,7 +533,7 @@ extension AmigurumiQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'materials',
+        r'ids',
         lower,
         includeLower,
         upper,
@@ -904,7 +899,7 @@ extension AmigurumiQueryFilter
   }
 
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusEqualTo(
-      AmigurumiStatus value) {
+      AmigurumiAvailability value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'status',
@@ -914,7 +909,7 @@ extension AmigurumiQueryFilter
   }
 
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusGreaterThan(
-    AmigurumiStatus value, {
+    AmigurumiAvailability value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -927,7 +922,7 @@ extension AmigurumiQueryFilter
   }
 
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusLessThan(
-    AmigurumiStatus value, {
+    AmigurumiAvailability value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -940,14 +935,67 @@ extension AmigurumiQueryFilter
   }
 
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> statusBetween(
-    AmigurumiStatus lower,
-    AmigurumiStatus upper, {
+    AmigurumiAvailability lower,
+    AmigurumiAvailability upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'status',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> stockEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'stock',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> stockGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'stock',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> stockLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'stock',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> stockBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'stock',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1063,44 +1111,44 @@ extension AmigurumiQueryFilter
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> workedHoursEqualTo(
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> workedTimeEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'workedHours',
+        property: r'workedTime',
         value: value,
       ));
     });
   }
 
   QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      workedHoursGreaterThan(
+      workedTimeGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'workedHours',
+        property: r'workedTime',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> workedHoursLessThan(
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> workedTimeLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'workedHours',
+        property: r'workedTime',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> workedHoursBetween(
+  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition> workedTimeBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1108,63 +1156,7 @@ extension AmigurumiQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'workedHours',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      workedMinutesEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'workedMinutes',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      workedMinutesGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'workedMinutes',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      workedMinutesLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'workedMinutes',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterFilterCondition>
-      workedMinutesBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'workedMinutes',
+        property: r'workedTime',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1332,6 +1324,18 @@ extension AmigurumiQuerySortBy on QueryBuilder<Amigurumi, Amigurumi, QSortBy> {
     });
   }
 
+  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByStockDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.desc);
+    });
+  }
+
   QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -1356,27 +1360,15 @@ extension AmigurumiQuerySortBy on QueryBuilder<Amigurumi, Amigurumi, QSortBy> {
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByWorkedHours() {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByWorkedTime() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'workedHours', Sort.asc);
+      return query.addSortBy(r'workedTime', Sort.asc);
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByWorkedHoursDesc() {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByWorkedTimeDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'workedHours', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByWorkedMinutes() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'workedMinutes', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> sortByWorkedMinutesDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'workedMinutes', Sort.desc);
+      return query.addSortBy(r'workedTime', Sort.desc);
     });
   }
 }
@@ -1431,6 +1423,18 @@ extension AmigurumiQuerySortThenBy
     });
   }
 
+  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByStockDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stock', Sort.desc);
+    });
+  }
+
   QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -1455,27 +1459,15 @@ extension AmigurumiQuerySortThenBy
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByWorkedHours() {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByWorkedTime() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'workedHours', Sort.asc);
+      return query.addSortBy(r'workedTime', Sort.asc);
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByWorkedHoursDesc() {
+  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByWorkedTimeDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'workedHours', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByWorkedMinutes() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'workedMinutes', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QAfterSortBy> thenByWorkedMinutesDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'workedMinutes', Sort.desc);
+      return query.addSortBy(r'workedTime', Sort.desc);
     });
   }
 }
@@ -1488,9 +1480,9 @@ extension AmigurumiQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByMaterials() {
+  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByIds() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'materials');
+      return query.addDistinctBy(r'ids');
     });
   }
 
@@ -1513,6 +1505,12 @@ extension AmigurumiQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'stock');
+    });
+  }
+
   QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'type');
@@ -1525,15 +1523,9 @@ extension AmigurumiQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByWorkedHours() {
+  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByWorkedTime() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'workedHours');
-    });
-  }
-
-  QueryBuilder<Amigurumi, Amigurumi, QDistinct> distinctByWorkedMinutes() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'workedMinutes');
+      return query.addDistinctBy(r'workedTime');
     });
   }
 }
@@ -1552,9 +1544,9 @@ extension AmigurumiQueryProperty
     });
   }
 
-  QueryBuilder<Amigurumi, List<int>, QQueryOperations> materialsProperty() {
+  QueryBuilder<Amigurumi, List<int>, QQueryOperations> idsProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'materials');
+      return query.addPropertyName(r'ids');
     });
   }
 
@@ -1571,9 +1563,16 @@ extension AmigurumiQueryProperty
     });
   }
 
-  QueryBuilder<Amigurumi, AmigurumiStatus, QQueryOperations> statusProperty() {
+  QueryBuilder<Amigurumi, AmigurumiAvailability, QQueryOperations>
+      statusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'status');
+    });
+  }
+
+  QueryBuilder<Amigurumi, int, QQueryOperations> stockProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'stock');
     });
   }
 
@@ -1589,15 +1588,9 @@ extension AmigurumiQueryProperty
     });
   }
 
-  QueryBuilder<Amigurumi, int, QQueryOperations> workedHoursProperty() {
+  QueryBuilder<Amigurumi, int, QQueryOperations> workedTimeProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'workedHours');
-    });
-  }
-
-  QueryBuilder<Amigurumi, int, QQueryOperations> workedMinutesProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'workedMinutes');
+      return query.addPropertyName(r'workedTime');
     });
   }
 }

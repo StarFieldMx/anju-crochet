@@ -25,6 +25,7 @@ class AnjuRouter extends $AnjuRouter {
           AutoRoute(page: YarnRoute.page),
         ]),
         AutoRoute(page: DetailsOrderRoute.page),
+        AutoRoute(page: NewAmigurumiRoute.page),
         AutoRoute(page: PdfViewRoute.page),
         AutoRoute(page: AmigurumiDetailsRoute.page),
         AutoRoute(page: ConsumablesManagerRoute.page),
@@ -62,6 +63,7 @@ class AnjuRouteCubit extends Cubit<AnjuRouter> {
   }
 
   void addMaterial() => state.push(ConsumablesManagerRoute());
+  void addAmigurumi() => state.push(const NewAmigurumiRoute());
 
   BuildContext get context => state.navigatorKey.currentContext!;
 }

@@ -1,7 +1,6 @@
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/config/utils/utils.dart';
 import 'package:anju/data/models/models.dart';
-import 'package:anju/data/models/orders.dart';
 import 'package:flutter/material.dart';
 // ROUTER
 import 'package:anju/config/router/anju_router.gr.dart';
