@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 
 part 'anju_image_model.g.dart';
 
-enum ImageSourceAnju { local, network }
+enum ImageSourceAnju { local, network, file }
 
 @collection
 class AnjuImageModel {

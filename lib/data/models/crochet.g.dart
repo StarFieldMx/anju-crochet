@@ -1081,12 +1081,6 @@ const FillingSchema = CollectionSchema(
       target: r'Bill',
       single: false,
       linkName: r'filling',
-    ),
-    r'image': LinkSchema(
-      id: -3101477177537796741,
-      name: r'image',
-      target: r'AnjuImageModel',
-      single: true,
     )
   },
   embeddedSchemas: {},
@@ -1194,13 +1188,12 @@ Id _fillingGetId(Filling object) {
 }
 
 List<IsarLinkBase<dynamic>> _fillingGetLinks(Filling object) {
-  return [object.bills, object.image];
+  return [object.bills];
 }
 
 void _fillingAttach(IsarCollection<dynamic> col, Id id, Filling object) {
   object.id = id;
   object.bills.attach(col, col.isar.collection<Bill>(), r'bills', id);
-  object.image.attach(col, col.isar.collection<AnjuImageModel>(), r'image', id);
 }
 
 extension FillingQueryWhereSort on QueryBuilder<Filling, Filling, QWhere> {
@@ -1560,19 +1553,6 @@ extension FillingQueryLinks
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'bills', lower, includeLower, upper, includeUpper);
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> image(
-      FilterQuery<AnjuImageModel> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'image');
-    });
-  }
-
-  QueryBuilder<Filling, Filling, QAfterFilterCondition> imageIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'image', 0, true, 0, true);
     });
   }
 }

@@ -98,10 +98,12 @@ P _anjuImageModelDeserializeProp<P>(
 const _AnjuImageModeltypeEnumValueMap = {
   'local': 0,
   'network': 1,
+  'file': 2,
 };
 const _AnjuImageModeltypeValueEnumMap = {
   0: ImageSourceAnju.local,
   1: ImageSourceAnju.network,
+  2: ImageSourceAnju.file,
 };
 
 Id _anjuImageModelGetId(AnjuImageModel object) {

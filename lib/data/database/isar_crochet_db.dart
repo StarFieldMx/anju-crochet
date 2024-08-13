@@ -28,6 +28,7 @@ class IsarCrochetDb {
         // ExpensesSchema,
       ],
       directory: dir.path,
+      inspector: true,
     );
     return IsarCrochetDb()..db = isar;
   }

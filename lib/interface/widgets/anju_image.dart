@@ -50,18 +50,28 @@ class AnjuImage extends StatelessWidget {
   }
 
   Image get _imageBasedType {
-    return source == ImageSourceAnju.local
-        ? Image.file(
-            File(imageUrl),
-            height: height,
-            width: width,
-            fit: BoxFit.cover,
-          )
-        : Image.network(
-            imageUrl,
-            height: height,
-            width: width,
-            fit: BoxFit.cover,
-          );
+    switch (source) {
+      case ImageSourceAnju.local:
+        return Image.asset(
+          imageUrl,
+          height: height,
+          width: width,
+          fit: BoxFit.cover,
+        );
+      case ImageSourceAnju.network:
+        return Image.network(
+          imageUrl,
+          height: height,
+          width: width,
+          fit: BoxFit.cover,
+        );
+      case ImageSourceAnju.file:
+        return Image.file(
+          File(imageUrl),
+          height: height,
+          width: width,
+          fit: BoxFit.cover,
+        );
+    }
   }
 }

@@ -176,7 +176,7 @@ class _CreateCrochetMaterialFormState extends State<CreateCrochetMaterialForm> {
             if (image != null) {
               // TODO: SI ES LA MEJOR MANERA DE GUARDARLO?
               consumableImage = AnjuImageModel()
-                ..type = ImageSourceAnju.local
+                ..type = ImageSourceAnju.file
                 ..url = image!.path;
               final id = await getIt<ConsumablesService>()
                   .createOrUpdateAnjuImageModel(consumableImage);
