@@ -25,7 +25,7 @@ class AmigurumiDetailsScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 30),
             AnjuCarousel(
-              images: AnjuImages.values,
+              images: AnjuImages.values.toList(),
             ),
             const SizedBox(height: 20),
             Text('Handmade', style: AnjuTextStyles.handmade),
@@ -43,7 +43,9 @@ class AmigurumiDetailsScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 30),
-            Text('\$ ${amigurumi.total} MXN', style: AnjuTextStyles.priceTag),
+            // TODO: ADD TOTAL PRICE
+            // Text('\$ ${amigurumi.price} MXN', style: AnjuTextStyles.priceTag),
+            Text('\$ 200 MXN', style: AnjuTextStyles.priceTag),
             const SizedBox(height: 30),
             Text(
               'Colors',
@@ -60,11 +62,14 @@ class AmigurumiDetailsScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: MultiColorCircle(colors: [
-                        Colors.amber,
-                        Colors.brown,
-                        Colors.white,
-                      ]),
+                      child: MultiColorCircle(
+                        colors: [
+                          Colors.amber,
+                          Colors.brown,
+                          Colors.white,
+                        ],
+                        isSelected: true,
+                      ),
                     );
                   },
                 ),

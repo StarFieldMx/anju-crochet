@@ -1,5 +1,5 @@
 import 'package:anju/config/router/anju_router.dart';
-import 'package:anju/config/servicelocator.dart';
+import 'package:anju/config/service_locator.dart';
 import 'package:anju/interface/layouts/anju_home_layout.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +71,8 @@ class _AnjuTopBarState extends State<AnjuTopBar> {
   Widget build(BuildContext context) {
     return AppBar(
       // * remove color when scrolling
+      actionsIconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: const IconThemeData(color: Colors.white),
       surfaceTintColor: Colors.transparent,
       actions: widget.actions ?? getActions(context),
       backgroundColor: AnjuColors.primary,

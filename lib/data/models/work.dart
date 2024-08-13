@@ -1,5 +1,7 @@
 import 'package:isar/isar.dart';
 
+part 'work.g.dart';
+
 enum TimeLapse { hr, mn }
 
 @collection

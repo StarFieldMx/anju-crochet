@@ -1,5 +1,6 @@
 import 'package:anju/config/themes/anju_textstyles.dart';
 import 'package:anju/config/utils/utils.dart';
+import 'package:anju/data/models/models.dart';
 import 'package:anju/data/models/orders.dart';
 import 'package:flutter/material.dart';
 // ROUTER
@@ -25,9 +26,10 @@ class OrderCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            AnjuImage(
+            const AnjuImage(
               // id: order.id,
-              imagePath: AnjuImages.test,
+              imageUrl: AnjuImages.test,
+              source: ImageSourceAnju.local,
               hero: false,
             ),
             const SizedBox(width: 20),

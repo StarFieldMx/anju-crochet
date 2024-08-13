@@ -1,6 +1,8 @@
 import 'package:anju/config/router/anju_router.gr.dart';
+import 'package:anju/data/models/crochet.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 
 @AutoRouterConfig()
 class AnjuRouter extends $AnjuRouter {
@@ -18,6 +20,10 @@ class AnjuRouter extends $AnjuRouter {
           ],
         ),
         AutoRoute(page: CategoryRoute.page),
+        AutoRoute(page: YarnLayout.page, children: [
+          AutoRoute(page: YarnByBrandRoute.page),
+          AutoRoute(page: YarnRoute.page),
+        ]),
         AutoRoute(page: DetailsOrderRoute.page),
         AutoRoute(page: PdfViewRoute.page),
         AutoRoute(page: AmigurumiDetailsRoute.page),
@@ -43,6 +49,19 @@ class AnjuRouteCubit extends Cubit<AnjuRouter> {
   void goHomeFromSplash() =>
       state.replace(const AnjuHomeLayout(children: [HomeRoute()]));
 
-  void goCategory({dynamic something}) => state.push(const CategoryRoute());
+  void goCategory({required CrochetType type}) {
+    if (type == CrochetType.yarn) {
+      state.push(const YarnLayout(children: [YarnByBrandRoute()]));
+      return;
+    }
+    state.push(CategoryRoute(type: type));
+  }
+
+  void goYarnScreen(String brand) {
+    state.push(YarnLayout(children: [YarnRoute(brand: brand)]));
+  }
+
   void addMaterial() => state.push(ConsumablesManagerRoute());
+
+  BuildContext get context => state.navigatorKey.currentContext!;
 }

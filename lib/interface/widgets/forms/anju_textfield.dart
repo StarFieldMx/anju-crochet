@@ -19,16 +19,16 @@ class AnjuTextField extends StatelessWidget {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           labelText: label,
-          focusedBorder: _myBorders(),
-          enabledBorder: _myBorders(color: AnjuColors.primaryShade100),
-          errorBorder: _myBorders(color: AnjuColors.secondary),
+          focusedBorder: myBorders(),
+          enabledBorder: myBorders(color: AnjuColors.primaryShade100),
+          errorBorder: myBorders(color: AnjuColors.secondary),
         ),
       ),
     );
   }
-
-  InputBorder _myBorders({Color? color}) => OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
-        borderSide: BorderSide(color: color ?? AnjuColors.primary, width: 2),
-      );
 }
+
+InputBorder myBorders({Color? color}) => OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(12)),
+      borderSide: BorderSide(color: color ?? AnjuColors.primary, width: 2),
+    );

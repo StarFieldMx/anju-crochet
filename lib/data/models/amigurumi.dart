@@ -1,6 +1,7 @@
-import 'package:anju/data/models/material_snapshot.dart';
-import 'package:anju/data/models/work.dart';
+import 'package:anju/data/models/anju_image_model.dart';
+import 'package:anju/data/models/bill.dart';
 import 'package:isar/isar.dart';
+part 'amigurumi.g.dart';
 
 enum AmigurumiStatus { disponible, sobrepedido, proximamente }
 
@@ -17,12 +18,14 @@ class Amigurumi {
   late int workedMinutes;
 
   /// Materials
-  late List<MaterialSnapshot> materials;
+  late List<int> materials;
+  // @Enumerated(EnumType.name)
+  late List<String> materialsTypes;
 
-  final images = IsarLinks<AmigurumiImage>();
+  final images = IsarLinks<AnjuImageModel>();
 
   /// Status of the amigurumi
-  @Enumerated(EnumType.name)
+  @enumerated
   late AmigurumiStatus status;
 
   /// UTC time
@@ -31,50 +34,16 @@ class Amigurumi {
   /// UTC time
   late DateTime updatedAt;
 
-  final pricesWork = IsarLinks<Work>();
+  // final pricesWork = IsarLinks<Work>();
+
+  @Backlink(to: 'amigurumi')
+  final bills = IsarLinks<Bill>();
 
   @enumerated
   late AmigurumiType type;
 
-  /// Precio total de todos los materiales
-  double get priceMaterial {
-    double price = 0;
-    for (var material in materials) {
-      price += material.total;
-    }
-    return price;
-  }
-
-  double get _calculateFeeOfWork {
-    double myPrice = 0;
-    if (pricesWork.isEmpty) {
-      throw Exception('¿No hay precios de tus horas de trabajo?');
-    }
-    for (var price in pricesWork) {
-      switch (price.timeLapse) {
-        case TimeLapse.hr:
-          myPrice += price.fee * workedHours;
-          break;
-        case TimeLapse.mn:
-          myPrice += price.fee * workedMinutes;
-          break;
-      }
-    }
-    return myPrice;
-  }
-
-  double get total {
-    return priceMaterial + _calculateFeeOfWork;
+  Amigurumi() {
+    assert(materials.length == materialsTypes.length,
+        'materials and materialsTypes must have the same length');
   }
 }
-
-@collection
-class AmigurumiImage {
-  Id id = Isar.autoIncrement;
-  late String url;
-
-  @Enumerated(EnumType.name)
-  late ImageType type;
-}
-
-enum ImageType { local, network }
