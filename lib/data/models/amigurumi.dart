@@ -20,6 +20,7 @@ class Amigurumi {
     return Duration(milliseconds: workedTime);
   }
 
+  // TODO: IMPLEMENT (WITH ID AND TYPES)
   @ignore
   final List<Crochet> crochetMaterials = [];
 
@@ -48,10 +49,11 @@ class Amigurumi {
     bills = value;
   }
 
+  // TODO: IMPLEMENT
   @enumerated
   late AmigurumiType type;
 
-  /// MAX (0 to 255)Dependiendo de la disponibilidad (si hay existente entonces hay stock si no no)
+  // TODO: MAX (0 to 255) Dependiendo de la disponibilidad (si hay existente entonces hay stock si no no)
   byte stock = 0;
 
   Amigurumi() {

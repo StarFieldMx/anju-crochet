@@ -4,6 +4,7 @@ import 'package:anju/data/models/models.dart';
 import 'package:anju/interface/views/show/amigurumi_cubit/amigurumi_cubit_cubit.dart';
 import 'package:anju/interface/widgets/anju_pick_image.dart';
 import 'package:anju/interface/widgets/anju_topbar.dart';
+import 'package:anju/interface/widgets/duration_picker.dart';
 import 'package:anju/interface/widgets/forms/forms.dart';
 import 'package:anju/interface/widgets/title_screen_widget.dart';
 import 'package:auto_route/annotations.dart';
@@ -119,6 +120,11 @@ class NewAmigurumiScreen extends StatelessWidget {
                         .toList(),
                   ),
                   const SizedBox(height: 15),
+                  AnjuAddButton(onTap: () async {
+                    final resp = await showDurationPicker(context);
+                    if (resp == null) return;
+                    print(resp.inMilliseconds);
+                  }),
                 ],
               );
             },
